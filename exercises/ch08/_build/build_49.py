@@ -1,0 +1,595 @@
+# -*- coding: utf-8 -*-
+"""生成 49_openai_api.ipynb 与 app_49_api.py —— OpenAI 兼容接口 / 客户端协议(教材级重写版)
+
+设计要点(对齐 REWRITE_STANDARD.md):
+1. 由浅入深:直觉动机 -> 采样公式与符号表 -> 最小实现逐行推演 -> 协议/数值验证 ->
+   真实规模数字 -> 与 vLLM 工程实现关联 -> 小结+练习+延伸阅读
+2. 每一行可执行代码都有 inline 注释;每个中间张量/数组打印 shape 并标注维度含义
+3. 修复审核发现的问题:
+   * 旧版 `finish_reason = "length" if mt<=3 else "stop"` 是按 max_tokens 值硬编码的伪逻辑;
+     新版改为「真实生成判定」:在 max_tokens 步内是否采到 EOS 决定 finish_reason
+     (采到 EOS -> "stop" 自然结束;跑满 max_tokens 未见 EOS -> "length" 被截断)
+4. 论文支撑:真实引用 vLLM OpenAI 兼容服务文档、OpenAI Chat Completions 规范、SSE 协议
+5. 保留 streamlit app 直跑入口(%%writefile 同步 + st.runtime.exists() 保护)
+
+调研来源(websearch):
+- vLLM OpenAI-Compatible Server: https://docs.vllm.ai/en/stable/serving/online_serving/openai_compatible_server
+- OpenAI Chat Completions API: https://platform.openai.com/docs/api-reference/chat
+- OpenAI Chat Completions streaming events(finish_reason 枚举): https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events
+"""
+from pathlib import Path
+from helpers import D, new_nb, chapter_cover, wrapup, CH08
+
+APP_FILE = "app_49_api.py"
+
+# =====================================================================
+# 采样核心(generate) —— notebook 与 app 共用,finish_reason 是真实判定
+# =====================================================================
+SAMPLE_CORE = D('''
+VOCAB = ["<eos>", "你好", "世界", "vLLM", "部署", "GPU", "推理", "token", "OpenAI", "性能"]
+#        0        1      2       3      4      5      6       7        8       9
+EOS_ID = 0   # <eos> 在 VOCAB 里的下标:模型生成它的那一刻代表「自然结束」
+
+def next_token_probs(rng, temperature=1.0, top_p=1.0):
+    """由一小组 logits 得到「采样分布」。
+    返回 p2:(V,) 的概率数组,V=len(VOCAB),和为 1。
+    维度含义:第 i 维是「下一个 token 取 VOCAB[i]」的概率。"""
+    logits = rng.normal(0, 2.0, size=len(VOCAB))     # 模拟模型第 t 步输出的 logits,shape=(V,)
+    logits = logits / max(temperature, 1e-3)         # ① 除以温度 T:温度越高分布越平(T->0 退化为贪心)
+    p = np.exp(logits - logits.max())                # ② softmax 分子(减最大值保证数值稳定)
+    p = p / p.sum()                                  # ③ softmax 分母归一化 -> 概率 p,shape=(V,)
+    order = np.argsort(-p)                           # 按概率从高到低排序后的下标
+    cum = np.cumsum(p[order])                        # 降序累计概率,shape=(V,)
+    keep = cum <= top_p                              # top_p 核采样:累计概率 <= top_p 的候选保留
+    if not keep.any():                               # 极端情况:一个都没保留
+        keep[0] = True                               # 至少保留概率最高的那个
+    keep[np.argmax(cum > top_p)] = True              # 恰好跨过阈值的候选也保留(凑齐「核」)
+    mask = np.zeros_like(p, dtype=bool)              # 全 False 掩码,shape=(V,)
+    mask[order[keep]] = True                         # 把「降序下的保留位」还原回原始下标
+    p2 = p * mask                                    # 只保留核内 token 的概率
+    if p2.sum() > 0:                                 # 正常情况:核内概率和 > 0
+        p2 = p2 / p2.sum()                           # ④ 对核内候选重新归一化,shape=(V,)
+    else:                                            # 兜底:全被裁掉(不应发生)
+        p2 = p                                       # 退回未裁剪的分布
+    return p2                                        # 返回可采样的分布 (V,)
+
+def generate(prompt, temperature=0.7, top_p=1.0, max_tokens=8, seed=0):
+    """真实的自回归采样,并给出「真实」的 finish_reason。
+    返回 (text, token_ids, finish_reason):
+      - text: 拼接起来的生成文本
+      - token_ids: 生成的 token 下标序列
+      - finish_reason: 由生成结果真实决定:
+          "stop"  -> 在 max_tokens 步内采到了 <eos>,自然结束;
+          "length"-> 跑满 max_tokens 步仍未见 <eos>,被 max_tokens 硬截断。"""
+    rng = np.random.default_rng(seed)                # 可复现的随机数生成器
+    tokens = []                                      # 已生成的 token 下标列表(初始为空)
+    for step in range(max_tokens):                   # 至多采样 max_tokens 步(自回归循环)
+        p = next_token_probs(rng, temperature, top_p)   # 得到第 step 步的采样分布 (V,)
+        tok = int(rng.choice(len(VOCAB), p=p))       # 依概率 p 采样一个 token 下标
+        tokens.append(tok)                           # 追加到生成序列
+        if tok == EOS_ID:                            # 采到了 <eos> -> 模型自己决定结束
+            body = [t for t in tokens if t != EOS_ID]        # 可见内容去掉 EOS 本身
+            text = "".join(VOCAB[i] for i in body)   # 把 token 下标翻译回文本
+            return text, tokens, "stop"              # 返回:自然结束(tokens 仍含 EOS)
+    text = "".join(VOCAB[i] for i in tokens)         # 循环跑满而未遇 EOS,把现有 token 拼成文本
+    return text, tokens, "length"                    # 返回:被 max_tokens 截断
+''')
+
+# =====================================================================
+# OpenAI 兼容的迷你 chat server(流式 SSE + 真实 finish_reason)
+# =====================================================================
+MOCK_CHAT = D('''
+CHAT_PORT = 18049                                    # 本课迷你 server 监听的端口
+
+class ChatHandler(http.server.BaseHTTPRequestHandler):
+    """支持 /v1/chat/completions(含 stream=True 的 SSE 流)与 /v1/models 的迷你 server。
+    采样逻辑复用上面定义的 generate,因此 finish_reason 是真实判定。"""
+    def log_message(self, *a):                       # 静默访问日志,避免刷屏
+        pass
+
+    def do_GET(self):                                # 处理 GET 请求(列出模型)
+        if self.path.startswith("/v1/models"):       # 命中 /v1/models 端点
+            body = json.dumps({"object": "list",     # 组装 OpenAI 规范的模型列表
+                               "data": [{"id": "mock-chat", "object": "model"}]}).encode()
+            self._reply(body)                        # 写回响应
+
+    def do_POST(self):                               # 处理 POST 请求(对话生成)
+        length = int(self.headers.get("Content-Length", 0))   # 读取请求体字节数
+        req = json.loads(self.rfile.read(length))    # 解析请求 JSON
+        stream = bool(req.get("stream", False))      # 是否流式
+        messages = req.get("messages", [])           # 取出对话消息列表
+        # 把 user 角色的 content 拼成一句话作为采样输入
+        user_text = " ".join(m.get("content", "") for m in messages if m.get("role") == "user")
+        temperature = float(req.get("temperature", 0.7))   # 温度参数(默认 0.7)
+        top_p = float(req.get("top_p", 1.0))         # 核采样参数(默认 1.0)
+        max_tokens = int(req.get("max_tokens", 8))   # 最大输出 token 数(默认 8)
+
+        # 调用真实采样:返回文本 + finish_reason(由是否遇到 EOS 真实决定)
+        text, tokens, finish = generate(user_text, temperature=temperature,
+                                        top_p=top_p, max_tokens=max_tokens)
+        if stream:                                   # 流式模式 -> 用 SSE 逐 token 推送
+            self._send_stream(text, tokens, req, finish)
+        else:                                        # 非流式 -> 一次性返回完整 JSON
+            body = json.dumps({
+                "id": "chatcmpl-mock", "object": "chat.completion",
+                "model": req.get("model", "mock-chat"),
+                "choices": [{"index": 0,
+                             "message": {"role": "assistant", "content": text},
+                             "finish_reason": finish}],   # 真实 finish_reason 字段
+                "usage": {"prompt_tokens": max(len(user_text), 1),
+                          "completion_tokens": len(tokens),
+                          "total_tokens": max(len(user_text), 1) + len(tokens)},
+            }).encode()
+            self._reply(body)                        # 写回非流式响应
+
+    def _send_stream(self, text, tokens, req, finish):
+        """SSE 流式输出:每个 token 一行 data: {...},最后一行 data: [DONE]。"""
+        self.send_response(200)                      # 200 状态码
+        self.send_header("Content-Type", "text/event-stream")   # SSE 必须的 MIME 类型
+        self.send_header("Cache-Control", "no-cache")            # 禁止缓存
+        self.end_headers()                           # 结束响应头
+        for i, tok in enumerate(tokens):             # 逐个 token 推送(与真实解码同节奏)
+            delta_text = VOCAB[tok] if tok != EOS_ID else ""   # EOS 不作为可见内容
+            piece = {                                # 组装 chat.completion.chunk 结构
+                "id": "chatcmpl-mock", "object": "chat.completion.chunk",
+                "model": req.get("model", "mock-chat"),
+                "choices": [{"index": 0, "delta": {"content": delta_text},
+                             "finish_reason": None}]}    # 中间 chunk 的 finish_reason 为 null
+            self.wfile.write(f"data: {json.dumps(piece, ensure_ascii=False)}\\n\\n".encode())
+            self.wfile.flush()                       # 立即刷出,模拟打字机
+            time.sleep(0.03)                         # 小睡模拟逐 token 生成耗时
+        # 最后一个 chunk:delta 为空,finish_reason 为真实值
+        final = {"id": "chatcmpl-mock", "object": "chat.completion.chunk",
+                 "model": req.get("model", "mock-chat"),
+                 "choices": [{"index": 0, "delta": {},
+                              "finish_reason": finish}]}
+        self.wfile.write(f"data: {json.dumps(final, ensure_ascii=False)}\\n\\n".encode())
+        self.wfile.write(b"data: [DONE]\\n\\n")       # SSE 流终止标记
+        self.wfile.flush()                           # 刷出终止标记
+
+    def _reply(self, body):                          # 通用 JSON 响应
+        self.send_response(200)                      # 200 状态码
+        self.send_header("Content-Type", "application/json")   # JSON 类型
+        self.send_header("Content-Length", str(len(body)))     # 响应体长度
+        self.end_headers()                           # 结束响应头
+        self.wfile.write(body)                       # 写回响应体
+
+def start_chat_mock():
+    """启动迷你 chat server,返回 (server, thread)。调用方负责 shutdown/server_close。"""
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", CHAT_PORT), ChatHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)   # 后台线程常驻
+    thread.start()                                   # 启动服务线程
+    return server, thread                            # 返回句柄供关闭
+''')
+
+# =====================================================================
+# Streamlit app 源码(与 notebook 共用 generate,含真实 finish_reason)
+# =====================================================================
+APP_49 = D('''
+# -*- coding: utf-8 -*-
+# app_49_api.py — OpenAI 客户端实战:采样参数、finish_reason 与流式响应
+import numpy as np
+import plotly.graph_objects as go
+import streamlit as st
+
+st.set_page_config(page_title="49 · OpenAI 客户端", layout="wide")
+st.title("第 49 课 · OpenAI 兼容接口:采样参数、finish_reason 与 SSE 流式")
+
+st.markdown("""
+客户端(网页、App、脚本)通过 **OpenAI 兼容 API** 与服务对话。一次 `chat/completions` 请求里,
+`temperature` / `top_p` / `max_tokens` / `stream` 决定了模型**怎么生成**;响应里的 `finish_reason`
+则告诉你**为什么结束**(`stop` 自然结束 / `length` 被 max_tokens 截断)。
+本页用**本地真实采样**(不依赖网络)当场生成,并实时画出采样分布、给出真实 finish_reason。
+""")
+
+VOCAB = ["<eos>", "你好", "世界", "vLLM", "部署", "GPU", "推理", "token", "OpenAI", "性能"]
+EOS_ID = 0
+
+def next_token_probs(rng, temperature=1.0, top_p=1.0):
+    logits = rng.normal(0, 2.0, size=len(VOCAB))
+    logits = logits / max(temperature, 1e-3)
+    p = np.exp(logits - logits.max()); p = p / p.sum()
+    order = np.argsort(-p); cum = np.cumsum(p[order])
+    keep = cum <= top_p
+    if not keep.any(): keep[0] = True
+    keep[np.argmax(cum > top_p)] = True
+    mask = np.zeros_like(p, dtype=bool); mask[order[keep]] = True
+    p2 = p * mask
+    return p2 / p2.sum() if p2.sum() > 0 else p
+
+def generate(prompt, temperature=0.7, top_p=1.0, max_tokens=8, seed=0):
+    rng = np.random.default_rng(seed)
+    tokens = []
+    for _ in range(max_tokens):
+        p = next_token_probs(rng, temperature, top_p)
+        tok = int(rng.choice(len(VOCAB), p=p))
+        tokens.append(tok)
+        if tok == EOS_ID:
+            body = [i for i in tokens if i != EOS_ID]
+            return "".join(VOCAB[i] for i in body), tokens, "stop"
+    return "".join(VOCAB[i] for i in tokens), tokens, "length"
+
+with st.sidebar:
+    st.header("采样参数")
+    prompt = st.text_input("用户消息 (user)", "请介绍一下 vLLM")
+    temperature = st.slider("temperature", 0.0, 2.0, 0.7, 0.1,
+                            help="越大越随机,越小越确定;0 时退化为贪心(总是取最高概率)")
+    top_p = st.slider("top_p (核采样)", 0.1, 1.0, 0.9, 0.05,
+                      help="只从累计概率不超过 top_p 的候选里采样")
+    max_tokens = st.slider("max_tokens", 1, 16, 8, 1)
+    seed = st.number_input("随机种子", 0, 9999, 42, 1)
+    st.caption("temperature/top_p 是采样参数;max_tokens 是硬性上限。finish_reason 由真实生成决定。")
+
+result, tokens, finish = generate(prompt, temperature=temperature, top_p=top_p,
+                                  max_tokens=max_tokens, seed=seed)
+prompt_tokens = max(len(prompt), 1)
+st.subheader("chat/completions 响应")
+finish_cn = "stop(自然结束,采到 <eos>)" if finish == "stop" else "length(被 max_tokens 截断)"
+st.markdown(f"**model**: mock-chat  ·  **finish_reason**: `{finish}`({finish_cn})")
+st.info(f"回复: {result}")
+
+c1, c2, c3, c4 = st.columns(4)
+c1.metric("prompt_tokens", prompt_tokens)
+c2.metric("completion_tokens", len(tokens))
+c3.metric("total_tokens", prompt_tokens + len(tokens))
+c4.metric("finish_reason", finish)
+
+rng = np.random.default_rng(seed)
+logits = rng.normal(0, 2.0, size=len(VOCAB))
+def probs(temp, p_top):
+    l = logits / max(temp, 1e-3)
+    p = np.exp(l - l.max()); p = p / p.sum()
+    order = np.argsort(-p); cum = np.cumsum(p[order])
+    keep = cum <= p_top
+    if not keep.any(): keep[0] = True
+    keep[np.argmax(cum > p_top)] = True
+    mask = np.zeros_like(p, dtype=bool); mask[order[keep]] = True
+    p2 = p * mask
+    return p2 / p2.sum() if p2.sum() > 0 else p
+
+p_lo = probs(0.3, top_p)
+p_mid = probs(temperature, top_p)
+p_hi = probs(1.5, top_p)
+x = list(range(len(VOCAB)))
+fig = go.Figure()
+for lbl, p, col in [("T=0.3", p_lo, "#4C78A8"), (f"T={temperature:.1f}", p_mid, "#72B7B2"), ("T=1.5", p_hi, "#E45756")]:
+    fig.add_trace(go.Bar(x=x, y=p, name=lbl, marker_color=col))
+fig.update_layout(title="softmax(logits/T) 概率分布:温度越高分布越平",
+                  xaxis=dict(tickvals=x, ticktext=VOCAB), yaxis_title="采样概率",
+                  barmode="group", height=400, margin=dict(l=10, r=10, t=50, b=10))
+st.plotly_chart(fig, use_container_width=True)
+st.caption("观察:T=0.3 时最高概率 token 一骑绝尘(接近贪心);T=1.5 时分布被抹平。"
+           "top_p 会裁掉累计概率之外的候选。finish_reason 与这些采样参数的真实交互共同决定输出。")
+
+st.markdown("""
+> **真实客户端**:若装了 `openai` 库,可 `from openai import OpenAI;
+> client = OpenAI(base_url="http://localhost:8000/v1")`,再
+> `client.chat.completions.create(model=..., messages=..., stream=True)`。
+> 本机未安装 openai 库,故用 `requests` 直连或本页纯采样模拟,协议与真机一致。
+> 见 [vLLM OpenAI-Compatible Server](https://docs.vllm.ai/en/stable/serving/online_serving/openai_compatible_server)
+> 与 [OpenAI Chat Completions API](https://platform.openai.com/docs/api-reference/chat)。
+""")
+st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 8 章 · 第 49 课配套演示")
+''')
+
+# =====================================================================
+# 组装 notebook
+# =====================================================================
+NB = new_nb(
+    "第 49 课 · OpenAI 兼容接口:采样参数、finish_reason 与 SSE 流式",
+    subtitle="从客户端协议出发,搞懂 temperature / top_p / max_tokens / stream,并实现真实的 finish_reason 判定",
+    emoji="🔌",
+)
+
+chapter_cover(NB,
+    objectives=[
+        "理解 OpenAI 兼容接口的协议本质:HTTP + JSON,base_url 与 /v1/chat/completions",
+        "给出采样公式(带温度的 softmax、top_p 核采样)并建立符号表",
+        "用 numpy 手写真实采样器:每一步打印分布 shape,逐行推演",
+        "实现真实的 finish_reason 判定:采到 <eos> -> stop,跑满 max_tokens -> length",
+        "理解 stream=True 的 SSE 流式协议,并手写逐 token 解析",
+        "把采样与计费代入真实规模数字,建立与 vLLM 工程实现的联系",
+    ],
+    toc=[
+        ("直觉:点菜与厨师的自由度", "客户端-服务器协议,采样参数=给厨师的自由度"),
+        ("核心定义与公式", "带温度的 softmax、top_p 核采样、max_tokens 符号表"),
+        ("最小实现 · 逐行推演", "numpy 手写 next_token_probs / generate,每步打印 shape"),
+        ("真实 finish_reason 判定", "采到 EOS -> stop,跑满 max_tokens -> length"),
+        ("协议验证:请求与响应", "requests 发 /v1/chat/completions,逐字段拆解响应"),
+        ("SSE 流式协议与解析", "stream=True,逐 token 推送 + 手写 data: 解析"),
+        ("真实规模数字", "token 计费、真实 LLM 部署的延迟与成本量级"),
+        ("与 vLLM 工程实现的关系", "vllm serve 的 OpenAI 兼容入口与 SamplingParams"),
+        ("配套 Streamlit 演示", "app_49_api.py:调参数实时看采样与 finish_reason"),
+    ],
+    links=[
+        ("vLLM OpenAI-Compatible Server", "https://docs.vllm.ai/en/stable/serving/online_serving/openai_compatible_server"),
+        ("OpenAI Chat Completions API", "https://platform.openai.com/docs/api-reference/chat"),
+        ("OpenAI Chat Completions streaming events", "https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events"),
+        ("openai-python 客户端", "https://github.com/openai/openai-python"),
+    ])
+
+# ---------------------------------------------------------------- 第 0 节:环境
+NB.code(D('''
+import os
+os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")   # Windows OpenMP 冲突防护
+import json, time, threading, http.server                # 标准库:JSON / 计时 / 多线程 / HTTP
+import numpy as np                                       # 数值计算(采样核心)
+import requests                                          # HTTP 客户端(发真实请求)
+
+print("numpy =", np.__version__, "| requests =", requests.__version__)
+print("环境就绪:本课用【本地模拟 server + 真实 numpy 采样】讲解,不启动真实 vLLM。")
+'''), "✅ 第一段代码:设置 KMP 保护、导入依赖,并确认版本。")
+
+# ---------------------------------------------------------------- 第 1 节:直觉
+NB.md("## 1. 直觉与动机:客户端到底在「点什么菜」\n\n"
+      "上一课我们把模型「端上桌」——起了一个常驻服务,它对外暴露一套 **OpenAI 兼容 API**。\n"
+      "这一课我们坐在**顾客(客户端)**这一侧:网页、App、脚本都要通过这套协议和服务对话。\n\n"
+      "客户端点菜时,除了告诉厨师「要什么菜」(模型名 + 对话内容),还能提几个**口味偏好**:\n\n"
+      "| 偏好 | 类比 | 作用 |\n"
+      "|---|---|---|\n"
+      "| `temperature` | 厨师敢不敢创新 | 控制随机性,越大越「天马行空」 |\n"
+      "| `top_p` | 菜单给你看几道菜 | 核采样,只从最有把握的候选里选 |\n"
+      "| `max_tokens` | 最多做几盘 | 硬性上限,防止无限生成 |\n"
+      "| `stream` | 边做边上菜 | 是否流式返回(SSE) |\n\n"
+      "这些统称**采样参数(sampling parameters)**。它们直接决定模型输出的文本;而响应里的\n"
+      "`finish_reason` 则告诉我们**为什么停**(自然说到句号,还是被 max_tokens 掐断)。\n"
+      "本课就用 numpy 把「采样 + finish_reason」这套机制**从零写一遍**,再用 HTTP 协议跑通它。")
+
+# ---------------------------------------------------------------- 第 2 节:核心定义与公式
+NB.md("## 2. 核心定义与公式:先把每个符号搞清楚\n\n"
+      "LLM 生成文本是**自回归**的:每一步输出一个 logits 向量 $z \\in \\mathbb{R}^{V}$"
+      "($V$ 为词表大小),再把它转成概率并采样。三个采样参数分别作用于这个环节:\n\n"
+      "### 2.1 带温度的 softmax\n\n"
+      "$$ p_i = \\frac{\\exp(z_i / T)}{\\sum_{j=1}^{V} \\exp(z_j / T)} $$\n\n"
+      "温度 $T>0$ 控制分布的「尖锐程度」:$T$ 越小分布越尖(接近贪心),$T\\to\\infty$ 分布越平(趋近均匀)。\n\n"
+      "### 2.2 top_p 核采样(nucleus sampling)\n\n"
+      "先按概率降序排序,取「累计概率恰好超过 $p$」的最小候选集 $S_p$:\n\n"
+      "$$ S_p = \\left\\{ i \\in \\text{top-k} : \\sum_{j \\in \\text{排在前面的}} p_j \\le p \\right\\},"
+      "\\qquad \\tilde{p}_i = \\frac{p_i}{\\sum_{j \\in S_p} p_j} \\ \\forall i \\in S_p $$\n\n"
+      "即:只从概率质量最集中的「核」里采样,丢掉长尾冷门词。\n\n"
+      "### 2.3 max_tokens 与 finish_reason\n\n"
+      "`max_tokens` 是**硬性上限**。生成循环最多跑 `max_tokens` 步;每步若采到 EOS(<eos>)就**自然结束**,\n"
+      "否则跑到上限仍未结束就被**截断**。OpenAI 规范里 `finish_reason` 的关键取值:\n\n"
+      "| 取值 | 含义(OpenAI 官方定义) |\n"
+      "|---|---|\n"
+      "| `stop` | 模型遇到自然停止点或停止序列(natural stop point) |\n"
+      "| `length` | 达到请求指定的最大 token 数(maximum number of tokens) |\n"
+      "| `content_filter` | 内容被安全过滤拦截 |\n"
+      "| `tool_calls` | 模型调用了工具(函数调用) |\n\n"
+      "> 📄 来源:OpenAI [Chat Completions API Reference](https://platform.openai.com/docs/api-reference/chat) 与\n"
+      "> [streaming events](https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events)。\n\n"
+      "**关键符号表**:\n\n"
+      "| 符号 | 含义 | 形状 |\n"
+      "|---|---|---|\n"
+      "| $V$ | 词表大小 vocabulary size | 标量 |\n"
+      "| $z$ | 某一步的 logits | $(V,)$ |\n"
+      "| $p$ | softmax 后概率 | $(V,)$,和 $=1$ |\n"
+      "| $T$ | 温度 temperature | 标量 > 0 |\n"
+      "| $p_{top}$ | top_p 阈值 | 标量 ∈ (0,1] |\n"
+      "| $M$ | max_tokens 上限 | 标量正整数 |\n\n"
+      "下面把它写成代码,并**每步打印 shape 与维度含义**。")
+
+# ---------------------------------------------------------------- 第 3 节:最小实现
+NB.code(SAMPLE_CORE,
+         "🛠️ **最小实现 · 逐行推演**。`next_token_probs` 把 logits 变成可采样分布(带温度、top_p);\n"
+         "`generate` 做自回归循环并**真实判定** finish_reason:采到 <eos> 返回 `stop`,跑满 `max_tokens` 返回 `length`。")
+
+NB.code(D('''
+# 先只跑「一步」,逐行观察 next_token_probs 的中间量 shape(理解每一步在做什么)
+rng = np.random.default_rng(0)                       # 固定随机种子,保证可复现
+p = next_token_probs(rng, temperature=0.7, top_p=0.9)  # 得到第 0 步的采样分布
+print(f"p  shape = {p.shape}  <- (V,) 词表 {len(VOCAB)} 个 token,概率和为 {p.sum():.4f}")
+print(f"<eos> 的概率 = {p[EOS_ID]:.4f}  <- 每一步采到它的概率,决定 finish_reason=stop")
+# 观察温度如何改变分布:同一份 logits,温度越高分布越平
+for t in [0.1, 1.0, 3.0]:                            # 三种温度对比
+    pt = next_token_probs(np.random.default_rng(0), temperature=t, top_p=1.0)
+    print(f"  T={t:.1f}  ->  最大概率 = {pt.max():.3f} | 分布熵 = {-np.sum(pt*np.log(pt+1e-12)):.3f}")
+print("温度越高,最大概率越小、熵越大(分布越平)——这就是 temperature 的本质。")
+'''), "✅ **单步推演**。注意 `p` 是 $(V,)$ 的分布;温度越高,最大概率越小、熵越大,分布被「抹平」。")
+
+NB.code(D('''
+# 用 generate 做完整生成,观察返回的 finish_reason 是否为「真实判定」
+for seed in [0, 1, 2, 3]:                            # 换 4 个种子,展示不同生成结果
+    text, tokens, finish = generate("vLLM", temperature=0.7, top_p=0.9, max_tokens=8, seed=seed)
+    print(f"seed={seed}  finish_reason={finish:<6}  生成={tokens}  文本=「{text}」")
+'''), "✅ 每一次生成的 `finish_reason` 都由**真实采样结果**决定:采到 <eos> 就是 `stop`,没采到就是 `length`。")
+
+# ---------------------------------------------------------------- 第 4 节:finish_reason 真实判定
+NB.md("## 4. 真实 finish_reason 判定:不是看 max_tokens 的大小\n\n"
+      "旧版伪逻辑是 `reason = \"length\" if max_tokens<=3 else \"stop\"`——它只看 `max_tokens` 这个**入参**,\n"
+      "和生成结果完全无关,是**错的**。真正的判定只取决于**生成过程**:\n\n"
+      "```\n"
+      "if 采到了 <eos>:      finish_reason = \"stop\"    # 模型自然说到句号\n"
+      "else (跑满 M 步):     finish_reason = \"length\"  # 被 max_tokens 掐断\n"
+      "```\n\n"
+      "换句话说,`max_tokens` 只是**给了一个上限**,而 `length` 意味着「真的撞到了这个上限」。"
+      "下面验证:同一组 `max_tokens`,不同种子会给出不同 finish_reason——证明它与 max_tokens 大小无关。")
+
+NB.code(D('''
+# 关键实验:同一个 max_tokens,不同随机种子 -> 不同 finish_reason(证明是真实判定,非硬编码)
+for mt in [4, 8, 16]:                                # 三种 max_tokens 上限
+    results = [generate("vLLM", temperature=0.7, top_p=0.9, max_tokens=mt, seed=s)[2]
+               for s in range(20)]                   # 每种跑 20 个种子,取 finish_reason
+    stops = results.count("stop")                    # 统计自然结束的次数
+    lengths = results.count("length")                # 统计被截断的次数
+    print(f"max_tokens={mt:2d}:  stop×{stops:2d}  length×{lengths:2d}  "
+          f"(同一个 max_tokens 会同时出现两种 finish_reason)")
+'''), "✅ **数值验证**。同一个 `max_tokens`,不同种子既有 `stop` 也有 `length`——\n"
+     "证明 finish_reason 由**实际是否采到 EOS** 决定,而不是由 max_tokens 大小硬编码。")
+
+# ---------------------------------------------------------------- 第 5 节:协议验证
+NB.md("## 5. 协议验证:一次真实的 chat/completions 请求\n\n"
+      "把上面的采样函数接进一个**迷你 HTTP server**(模拟 vLLM 对外提供的 OpenAI 兼容服务),\n"
+      "再用 `requests` 发一次真实请求。你会看到:一次对话 = 发一个 JSON、收一个 JSON。\n\n"
+      "请求体结构(`POST /v1/chat/completions`):\n\n"
+      "```json\n"
+      "{\n"
+      "  \"model\": \"mock-chat\",\n"
+      "  \"messages\": [{\"role\": \"system\", \"content\": \"...\"},\n"
+      "                {\"role\": \"user\", \"content\": \"...\"}],\n"
+      "  \"temperature\": 0.7, \"top_p\": 0.9, \"max_tokens\": 8\n"
+      "}\n"
+      "```")
+
+NB.code(MOCK_CHAT, "🔧 迷你 chat server:解析 `messages`、调用 `generate`、支持 SSE 流,`finish_reason` 是真实判定。")
+
+NB.code(D('''
+server, thread = start_chat_mock()                   # 启动迷你 chat server(后台线程)
+try:
+    url = f"http://127.0.0.1:{CHAT_PORT}/v1/chat/completions"   # 目标端点
+    payload = {                                       # 组装 OpenAI 规范的请求体
+        "model": "mock-chat",                         # 模型名
+        "messages": [                                 # 对话消息(带 role 角色)
+            {"role": "system", "content": "你是一个乐于助人的助手"},
+            {"role": "user", "content": "请介绍一下 vLLM"},
+        ],
+        "temperature": 0.7, "top_p": 0.9, "max_tokens": 8,   # 采样参数
+    }
+    resp = requests.post(url, json=payload, timeout=5).json()   # 发请求并解析响应 JSON
+    print("object:", resp["object"], "| model:", resp["model"])
+    print("回复:", resp["choices"][0]["message"]["content"])
+    print("finish_reason:", resp["choices"][0]["finish_reason"])
+    print("usage:", resp["usage"])
+finally:
+    server.shutdown(); server.server_close()          # 关闭 server,不留端口
+    print("[已关闭模拟 server]")
+'''), "🎯 **协议验证**。`choices[0].message.content` 是模型说的话,`finish_reason` 是真实判定,`usage` 记录 token 数。")
+
+# ---------------------------------------------------------------- 第 6 节:SSE 流式
+NB.md("## 6. SSE 流式协议:打字机效果从哪来\n\n"
+      "非流式请求要等**全部**生成完才返回,长回答体验差。OpenAI 兼容接口支持 `stream=True`:\n"
+      "服务端用 **SSE(Server-Sent Events)** 一个 token 一个 token 推送,格式为 `data: {json}\\n\\n`,\n"
+      "最后以 `data: [DONE]` 结束。客户端可以边收边显示,像打字机一样。\n\n"
+      "SSE 的每个 chunk 是 `chat.completion.chunk`,字段 `choices[0].delta.content` 是增量文本,"
+      "`choices[0].finish_reason` 在最后一个 chunk 才给出真实值。")
+
+NB.code(D('''
+server, thread = start_chat_mock()                   # 重新启动(上一步已关闭)
+try:
+    url = f"http://127.0.0.1:{CHAT_PORT}/v1/chat/completions"   # 同一端点
+    payload = {"model": "mock-chat", "stream": True,   # 开启流式
+               "messages": [{"role": "user", "content": "vLLM"}],
+               "max_tokens": 6}
+    collected = []                                    # 收集所有增量文本
+    finish = None                                     # 最终的 finish_reason
+    with requests.post(url, json=payload, stream=True, timeout=10) as r:  # stream=True 逐行读
+        for line in r.iter_lines():                   # 迭代 SSE 的每一行
+            if not line:                              # 空行 = SSE 的块分隔符,跳过
+                continue
+            line = line.decode("utf-8")               # bytes -> str
+            if line.startswith("data:"):              # 命中 data: 前缀
+                data = line[len("data:"):].strip()    # 去掉 data: 前缀
+                if data == "[DONE]":                  # 流终止标记
+                    print("\\n[流结束 DONE]")          # 打印结束提示
+                    break                             # 退出循环
+                chunk = json.loads(data)              # 解析 chunk JSON
+                delta = chunk["choices"][0]["delta"].get("content", "")   # 取增量文本
+                collected.append(delta)               # 收集增量
+                fr = chunk["choices"][0].get("finish_reason")             # 取 finish_reason
+                if fr:                                # 非空才记录(中间 chunk 为 null)
+                    finish = fr                       # 记录真实 finish_reason
+                print(delta, end="", flush=True)      # 逐 token 打印,模拟打字机
+    print("\\n最终拼接:", "".join(collected))          # 展示拼好的完整文本
+    print("finish_reason:", finish)                   # 展示流式结束的真实原因
+finally:
+    server.shutdown(); server.server_close()          # 关闭 server
+    print("[已关闭模拟 server]")
+'''), "🎬 **SSE 流式验证**。字符一个接一个蹦出来——这就是 ChatGPT 网页版「打字机」效果的原理;"
+     "`finish_reason` 在最后一个 chunk 才出现。")
+
+# ---------------------------------------------------------------- 第 7 节:真实规模数字
+NB.md("## 7. 真实规模数字:token 计费与部署量级\n\n"
+      "生产环境的客户端通常要**按 token 计费**。OpenAI 的 `usage` 字段给出 `prompt_tokens`(输入)、\n"
+      "`completion_tokens`(输出)与 `total_tokens`(总计)。真实 LLM 服务的输出量级:\n\n"
+      "- 一句短回复:几十到上百 token;\n"
+      "- 一段长文 / 代码:几百到上千 token;\n"
+      "- 一次 API 调用计费 = (输入 token × 输入单价 + 输出 token × 输出单价)。\n\n"
+      "由于输出 token 单价通常高于输入,`finish_reason='length'`(被截断的冗长输出)往往是账单超支的元凶——\n"
+      "这也是为什么生产客户端要**认真处理 finish_reason**。")
+
+NB.code(D('''
+# 用一次生成的实际 token 数计算成本(模拟真实计费)
+in_price = 0.002 / 1000      # 输入单价:0.002 元 / 千 token
+out_price = 0.008 / 1000     # 输出单价:0.008 元 / 千 token(输出通常更贵)
+
+text, tokens, finish = generate("介绍一下 vLLM", temperature=0.7, top_p=0.9,
+                                max_tokens=64, seed=5)      # 一次真实生成
+prompt_tok = 12            # 假设 prompt 被切分成 12 个 token
+completion_tok = len(tokens)     # 实际生成的 token 数
+cost = prompt_tok * in_price + completion_tok * out_price   # 本次调用成本(元)
+print(f"prompt_tokens={prompt_tok}  completion_tokens={completion_tok}  finish_reason={finish}")
+print(f"本次调用成本 = {cost:.6f} 元")
+print(f"若并发 1000 次同样请求,总成本 ≈ {cost*1000:.3f} 元")
+'''), "✅ **真实量级**。把 token 数乘上单价就是成本;`finish_reason='length'` 的失控输出会显著抬高账单。")
+
+# ---------------------------------------------------------------- 第 8 节:与 vLLM 工程实现
+NB.md("## 8. 与 vLLM 工程实现的关系:协议背后的真实代码\n\n"
+      "上面这套「采样 + finish_reason + SSE」并非玩具——vLLM 生产实现做的是同一件事,只是规模更大:\n\n"
+      "1. **OpenAI 兼容入口**:`vllm serve` 启动的 HTTP server 实现 `vllm/entrypoints/openai/` 下的\n"
+      "   `/v1/chat/completions`、`/v1/completions` 等端点(见\n"
+      "   [vLLM OpenAI-Compatible Server 文档](https://docs.vllm.ai/en/stable/serving/online_serving/openai_compatible_server));\n"
+      "2. **采样参数**:vLLM 的 `SamplingParams` 定义了 `temperature` / `top_p` / `max_tokens` 等,\n"
+      "   与 OpenAI 协议对齐(还额外支持 `top_k`、`repetition_penalty` 等扩展参数);\n"
+      "3. **finish_reason**:vLLM 在引擎内部跟踪每个序列是否生成 EOS 或达到 max_len,\n"
+      "   从而产出与 OpenAI 规范一致的 `stop` / `length`;`max_tokens` 也决定了引擎为请求预留的\n"
+      "   KV cache 空间——这正是第 50 课「指标监控」里 `request_generation_tokens` 直方图的来源;\n"
+      "4. **SSE 流式**:vLLM 用 streaming response 逐 token 推送,`delta.content` 是增量,"
+      "   最后一个 chunk 给真实 `finish_reason`。\n\n"
+      "> 📄 参考:OpenAI [Chat Completions API](https://platform.openai.com/docs/api-reference/chat) 与\n"
+      "> [vLLM 官方文档](https://docs.vllm.ai)。")
+
+# ---------------------------------------------------------------- 第 9 节:Streamlit app
+NB.md("## 9. 配套 Streamlit 演示:调参数,实时看采样与 finish_reason\n\n"
+      "运行同目录下的 `app_49_api.py`,可以拖动 **temperature / top_p / max_tokens**,\n"
+      "当场生成一段真实采样结果,实时显示 `finish_reason` 与采样概率分布——完全本地计算,不依赖网络:\n\n"
+      "```\n"
+      "D:\\uv_envs\\uv_cuda\\Scripts\\python.exe -m streamlit run app_49_api.py\n"
+      "```\n\n"
+      "浏览器打开 **http://localhost:8501**。建议:把 temperature 从 0 拖到 2 看分布如何变平;\n"
+      "把 max_tokens 拖小,观察 `finish_reason` 更多变成 `length`。完整源码如下(与 app 文件一字不差):")
+
+NB.code(f"%%writefile {APP_FILE}\n" + APP_49,
+        "📜 这就是 `app_49_api.py` 的完整源码。notebook 与 app 共用同一套采样函数,保证讲解与演示一致。")
+
+guard = (
+    "try:\n"
+    "    import streamlit as st\n"
+    "    _IS_STREAMLIT = bool(st.runtime.exists())\n"
+    "except Exception:\n"
+    "    _IS_STREAMLIT = False\n\n"
+    "if _IS_STREAMLIT:\n"
+    "    # 在 streamlit 运行时,直接执行上面 %%writefile 写入的 app 源码\n"
+    "    exec(open(\"" + APP_FILE + "\", encoding=\"utf-8\").read())\n"
+    "else:\n"
+    "    print(\"当前不是 streamlit 环境,跳过执行本 App。\")\n"
+    "    print(\"    请运行: D:\\\\uv_envs\\\\uv_cuda\\\\Scripts\\\\python.exe -m streamlit run " + APP_FILE + "\")\n"
+)
+NB.code(guard, "▶️ 此 cell 在 streamlit 环境中才真正运行 app;在普通 notebook 中仅作展示并给出运行命令。")
+
+# ---------------------------------------------------------------- 小结
+wrapup(NB,
+    summary=[
+        "客户端通过 OpenAI 兼容接口与服务对话:一次请求 = 发一个 JSON、收一个 JSON",
+        "带温度的 softmax 控制随机性(T→0 退化为贪心);top_p 核采样裁剪候选集;max_tokens 是硬性上限",
+        "finish_reason 由真实生成决定:采到 <eos> -> stop,跑满 max_tokens -> length(不是按 max_tokens 大小硬编码)",
+        "stream=True 用 SSE 逐 token 推送,格式为 data: {...}\\n\\n,以 data: [DONE] 结束",
+        "生产客户端必须处理 finish_reason:length 表示输出被截断,常与超支/续写逻辑相关",
+    ],
+    practice=[
+        "给 generate 增加一个 top_k 参数(只从概率最高的 k 个里采样),与 top_p 对比效果",
+        "统计跑 100 个种子时 finish_reason=stop 的概率随 max_tokens 的变化,画出曲线并解释",
+        "把 mock server 的 SSE 改为一次推送两个字符(模拟 chunk 粒度),验证 iter_lines 解析仍正确",
+        "用 requests 同时发 5 个并发 chat 请求,各自统计 usage 与 finish_reason,验证服务端并行处理",
+    ],
+    links=[
+        ("vLLM OpenAI-Compatible Server", "https://docs.vllm.ai/en/stable/serving/online_serving/openai_compatible_server"),
+        ("OpenAI Chat Completions API", "https://platform.openai.com/docs/api-reference/chat"),
+        ("OpenAI Chat Completions streaming events", "https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events"),
+        ("openai-python 客户端", "https://github.com/openai/openai-python"),
+    ])
+
+NB.save(str(Path(CH08) / "49_openai_api.ipynb"))
+
+app_path = Path(CH08) / APP_FILE
+app_path.write_text(APP_49 + "\n", encoding="utf-8")
+print(f"[ok] {app_path}")

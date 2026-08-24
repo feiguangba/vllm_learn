@@ -1,0 +1,17 @@
+{
+  "n_ops_model": 89,
+  "n_ops_layer": 7,
+  "launch_us": -2.413924958091229,
+  "hbm_roundtrip_us": 8.0,
+  "cut_rates": [
+    0.3,
+    0.5,
+    0.6
+  ],
+  "save_us": [
+    82.47590217925608,
+    139.57460368797183,
+    168.1239544423297
+  ],
+  "note": "eager \u4fa7 (kernel \u6570\u3001\u8017\u65f6) \u4e3a\u672c\u673a\u5b9e\u6d4b; compiled \u4fa7\u4e3a\u878d\u5408\u89c4\u5219\u4f30\u7b97"
+}

@@ -1,0 +1,8 @@
+{
+  "launch_us": 14.127,
+  "kernel_us": 0.136,
+  "gap_pct": 99.05,
+  "n_kernels": 200,
+  "speedup": 104.87,
+  "note": "真实 GPU 微基准: N 次小 matmul vs 1 次合并 batched matmul, 差值即 N×t_l"
+}

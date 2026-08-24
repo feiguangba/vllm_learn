@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Awesome-pyecharts</title>
+                <script type="text/javascript" src="https://assets.pyecharts.org/assets/v6/echarts.min.js"></script>
+
+    
+</head>
+<body >
+    <div id="90fe2a1082714522a7b3008f2b24aabd" class="chart-container" style="width:900px; height:500px; "></div>
+    <script>
+        var chart_90fe2a1082714522a7b3008f2b24aabd = echarts.init(
+            document.getElementById('90fe2a1082714522a7b3008f2b24aabd'), 'white', {renderer: 'canvas', locale: 'ZH'});
+        var option_90fe2a1082714522a7b3008f2b24aabd = {
+    "animation": true,
+    "animationThreshold": 2000,
+    "animationDuration": 1000,
+    "animationEasing": "cubicOut",
+    "animationDelay": 0,
+    "animationDurationUpdate": 300,
+    "animationEasingUpdate": "cubicOut",
+    "animationDelayUpdate": 0,
+    "aria": {
+        "enabled": false
+    },
+    "series": [
+        {
+            "type": "scatter",
+            "name": "\u65b9\u6cd5",
+            "symbolSize": 20,
+            "data": [
+                [
+                    2.0,
+                    10.0
+                ],
+                [
+                    1.0,
+                    9.3
+                ],
+                [
+                    1.0,
+                    9.0
+                ],
+                [
+                    0.5,
+                    8.2
+                ],
+                [
+                    0.5,
+                    8.0
+                ],
+                [
+                    0.5,
+                    5.5
+                ],
+                [
+                    0.375,
+                    6.5
+                ]
+            ],
+            "label": {
+                "show": true,
+                "position": "top",
+                "margin": 8,
+                "formatter": function(p){var N=['fp16 \u57fa\u7ebf', 'FP8 E4M3', 'int8 W8A8', 'GPTQ int4', 'AWQ int4', 'RTN int4', 'int3 GPTQ'];return N[p.dataIndex];},
+                "richInheritPlainLabel": true,
+                "valueAnimation": false
+            },
+            "silent": false
+        }
+    ],
+    "legend": [
+        {
+            "data": [
+                "\u65b9\u6cd5"
+            ],
+            "selected": {},
+            "show": true,
+            "padding": 5,
+            "itemGap": 10,
+            "itemWidth": 25,
+            "itemHeight": 14,
+            "backgroundColor": "transparent",
+            "borderColor": "#ccc",
+            "borderRadius": 0,
+            "pageButtonItemGap": 5,
+            "pageButtonPosition": "end",
+            "pageFormatter": "{current}/{total}",
+            "pageIconColor": "#2f4554",
+            "pageIconInactiveColor": "#aaa",
+            "pageIconSize": 15,
+            "animationDurationUpdate": 800,
+            "selector": false,
+            "selectorPosition": "auto",
+            "selectorItemGap": 7,
+            "selectorButtonGap": 10,
+            "triggerEvent": false
+        }
+    ],
+    "tooltip": {
+        "show": true,
+        "trigger": "item",
+        "triggerOn": "mousemove|click",
+        "axisPointer": {
+            "type": "line"
+        },
+        "showContent": true,
+        "alwaysShowContent": false,
+        "showDelay": 0,
+        "hideDelay": 100,
+        "enterable": false,
+        "confine": false,
+        "appendToBody": false,
+        "transitionDuration": 0.4,
+        "displayTransition": true,
+        "textStyle": {
+            "fontSize": 14,
+            "richInheritPlainLabel": true
+        },
+        "borderWidth": 0,
+        "padding": 5,
+        "order": "seriesAsc"
+    },
+    "xAxis": [
+        {
+            "type": "value",
+            "name": "\u5b57\u8282/\u53c2\u6570",
+            "show": true,
+            "scale": false,
+            "nameLocation": "end",
+            "nameGap": 15,
+            "nameTruncate": {},
+            "nameMoveOverlap": true,
+            "inverse": false,
+            "offset": 0,
+            "splitNumber": 5,
+            "min": 0.3,
+            "minInterval": 0,
+            "silent": false,
+            "triggerEvent": false,
+            "splitLine": {
+                "show": true,
+                "lineStyle": {
+                    "show": false
+                }
+            },
+            "animation": true,
+            "animationThreshold": 2000,
+            "animationDuration": 1000,
+            "animationEasing": "cubicOut",
+            "animationDelay": 0,
+            "animationDurationUpdate": 300,
+            "animationEasingUpdate": "cubicOut",
+            "animationDelayUpdate": 0,
+            "data": [
+                2.0,
+                1.0,
+                1.0,
+                0.5,
+                0.5,
+                0.5,
+                0.375
+            ]
+        }
+    ],
+    "yAxis": [
+        {
+            "name": "\u7cbe\u5ea6\u5206",
+            "show": true,
+            "scale": false,
+            "nameLocation": "end",
+            "nameGap": 15,
+            "nameTruncate": {},
+            "nameMoveOverlap": true,
+            "inverse": false,
+            "offset": 0,
+            "splitNumber": 5,
+            "min": 4,
+            "max": 10.5,
+            "minInterval": 0,
+            "silent": false,
+            "triggerEvent": false,
+            "splitLine": {
+                "show": true,
+                "lineStyle": {
+                    "show": false
+                }
+            },
+            "animation": true,
+            "animationThreshold": 2000,
+            "animationDuration": 1000,
+            "animationEasing": "cubicOut",
+            "animationDelay": 0,
+            "animationDurationUpdate": 300,
+            "animationEasingUpdate": "cubicOut",
+            "animationDelayUpdate": 0
+        }
+    ],
+    "title": [
+        {
+            "show": true,
+            "text": "\u91cf\u5316\u65b9\u6cd5\u5e15\u7d2f\u6258\u56fe:\u6a2a\u8f74\u663e\u5b58(\u5b57\u8282/\u53c2\u6570,\u8d8a\u5c0f\u8d8a\u597d),\u7eb5\u8f74\u7cbe\u5ea6\u5206",
+            "target": "blank",
+            "subtarget": "blank",
+            "padding": 5,
+            "itemGap": 10,
+            "textAlign": "auto",
+            "textVerticalAlign": "auto",
+            "triggerEvent": false
+        }
+    ]
+};
+        chart_90fe2a1082714522a7b3008f2b24aabd.setOption(option_90fe2a1082714522a7b3008f2b24aabd);
+    </script>
+</body>
+</html>

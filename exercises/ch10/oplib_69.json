@@ -1,0 +1,20 @@
+[
+  {
+    "op": "矩阵乘",
+    "lib_ms": 0.127,
+    "triton_ms": 0.165,
+    "inductor_ms": 0.127
+  },
+  {
+    "op": "逐元素链",
+    "lib_ms": 3.031,
+    "triton_ms": 3.031,
+    "inductor_ms": 0.407
+  },
+  {
+    "op": "softmax",
+    "lib_ms": 1.042,
+    "triton_ms": 1.049,
+    "inductor_ms": 0.453
+  }
+]

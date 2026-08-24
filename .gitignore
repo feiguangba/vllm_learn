@@ -1,0 +1,23 @@
+# aios 是 clone 的参考代码,不提交
+aios/
+
+# Python 缓存
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+.claude/
+
+# marimo 会话临时文件
+__marimo__/
+
+# 临时/调试脚本
+test*.py
+*_test.py
+
+# 运行产物(可选保留的数据 JSON 除外)
+*.log

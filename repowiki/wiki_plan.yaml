@@ -1,0 +1,145 @@
+# wiki_plan.yaml — VLLM_learn/repowiki 架构文档计划
+# 依据: vendor/vllm (vLLM v0.23.0 dev/main, commit 967e104)
+# 路径约定: 文档中 `文件:行号` 相对 vendor/vllm/vllm/ 包根目录
+
+repo: vendor/vllm
+version: v0.23.0-dev (main @ 967e104)
+
+wiki:
+  - id: 01
+    file: 01_system_architecture.md
+    title: vLLM V1 系统架构:多进程拓扑与事件循环
+    status: done
+    sources:
+      - vllm/v1/engine/core.py          # EngineCore 事件循环 / run_busy_loop
+      - vllm/v1/engine/core_client.py   # 前端↔引擎 ZMQ 客户端族
+      - vllm/v1/engine/llm_engine.py    # LLMEngine 主进程封装
+      - vllm/v1/engine/async_llm.py     # AsyncLLM 异步接口
+      - vllm/v1/executor/multiproc_executor.py  # 多进程 Worker 执行器
+      - vllm/v1/worker/gpu_worker.py    # GPU Worker
+    highlights:
+      - 三层进程模型: 前端 / EngineCore / Worker
+      - ZMQ + shm_broadcast + torch.multiprocessing 三通道
+      - run_busy_loop 事件循环与请求旅程
+
+  - id: 02
+    file: 02_PagedAttention_KVCache.md
+    title: PagedAttention 与 KV Cache 管理
+    status: done
+    sources:
+      - vllm/v1/core/block_pool.py            # BlockPool / BlockHashToBlockMap
+      - vllm/v1/core/kv_cache_manager.py      # KVCacheManager
+      - vllm/v1/core/single_type_kv_cache_manager.py
+      - vllm/v1/core/kv_cache_utils.py        # KVCacheBlock / 哈希 / 容量
+      - vllm/v1/core/kv_cache_coordinator.py  # 多组协调
+      - vllm/v1/kv_cache_interface.py         # KV cache spec 类型
+      - vllm/config/cache.py                  # DEFAULT_BLOCK_SIZE=16
+      - vllm/v1/worker/gpu_worker.py          # determine_available_memory
+    highlights:
+      - 16-token 块 / 物理虚拟映射 / refcount 回收
+      - 容量公式: available // page_size // group_size
+      - 链式哈希前缀缓存 + COW
+
+  - id: 03
+    file: 03_Scheduler.md
+    title: V1 调度器:token 预算与连续批处理
+    status: done
+    sources:
+      - vllm/v1/core/sched/scheduler.py       # schedule / 抢占 / update_from_output
+      - vllm/v1/core/sched/interface.py       # SchedulerInterface / PauseState
+      - vllm/v1/core/sched/request_queue.py   # SchedulingPolicy
+      - vllm/v1/core/sched/output.py          # SchedulerOutput
+      - vllm/v1/request.py                    # RequestStatus
+    highlights:
+      - 无独立 prefill/decode 阶段, 按 token 预算调度
+      - recompute 抢占 + last_sched_seq 延迟释放
+      - 连续批处理与请求生命周期
+
+  - id: 04
+    file: 04_LLMEngine.md
+    title: LLMEngine:输入渲染与输出规格化
+    status: done
+    sources:
+      - vllm/v1/engine/llm_engine.py
+      - vllm/v1/engine/async_llm.py
+      - vllm/v1/engine/input_processor.py
+      - vllm/v1/engine/output_processor.py
+      - vllm/v1/engine/detokenizer.py
+      - vllm/v1/engine/parallel_sampling.py
+      - vllm/v1/engine/logprobs.py
+      - vllm/entrypoints/llm.py
+      - vllm/entrypoints/openai/api_server.py
+    highlights:
+      - InputProcessor 输入渲染 / OutputProcessor 输出聚合
+      - 增量 detokenizer / parallel sampling / logprobs
+      - 离线 LLM 与在线 OpenAI 入口
+
+  - id: 05
+    file: 05_ModelRunner_CUDAGraph.md
+    title: ModelRunner 与 CUDA Graph
+    status: done
+    sources:
+      - vllm/v1/worker/gpu/model_runner.py    # V2 GPUModelRunner
+      - vllm/v1/worker/gpu_model_runner.py    # V1 GPUModelRunner
+      - vllm/v1/worker/gpu_worker.py          # runner 选择 / profile
+      - vllm/config/compilation.py            # CompilationMode
+      - vllm/compilation/                     # VllmBackend / CUDAGraphWrapper
+      - vllm/v1/cudagraph_dispatcher.py
+    highlights:
+      - V1 vs V2 runner 差异与选择链
+      - CUDA Graph 捕获/重放/内存池 / shape 固定
+      - torch.compile 层级与编译缓存
+
+  - id: 06
+    file: 06_Quantization.md
+    title: 量化体系:FP8 / GPTQ / AWQ
+    status: done
+    sources:
+      - vllm/model_executor/layers/quantization/__init__.py
+      - vllm/model_executor/layers/quantization/fp8.py
+      - vllm/model_executor/layers/quantization/auto_gptq.py
+      - vllm/model_executor/layers/quantization/auto_awq.py
+      - vllm/model_executor/layers/quantization/base_config.py
+      - vllm/model_executor/kernels/linear/__init__.py
+      - vllm/model_executor/layers/linear.py
+    highlights:
+      - 配置→方法→kernel 三层抽象
+      - FP8 e4m3 / GPTQ desc_act / AWQ scaling
+      - kernel 优先级选择链
+
+  - id: 07
+    file: 07_TP_PP_DP.md
+    title: 张量 / 流水 / 数据并行
+    status: done
+    sources:
+      - vllm/distributed/parallel_state.py
+      - vllm/distributed/device_communicators/pynccl.py
+      - vllm/distributed/device_communicators/custom_all_reduce.py
+      - vllm/distributed/device_communicators/cuda_communicator.py
+      - vllm/model_executor/layers/linear.py
+      - vllm/model_executor/models/llama.py
+    highlights:
+      - initialize_model_parallel 组切分 / GroupCoordinator
+      - Column/Row/QKV/Merged 并行层切分
+      - PyNccl / CustomAllReduce / 七级优先级链
+
+  - id: 08
+    file: 08_Attention_Kernels.md
+    title: Attention 后端与 Kernel
+    status: done
+    sources:
+      - vllm/v1/attention/backend.py
+      - vllm/v1/attention/backends/registry.py
+      - vllm/v1/attention/backends/flash_attn.py
+      - vllm/platforms/cuda.py
+      - vllm/v1/attention/ops/paged_attn.py
+      - vllm/v1/worker/utils.py
+    highlights:
+      - AttentionBackend ABC 能力声明
+      - 后端注册与平台优先级 / MLA 家族
+      - Metadata 体系与 PagedAttention 寻址
+
+meta:
+  style_ref: 01_system_architecture.md   # 全部文档的风格基线
+  line_numbering: 相对 vendor/vllm/vllm/ 包根
+  status_field: done | todo

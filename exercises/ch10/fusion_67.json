@@ -1,0 +1,23 @@
+[
+  {
+    "scenario": "elementwise 链",
+    "eager_kernels": 6,
+    "compiled_kernels": 1,
+    "eager_ms": 3.03,
+    "compiled_ms": 0.457
+  },
+  {
+    "scenario": "broadcast 乘加",
+    "eager_kernels": 4,
+    "compiled_kernels": 1,
+    "eager_ms": 0.984,
+    "compiled_ms": 0.483
+  },
+  {
+    "scenario": "softmax",
+    "eager_kernels": 3,
+    "compiled_kernels": 1,
+    "eager_ms": 1.036,
+    "compiled_ms": 0.455
+  }
+]

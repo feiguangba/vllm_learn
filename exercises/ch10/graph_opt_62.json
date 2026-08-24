@@ -1,0 +1,23 @@
+[
+  {
+    "chain_len": 4,
+    "eager_kernels": 7,
+    "compiled_kernels": 1,
+    "eager_ms": 5.262,
+    "compiled_ms": 0.408
+  },
+  {
+    "chain_len": 6,
+    "eager_kernels": 11,
+    "compiled_kernels": 1,
+    "eager_ms": 8.027,
+    "compiled_ms": 0.454
+  },
+  {
+    "chain_len": 8,
+    "eager_kernels": 15,
+    "compiled_kernels": 1,
+    "eager_ms": 10.683,
+    "compiled_ms": 0.912
+  }
+]

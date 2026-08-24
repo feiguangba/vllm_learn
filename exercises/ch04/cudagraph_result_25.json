@@ -1,0 +1,8 @@
+{
+  "n_ops": 89,
+  "ms_eager": 0.6264466664288193,
+  "ms_replay": 0.5779576666342716,
+  "launch_us": 14.127,
+  "save_per_step_ms": 1.257303,
+  "note": "eager/replay \u4e3a\u672c\u673a CPU \u5b9e\u6d4b; save \u4e3a\u57fa\u4e8e\u542f\u52a8\u624b\u7eed\u8d39\u7684\u4f30\u7b97"
+}
