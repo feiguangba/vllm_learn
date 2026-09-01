@@ -1,3 +1,5 @@
+
+
 # VLLM_learn · 图解 vLLM 推理引擎
 
 > 用 **图解 + 动手实验** 的方式,从零到一理解 vLLM 推理引擎:KV Cache、PagedAttention、Continuous Batching、CUDA Graph、量化、分布式并行与 Attention Kernel。
@@ -140,7 +142,7 @@
 
 ```bash
 uv venv uv_cuda --python 3.12
-uv pip install --python uv_cuda/Scripts/python.exe torch pyecharts streamlit plotly numpy pandas matplotlib ipykernel nbformat
+uv pip install --python uv_cuda/Scripts/python.exe torch pyecharts streamlit plotly numpy pandas matplotlib ipykernel nbformat jupyterlab
 ```
 
 ### 运行 notebook
