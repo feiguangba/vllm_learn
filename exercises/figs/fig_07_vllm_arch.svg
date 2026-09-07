@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 800" width="1400" height="800" font-family="Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/></marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F59E0B"/></marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker>
+    <marker id="arrGr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#10B981"/></marker>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#F59E0B" flood-opacity="0.45"/></filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.10"/></filter>
+  </defs>
+  <rect width="1400" height="800" fill="#FFFFFF"/>
+
+  <text x="48" y="52" font-size="20" font-weight="bold" fill="#1E293B">vLLM 系统架构总览</text>
+
+  <!-- 请求/响应 主箭头车道 -->
+  <line x1="112" y1="100" x2="112" y2="700" stroke="#7C3AED" stroke-width="3" marker-end="url(#arrP)"/>
+  <text x="96" y="400" font-size="12" fill="#7C3AED" text-anchor="middle" transform="rotate(-90 96 400)">请求 →</text>
+  <line x1="136" y1="700" x2="136" y2="100" stroke="#10B981" stroke-width="3" marker-end="url(#arrGr)"/>
+  <text x="152" y="400" font-size="12" fill="#10B981" text-anchor="middle" transform="rotate(90 152 400)">响应（SSE）→</text>
+
+  <!-- ============ L1 客户端层 ============ -->
+  <rect x="160" y="88" width="1160" height="76" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="184" y="126" font-size="14" font-weight="bold" fill="#475569">客户端层</text>
+  <rect x="300" y="104" width="200" height="44" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="400" y="131" font-size="13" fill="#1E293B" text-anchor="middle">OpenAI Python SDK</text>
+  <rect x="560" y="104" width="200" height="44" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="660" y="131" font-size="13" fill="#1E293B" text-anchor="middle">curl · HTTP</text>
+  <rect x="820" y="104" width="200" height="44" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="920" y="131" font-size="13" fill="#1E293B" text-anchor="middle">Web 应用</text>
+
+  <!-- L1→L2 连接 -->
+  <line x1="690" y1="164" x2="690" y2="176" stroke="#7C3AED" stroke-width="2" marker-end="url(#arrP)"/>
+  <line x1="730" y1="176" x2="730" y2="164" stroke="#10B981" stroke-width="2" marker-end="url(#arrGr)"/>
+
+  <!-- ============ L2 API Server 层 ============ -->
+  <rect x="160" y="180" width="1160" height="104" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="184" y="210" font-size="14" font-weight="bold" fill="#475569">API Server 层（OpenAI 兼容）</text>
+  <rect x="300" y="222" width="280" height="52" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="440" y="243" font-size="13" fill="#1E293B" text-anchor="middle">FastAPI · OpenAI Protocol</text>
+  <text x="440" y="262" font-size="10" fill="#475569" text-anchor="middle">/v1/chat/completions · /v1/completions</text>
+  <rect x="620" y="222" width="200" height="52" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="720" y="253" font-size="13" fill="#1E293B" text-anchor="middle">Tokenizer 编解码</text>
+  <rect x="860" y="222" width="240" height="52" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+  <text x="980" y="253" font-size="13" fill="#1E293B" text-anchor="middle">SSE 流式响应</text>
+
+  <!-- L2→L3 连接 -->
+  <line x1="690" y1="284" x2="690" y2="296" stroke="#7C3AED" stroke-width="2" marker-end="url(#arrP)"/>
+  <line x1="730" y1="296" x2="730" y2="284" stroke="#10B981" stroke-width="2" marker-end="url(#arrGr)"/>
+
+  <!-- ============ L3 EngineCore ============ -->
+  <rect x="160" y="300" width="1160" height="300" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="184" y="330" font-size="14" font-weight="bold" fill="#475569">EngineCore 引擎核心</text>
+
+  <!-- Scheduler -->
+  <g filter="url(#glow)">
+    <rect x="200" y="370" width="180" height="120" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="290" y="418" font-size="15" font-weight="bold" fill="#1E293B" text-anchor="middle">Scheduler</text>
+  <text x="290" y="444" font-size="11" fill="#475569" text-anchor="middle">每步迭代调度</text>
+  <text x="290" y="462" font-size="11" fill="#475569" text-anchor="middle">组批 · 抢占 · 恢复</text>
+
+  <!-- 双向箭头 -->
+  <line x1="384" y1="410" x2="462" y2="410" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <line x1="462" y1="440" x2="384" y2="440" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <text x="424" y="396" font-size="10" fill="#475569" text-anchor="middle">物理块分配 / 回收</text>
+
+  <!-- KV Cache Manager -->
+  <g filter="url(#glow)">
+    <rect x="470" y="370" width="240" height="120" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="590" y="405" font-size="14" font-weight="bold" fill="#1E293B" text-anchor="middle">KV Cache Manager</text>
+  <text x="590" y="428" font-size="14" font-weight="bold" fill="#1E293B" text-anchor="middle">BlockAllocator</text>
+  <text x="590" y="455" font-size="11" fill="#475569" text-anchor="middle">PagedAttention 分页管理</text>
+
+  <line x1="714" y1="430" x2="752" y2="430" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+
+  <rect x="760" y="370" width="150" height="120" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="835" y="424" font-size="14" font-weight="bold" fill="#1E293B" text-anchor="middle">Model Runner</text>
+  <text x="835" y="450" font-size="11" fill="#475569" text-anchor="middle">前向执行</text>
+
+  <line x1="914" y1="430" x2="952" y2="430" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+
+  <rect x="960" y="370" width="110" height="120" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="1015" y="424" font-size="14" font-weight="bold" fill="#1E293B" text-anchor="middle">Executor</text>
+  <text x="1015" y="450" font-size="11" fill="#475569" text-anchor="middle">分发执行</text>
+
+  <line x1="1074" y1="430" x2="1112" y2="430" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+
+  <!-- GPU Worker -->
+  <rect x="1120" y="340" width="180" height="240" rx="12" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="1210" y="366" font-size="13" font-weight="bold" fill="#1E293B" text-anchor="middle">GPU Worker ×N</text>
+  <rect x="1136" y="378" width="148" height="34" rx="8" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="1210" y="400" font-size="11" fill="#1E293B" text-anchor="middle">Model Forward</text>
+  <rect x="1136" y="418" width="148" height="34" rx="8" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="1210" y="440" font-size="11" fill="#1E293B" text-anchor="middle">Sampler</text>
+  <rect x="1136" y="458" width="148" height="34" rx="8" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text x="1210" y="480" font-size="11" fill="#1E293B" text-anchor="middle">CUDA Graph</text>
+  <rect x="1136" y="498" width="148" height="34" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="1210" y="520" font-size="11" fill="#1E293B" text-anchor="middle">KV Blocks</text>
+
+  <!-- L3→L4 连接 -->
+  <line x1="690" y1="600" x2="690" y2="612" stroke="#7C3AED" stroke-width="2" marker-end="url(#arrP)"/>
+  <line x1="730" y1="612" x2="730" y2="600" stroke="#10B981" stroke-width="2" marker-end="url(#arrGr)"/>
+
+  <!-- ============ L4 输出与观测 ============ -->
+  <rect x="160" y="616" width="1160" height="100" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="184" y="646" font-size="14" font-weight="bold" fill="#475569">输出与观测层</text>
+  <rect x="300" y="646" width="200" height="44" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="400" y="673" font-size="13" fill="#1E293B" text-anchor="middle">Detokenizer</text>
+  <line x1="500" y1="668" x2="552" y2="668" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <rect x="560" y="646" width="240" height="44" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+  <text x="680" y="673" font-size="13" fill="#1E293B" text-anchor="middle">Streaming Response</text>
+  <line x1="1240" y1="600" x2="1240" y2="640" stroke="#64748B" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrG)"/>
+  <text x="1250" y="626" font-size="10" fill="#64748B">指标旁路</text>
+  <rect x="1100" y="646" width="200" height="44" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="1200" y="673" font-size="13" fill="#1E293B" text-anchor="middle">Prometheus Metrics</text>
+
+  <text x="48" y="784" font-size="11" fill="#94A3B8">vLLM 三层解耦：OpenAI 兼容 API 层 / Scheduler + KV 管理引擎 / GPU 执行层——Scheduler 与 PagedAttention 决定吞吐上限</text>
+</svg>

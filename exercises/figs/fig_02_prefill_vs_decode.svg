@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" width="1400" height="900" font-family="Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/></marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F59E0B"/></marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#F59E0B" flood-opacity="0.45"/></filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.10"/></filter>
+  </defs>
+  <rect width="1400" height="900" fill="#FFFFFF"/>
+
+  <text x="48" y="52" font-size="20" font-weight="bold" fill="#1E293B">LLM 推理两阶段：Prefill（预填充）vs Decode（解码）</text>
+
+  <!-- ============ 面板 A：Prefill ============ -->
+  <rect x="80" y="78" width="1240" height="370" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="104" y="108" font-size="14" font-weight="bold" fill="#475569">① Prefill 阶段 —— 一次前向，整段并行</text>
+
+  <!-- 输入 tokens -->
+  <rect x="140" y="180" width="46" height="46" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="163" y="208" font-size="11" fill="#1E293B" text-anchor="middle">t1</text>
+  <rect x="196" y="180" width="46" height="46" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="219" y="208" font-size="11" fill="#1E293B" text-anchor="middle">t2</text>
+  <rect x="252" y="180" width="46" height="46" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="275" y="208" font-size="11" fill="#1E293B" text-anchor="middle">t3</text>
+  <rect x="308" y="180" width="46" height="46" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="331" y="208" font-size="11" fill="#1E293B" text-anchor="middle">t4</text>
+  <rect x="364" y="180" width="46" height="46" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="387" y="208" font-size="11" fill="#1E293B" text-anchor="middle">t5</text>
+  <rect x="420" y="180" width="46" height="46" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="443" y="208" font-size="11" fill="#1E293B" text-anchor="middle">…</text>
+  <text x="303" y="252" font-size="12" fill="#475569" text-anchor="middle">Prompt 全部 T 个 token（一次输入）</text>
+
+  <line x1="490" y1="203" x2="560" y2="203" stroke="#2563EB" stroke-width="3" marker-end="url(#arrB)"/>
+
+  <!-- Transformer 大块 -->
+  <g filter="url(#glow)">
+    <rect x="570" y="130" width="280" height="146" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="710" y="188" font-size="15" font-weight="bold" fill="#1E293B" text-anchor="middle">N × Decoder Blocks</text>
+  <text x="710" y="214" font-size="12" fill="#475569" text-anchor="middle">整段 [B, T, d] 并行前向</text>
+  <text x="710" y="236" font-size="11" fill="#475569" text-anchor="middle">一次算出全部 K/V</text>
+
+  <line x1="850" y1="203" x2="920" y2="203" stroke="#2563EB" stroke-width="3" marker-end="url(#arrB)"/>
+
+  <!-- KV 写入 -->
+  <rect x="930" y="150" width="220" height="106" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="1040" y="196" font-size="14" font-weight="bold" fill="#1E293B" text-anchor="middle">KV Cache</text>
+  <text x="1040" y="222" font-size="12" fill="#475569" text-anchor="middle">全量写入</text>
+
+  <line x1="1150" y1="203" x2="1206" y2="203" stroke="#2563EB" stroke-width="3" marker-end="url(#arrB)"/>
+
+  <rect x="1214" y="156" width="92" height="94" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+  <text x="1260" y="208" font-size="12" fill="#1E293B" text-anchor="middle">首 Token</text>
+
+  <!-- Prefill 注释条 -->
+  <rect x="370" y="310" width="760" height="42" rx="8" fill="#F1F5F9" stroke="#E2E8F0"/>
+  <text x="750" y="337" font-size="12" fill="#475569" text-anchor="middle">并行计算 · compute-bound：瓶颈在 GPU 算力，一次处理整段序列</text>
+
+  <!-- ============ 面板 B：Decode ============ -->
+  <rect x="80" y="468" width="1240" height="370" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="104" y="498" font-size="14" font-weight="bold" fill="#475569">② Decode 阶段 —— 逐步循环，自回归</text>
+
+  <rect x="140" y="570" width="46" height="46" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="163" y="598" font-size="11" fill="#1E293B" text-anchor="middle">t</text>
+  <text x="163" y="640" font-size="11" fill="#475569" text-anchor="middle">当前 token</text>
+
+  <line x1="200" y1="593" x2="278" y2="593" stroke="#2563EB" stroke-width="3" marker-end="url(#arrB)"/>
+
+  <g filter="url(#glow)">
+    <rect x="290" y="520" width="280" height="146" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="430" y="578" font-size="15" font-weight="bold" fill="#1E293B" text-anchor="middle">N × Decoder Blocks</text>
+  <text x="430" y="604" font-size="12" fill="#475569" text-anchor="middle">仅 1 个 token [1, d]</text>
+  <text x="430" y="626" font-size="11" fill="#475569" text-anchor="middle">读取历史 KV</text>
+
+  <!-- KV 读写双向虚线 -->
+  <line x1="580" y1="578" x2="652" y2="578" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrP)"/>
+  <line x1="652" y1="608" x2="580" y2="608" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrP)"/>
+
+  <rect x="660" y="540" width="220" height="106" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="770" y="586" font-size="14" font-weight="bold" fill="#1E293B" text-anchor="middle">KV Cache</text>
+  <text x="770" y="612" font-size="11" fill="#475569" text-anchor="middle">增量读写（每步 1 组 K,V）</text>
+
+  <line x1="880" y1="593" x2="958" y2="593" stroke="#2563EB" stroke-width="3" marker-end="url(#arrB)"/>
+
+  <rect x="970" y="540" width="180" height="106" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="1060" y="586" font-size="14" font-weight="bold" fill="#1E293B" text-anchor="middle">Sampler</text>
+  <text x="1060" y="612" font-size="11" fill="#475569" text-anchor="middle">temperature / top-p</text>
+
+  <line x1="1150" y1="593" x2="1206" y2="593" stroke="#2563EB" stroke-width="3" marker-end="url(#arrB)"/>
+
+  <rect x="1214" y="546" width="92" height="94" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+  <text x="1260" y="598" font-size="12" fill="#1E293B" text-anchor="middle">新 Token</text>
+
+  <!-- 自回归回环 -->
+  <path d="M 1260,648 C 1260,772 163,772 163,624" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <text x="712" y="800" font-size="12" fill="#475569" text-anchor="middle">自回归循环：新 token 拼回输入，重复直到 EOS</text>
+
+  <!-- Decode 注释条 -->
+  <rect x="470" y="666" width="640" height="40" rx="8" fill="#F1F5F9" stroke="#E2E8F0"/>
+  <text x="790" y="691" font-size="12" fill="#475569" text-anchor="middle">串行逐步 · memory-bound：瓶颈在显存带宽，每步只处理 1 个 token</text>
+
+  <text x="48" y="878" font-size="11" fill="#94A3B8">Prefill 一次算完整段 prompt（并行 · 算力瓶颈），Decode 每步只算 1 个 token（串行 · 带宽瓶颈）——两阶段共享同一套 Transformer 权重</text>
+</svg>

@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" width="1400" height="900" font-family="Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/></marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F59E0B"/></marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#F59E0B" flood-opacity="0.45"/></filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.10"/></filter>
+  </defs>
+  <rect width="1400" height="900" fill="#FFFFFF"/>
+
+  <text x="48" y="52" font-size="20" font-weight="bold" fill="#1E293B">KV Cache 原理：以空间换时间，O(T²) → O(T)</text>
+
+  <!-- ============ 左：无 KV Cache ============ -->
+  <rect x="80" y="80" width="590" height="580" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="104" y="110" font-size="14" font-weight="bold" fill="#475569">① 无 KV Cache —— 每步重算全部历史</text>
+
+  <!-- t=1 -->
+  <text x="110" y="166" font-size="12" fill="#475569">t = 1</text>
+  <rect x="160" y="140" width="40" height="40" rx="6" fill="#F1F5F9" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="180" y="164" font-size="10" fill="#475569" text-anchor="middle">KV</text>
+  <text x="452" y="166" font-size="11" fill="#475569">重算 1 块</text>
+  <!-- t=2 -->
+  <text x="110" y="270" font-size="12" fill="#475569">t = 2</text>
+  <rect x="160" y="244" width="40" height="40" rx="6" fill="#F1F5F9" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="180" y="268" font-size="10" fill="#475569" text-anchor="middle">KV</text>
+  <rect x="212" y="244" width="40" height="40" rx="6" fill="#F1F5F9" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="232" y="268" font-size="10" fill="#475569" text-anchor="middle">KV</text>
+  <text x="452" y="270" font-size="11" fill="#475569">重算 1+2 块</text>
+  <!-- t=3 -->
+  <text x="110" y="374" font-size="12" fill="#475569">t = 3</text>
+  <rect x="160" y="348" width="40" height="40" rx="6" fill="#F1F5F9" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="180" y="372" font-size="10" fill="#475569" text-anchor="middle">KV</text>
+  <rect x="212" y="348" width="40" height="40" rx="6" fill="#F1F5F9" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="232" y="372" font-size="10" fill="#475569" text-anchor="middle">KV</text>
+  <rect x="264" y="348" width="40" height="40" rx="6" fill="#F1F5F9" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="284" y="372" font-size="10" fill="#475569" text-anchor="middle">KV</text>
+  <text x="452" y="374" font-size="11" fill="#475569">重算 1+2+3 块</text>
+  <!-- t=4 -->
+  <text x="110" y="478" font-size="12" fill="#475569">t = 4</text>
+  <rect x="160" y="452" width="40" height="40" rx="6" fill="#F1F5F9" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="180" y="476" font-size="10" fill="#475569" text-anchor="middle">KV</text>
+  <rect x="212" y="452" width="40" height="40" rx="6" fill="#F1F5F9" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="232" y="476" font-size="10" fill="#475569" text-anchor="middle">KV</text>
+  <rect x="264" y="452" width="40" height="40" rx="6" fill="#F1F5F9" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="284" y="476" font-size="10" fill="#475569" text-anchor="middle">KV</text>
+  <rect x="316" y="452" width="40" height="40" rx="6" fill="#F1F5F9" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="336" y="476" font-size="10" fill="#475569" text-anchor="middle">KV</text>
+  <text x="452" y="478" font-size="11" fill="#475569">重算 1+2+3+4 块</text>
+
+  <rect x="140" y="560" width="460" height="56" rx="8" fill="#F1F5F9" stroke="#64748B" stroke-width="1.5"/>
+  <text x="370" y="594" font-size="12" fill="#1E293B" text-anchor="middle">总计算量 1+2+…+T = O(T²) · 生成越长浪费越多</text>
+
+  <!-- ============ 右：有 KV Cache ============ -->
+  <rect x="700" y="80" width="620" height="580" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="724" y="110" font-size="14" font-weight="bold" fill="#475569">② 有 KV Cache —— 每步只算新 token</text>
+
+  <rect x="780" y="130" width="460" height="150" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="800" y="158" font-size="13" font-weight="bold" fill="#1E293B">KV Cache（历史 K/V 复用）</text>
+  <!-- 4 列已缓存 K/V -->
+  <text x="850" y="184" font-size="10" fill="#475569" text-anchor="middle">t1</text>
+  <rect x="800" y="190" width="100" height="28" rx="4" fill="#FFFFFF" stroke="#7C3AED"/>
+  <text x="850" y="209" font-size="10" fill="#1E293B" text-anchor="middle">K₁</text>
+  <rect x="800" y="222" width="100" height="28" rx="4" fill="#FFFFFF" stroke="#7C3AED"/>
+  <text x="850" y="241" font-size="10" fill="#1E293B" text-anchor="middle">V₁</text>
+  <text x="965" y="184" font-size="10" fill="#475569" text-anchor="middle">t2</text>
+  <rect x="915" y="190" width="100" height="28" rx="4" fill="#FFFFFF" stroke="#7C3AED"/>
+  <text x="965" y="209" font-size="10" fill="#1E293B" text-anchor="middle">K₂</text>
+  <rect x="915" y="222" width="100" height="28" rx="4" fill="#FFFFFF" stroke="#7C3AED"/>
+  <text x="965" y="241" font-size="10" fill="#1E293B" text-anchor="middle">V₂</text>
+  <text x="1080" y="184" font-size="10" fill="#475569" text-anchor="middle">t3</text>
+  <rect x="1030" y="190" width="100" height="28" rx="4" fill="#FFFFFF" stroke="#7C3AED"/>
+  <text x="1080" y="209" font-size="10" fill="#1E293B" text-anchor="middle">K₃</text>
+  <rect x="1030" y="222" width="100" height="28" rx="4" fill="#FFFFFF" stroke="#7C3AED"/>
+  <text x="1080" y="241" font-size="10" fill="#1E293B" text-anchor="middle">V₃</text>
+  <text x="1195" y="184" font-size="10" fill="#475569" text-anchor="middle">t4</text>
+  <rect x="1145" y="190" width="100" height="28" rx="4" fill="#FFFFFF" stroke="#7C3AED"/>
+  <text x="1195" y="209" font-size="10" fill="#1E293B" text-anchor="middle">K₄</text>
+  <rect x="1145" y="222" width="100" height="28" rx="4" fill="#FFFFFF" stroke="#7C3AED"/>
+  <text x="1195" y="241" font-size="10" fill="#1E293B" text-anchor="middle">V₄</text>
+
+  <!-- 每步只算新 token -->
+  <rect x="800" y="330" width="40" height="40" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="820" y="354" font-size="10" fill="#1E293B" text-anchor="middle">K,V</text>
+  <line x1="806" y1="330" x2="806" y2="288" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrP)"/>
+  <text x="880" y="356" font-size="12" fill="#475569">t=1：仅计算新 token 的 K,V → 追加</text>
+  <rect x="800" y="404" width="40" height="40" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="820" y="428" font-size="10" fill="#1E293B" text-anchor="middle">K,V</text>
+  <line x1="818" y1="404" x2="818" y2="288" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrP)"/>
+  <text x="880" y="430" font-size="12" fill="#475569">t=2：历史复用，只算新的一组</text>
+  <rect x="800" y="478" width="40" height="40" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="820" y="502" font-size="10" fill="#1E293B" text-anchor="middle">K,V</text>
+  <line x1="830" y1="478" x2="830" y2="288" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrP)"/>
+  <text x="880" y="504" font-size="12" fill="#475569">t=3：同上</text>
+  <rect x="800" y="552" width="40" height="40" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="820" y="576" font-size="10" fill="#1E293B" text-anchor="middle">K,V</text>
+  <line x1="838" y1="552" x2="838" y2="288" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrP)"/>
+  <text x="880" y="578" font-size="12" fill="#475569">t=4：同上</text>
+
+  <rect x="780" y="606" width="460" height="44" rx="8" fill="#F1F5F9" stroke="#64748B" stroke-width="1.5"/>
+  <text x="1010" y="633" font-size="12" fill="#1E293B" text-anchor="middle">每步计算量恒为 1 → O(T) · 历史 K/V 只算一次</text>
+
+  <!-- ============ 底部：显存增长 ============ -->
+  <rect x="80" y="690" width="1240" height="110" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="104" y="720" font-size="12" font-weight="bold" fill="#475569">KV Cache 显存占用 · 随序列长度线性增长</text>
+  <rect x="200" y="764" width="70" height="16" fill="#EDE9FE" stroke="#7C3AED"/>
+  <text x="235" y="796" font-size="10" fill="#475569" text-anchor="middle">T=128</text>
+  <rect x="340" y="748" width="70" height="32" fill="#EDE9FE" stroke="#7C3AED"/>
+  <text x="375" y="796" font-size="10" fill="#475569" text-anchor="middle">T=512</text>
+  <rect x="480" y="732" width="70" height="48" fill="#EDE9FE" stroke="#7C3AED"/>
+  <text x="515" y="796" font-size="10" fill="#475569" text-anchor="middle">T=1024</text>
+  <rect x="620" y="716" width="70" height="64" fill="#EDE9FE" stroke="#7C3AED"/>
+  <text x="655" y="796" font-size="10" fill="#475569" text-anchor="middle">T=2048</text>
+  <rect x="760" y="700" width="70" height="80" fill="#EDE9FE" stroke="#7C3AED"/>
+  <text x="795" y="796" font-size="10" fill="#475569" text-anchor="middle">T=4096</text>
+  <text x="900" y="745" font-size="11" fill="#475569" font-family="Consolas, monospace">KV bytes ≈ 2 × n_layers × n_kv_heads × d_head × T × 2B</text>
+  <text x="900" y="775" font-size="12" fill="#475569">T 增大 → 显存线性增长（长上下文的代价）</text>
+
+  <text x="48" y="876" font-size="11" fill="#94A3B8">KV Cache 用空间换时间：历史 K/V 只算一次存入显存，每步仅计算新 token 的 K/V 并追加（O(T²) → O(T)）</text>
+</svg>

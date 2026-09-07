@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 800" width="1400" height="800" font-family="Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/></marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F59E0B"/></marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#F59E0B" flood-opacity="0.45"/></filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.10"/></filter>
+  </defs>
+  <rect width="1400" height="800" fill="#FFFFFF"/>
+
+  <text x="48" y="52" font-size="20" font-weight="bold" fill="#1E293B">FlashAttention：分块计算 + Online Softmax</text>
+
+  <!-- ============ 左：朴素 Attention ============ -->
+  <rect x="80" y="80" width="580" height="620" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="104" y="110" font-size="14" font-weight="bold" fill="#475569">① 朴素 Attention —— 中间矩阵落 HBM</text>
+
+  <rect x="140" y="130" width="70" height="40" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="175" y="155" font-size="12" fill="#1E293B" text-anchor="middle">Q</text>
+  <rect x="230" y="130" width="70" height="40" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="265" y="155" font-size="12" fill="#1E293B" text-anchor="middle">K</text>
+  <rect x="320" y="130" width="70" height="40" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="355" y="155" font-size="12" fill="#1E293B" text-anchor="middle">V</text>
+
+  <line x1="175" y1="170" x2="210" y2="222" stroke="#7C3AED" stroke-width="2" marker-end="url(#arrP)"/>
+  <line x1="265" y1="170" x2="286" y2="222" stroke="#7C3AED" stroke-width="2" marker-end="url(#arrP)"/>
+  <line x1="355" y1="170" x2="360" y2="222" stroke="#7C3AED" stroke-width="2" marker-end="url(#arrP)"/>
+
+  <!-- N×N 网格 -->
+  <rect x="150" y="230" width="272" height="272" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5"/>
+  <line x1="184" y1="230" x2="184" y2="502" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="218" y1="230" x2="218" y2="502" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="252" y1="230" x2="252" y2="502" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="286" y1="230" x2="286" y2="502" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="320" y1="230" x2="320" y2="502" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="354" y1="230" x2="354" y2="502" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="388" y1="230" x2="388" y2="502" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="150" y1="264" x2="422" y2="264" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="150" y1="298" x2="422" y2="298" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="150" y1="332" x2="422" y2="332" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="150" y1="366" x2="422" y2="366" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="150" y1="400" x2="422" y2="400" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="150" y1="434" x2="422" y2="434" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="150" y1="468" x2="422" y2="468" stroke="#CBD5E1" stroke-width="1"/>
+
+  <rect x="138" y="218" width="296" height="296" rx="10" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="286" y="540" font-size="12" fill="#F59E0B" text-anchor="middle">S = Q·Kᵀ 显存 O(N²) · 反复读写 HBM</text>
+
+  <line x1="286" y1="546" x2="286" y2="554" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <rect x="200" y="560" width="130" height="40" rx="8" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="265" y="585" font-size="12" fill="#1E293B" text-anchor="middle">Softmax</text>
+  <line x1="330" y1="580" x2="360" y2="580" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <rect x="366" y="560" width="80" height="40" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="406" y="585" font-size="12" fill="#1E293B" text-anchor="middle">O</text>
+
+  <rect x="120" y="630" width="500" height="44" rx="8" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="370" y="657" font-size="12" fill="#475569" text-anchor="middle">HBM 显存（GB/s 级 · 慢）</text>
+
+  <!-- ============ 右：FlashAttention ============ -->
+  <rect x="700" y="80" width="620" height="620" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="724" y="110" font-size="14" font-weight="bold" fill="#475569">② FlashAttention 分块 —— 中间结果留在片上</text>
+
+  <g filter="url(#glow)">
+    <rect x="740" y="130" width="540" height="90" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="760" y="158" font-size="13" font-weight="bold" fill="#1E293B">SRAM 片上缓存（TB/s 级 · 快）</text>
+  <text x="1266" y="158" font-size="11" fill="#F59E0B" text-anchor="end">online softmax 增量更新</text>
+  <rect x="760" y="172" width="160" height="36" rx="8" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="840" y="195" font-size="11" fill="#1E293B" text-anchor="middle">running max m</text>
+  <rect x="930" y="172" width="160" height="36" rx="8" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="1010" y="195" font-size="11" fill="#1E293B" text-anchor="middle">running sum ℓ</text>
+  <rect x="1100" y="172" width="160" height="36" rx="8" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="1180" y="195" font-size="11" fill="#1E293B" text-anchor="middle">累加器 O</text>
+
+  <!-- 加载 / 写回 -->
+  <line x1="880" y1="552" x2="880" y2="228" stroke="#7C3AED" stroke-width="2" marker-end="url(#arrP)"/>
+  <text x="892" y="390" font-size="11" fill="#7C3AED">逐块加载 K_j · V_j</text>
+  <line x1="1100" y1="228" x2="1100" y2="548" stroke="#64748B" stroke-width="2" marker-end="url(#arrG)"/>
+  <text x="1088" y="390" font-size="11" fill="#64748B" text-anchor="end">写回 O（仅一次）</text>
+  <text x="760" y="508" font-size="11" fill="#475569">for j = 1 .. N/bc 循环</text>
+
+  <!-- 被划掉的 N×N -->
+  <rect x="1160" y="300" width="128" height="128" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5"/>
+  <line x1="1160" y1="332" x2="1288" y2="332" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="1160" y1="364" x2="1288" y2="364" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="1160" y1="396" x2="1288" y2="396" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="1192" y1="300" x2="1192" y2="428" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="1224" y1="300" x2="1224" y2="428" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="1256" y1="300" x2="1256" y2="428" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="1160" y1="300" x2="1288" y2="428" stroke="#64748B" stroke-width="3"/>
+  <line x1="1288" y1="300" x2="1160" y2="428" stroke="#64748B" stroke-width="3"/>
+  <text x="1224" y="452" font-size="11" fill="#64748B" text-anchor="middle">不物化 N×N</text>
+
+  <!-- HBM -->
+  <rect x="740" y="540" width="540" height="70" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="760" y="566" font-size="12" fill="#475569">HBM 显存（GB/s 级 · 慢）</text>
+  <rect x="760" y="576" width="90" height="26" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="805" y="593" font-size="10" fill="#1E293B" text-anchor="middle">Q tile</text>
+  <rect x="870" y="576" width="100" height="26" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="920" y="593" font-size="10" fill="#1E293B" text-anchor="middle">K tile j</text>
+  <rect x="990" y="576" width="100" height="26" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="1040" y="593" font-size="10" fill="#1E293B" text-anchor="middle">V tile j</text>
+  <rect x="1110" y="576" width="100" height="26" rx="6" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text x="1160" y="593" font-size="10" fill="#1E293B" text-anchor="middle">O 写回</text>
+
+  <text x="48" y="784" font-size="11" fill="#94A3B8">FlashAttention 把注意力中间结果留在片上 SRAM：显存 O(N²) → O(N)，长序列速度提升 2~4 倍</text>
+</svg>

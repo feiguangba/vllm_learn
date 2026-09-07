@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 800" width="1400" height="800" font-family="Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/></marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F59E0B"/></marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#F59E0B" flood-opacity="0.45"/></filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.10"/></filter>
+  </defs>
+  <rect width="1400" height="800" fill="#FFFFFF"/>
+
+  <!-- 标题 -->
+  <text x="48" y="52" font-size="20" font-weight="bold" fill="#1E293B">现代 LLM 神经网络架构 · Decoder-only Transformer（GPT / LLaMA 同构）</text>
+
+  <!-- 输出层面板 -->
+  <rect x="100" y="72" width="1200" height="128" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="124" y="100" font-size="14" font-weight="bold" fill="#475569">输出层 Output</text>
+  <!-- Final RMSNorm -->
+  <rect x="170" y="112" width="200" height="46" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="270" y="140" font-size="14" fill="#1E293B" text-anchor="middle">Final RMSNorm</text>
+  <line x1="370" y1="135" x2="424" y2="135" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <!-- lm_head -->
+  <rect x="430" y="112" width="240" height="46" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="550" y="140" font-size="14" fill="#1E293B" text-anchor="middle">lm_head Linear（d→V）</text>
+  <line x1="670" y1="135" x2="724" y2="135" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <!-- Softmax -->
+  <rect x="730" y="112" width="210" height="46" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="835" y="140" font-size="14" fill="#1E293B" text-anchor="middle">Softmax 概率分布</text>
+  <line x1="940" y1="135" x2="994" y2="135" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <!-- Next Token -->
+  <rect x="1000" y="112" width="200" height="46" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+  <text x="1100" y="140" font-size="14" fill="#1E293B" text-anchor="middle">Next Token 预测</text>
+  <text x="1296" y="140" font-size="12" fill="#475569" text-anchor="end">[B, T, V]</text>
+
+  <!-- 输出层与隐藏层之间的主流程箭头 -->
+  <line x1="700" y1="256" x2="700" y2="206" stroke="#2563EB" stroke-width="3" marker-end="url(#arrB)"/>
+
+  <!-- 隐藏层面板 -->
+  <rect x="100" y="222" width="1200" height="400" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="124" y="248" font-size="14" font-weight="bold" fill="#475569">隐藏层 · N 个 Decoder Block 堆叠（结构完全相同）</text>
+
+  <!-- 幽灵堆叠卡 -->
+  <rect x="380" y="256" width="640" height="22" rx="8" fill="#F1F5F9" stroke="#94A3B8" stroke-dasharray="4 3"/>
+  <text x="700" y="271" font-size="11" fill="#64748B" text-anchor="middle">Decoder Block（第 N−2 层）</text>
+  <rect x="380" y="286" width="640" height="22" rx="8" fill="#F1F5F9" stroke="#94A3B8" stroke-dasharray="4 3"/>
+  <text x="700" y="301" font-size="11" fill="#64748B" text-anchor="middle">Decoder Block（第 N−1 层）</text>
+  <text x="1044" y="286" font-size="13" font-weight="bold" fill="#475569">× N 层</text>
+
+  <!-- 详细展开的单个 Decoder Block -->
+  <rect x="380" y="318" width="640" height="288" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" filter="url(#soft)"/>
+
+  <!-- RMSNorm 1 -->
+  <rect x="410" y="556" width="580" height="34" rx="8" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="700" y="578" font-size="14" fill="#1E293B" text-anchor="middle">RMSNorm（Pre-Norm）</text>
+  <line x1="700" y1="556" x2="700" y2="548" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+
+  <!-- Attention 组（重点高亮） -->
+  <g filter="url(#glow)">
+    <rect x="410" y="444" width="580" height="100" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="700" y="466" font-size="13" font-weight="bold" fill="#1E293B" text-anchor="middle">Masked Multi-Head Self-Attention</text>
+  <rect x="422" y="476" width="128" height="52" rx="8" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="486" y="496" font-size="11" fill="#1E293B" text-anchor="middle">Linear Q/K/V</text>
+  <text x="486" y="512" font-size="11" fill="#475569" text-anchor="middle">（d→d ×3）</text>
+  <rect x="564" y="476" width="128" height="52" rx="8" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="628" y="496" font-size="11" fill="#1E293B" text-anchor="middle">RoPE</text>
+  <text x="628" y="512" font-size="11" fill="#475569" text-anchor="middle">旋转位置编码</text>
+  <rect x="706" y="476" width="128" height="52" rx="8" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="770" y="496" font-size="11" fill="#1E293B" text-anchor="middle">Scaled Dot-Prod</text>
+  <text x="770" y="512" font-size="11" fill="#475569" text-anchor="middle">Attention·Causal</text>
+  <rect x="848" y="476" width="128" height="52" rx="8" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="912" y="496" font-size="11" fill="#1E293B" text-anchor="middle">Concat + Linear</text>
+  <text x="912" y="512" font-size="11" fill="#475569" text-anchor="middle">（Output d→d）</text>
+  <line x1="700" y1="444" x2="700" y2="436" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+
+  <!-- RMSNorm 2 -->
+  <rect x="410" y="402" width="580" height="34" rx="8" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="700" y="424" font-size="14" fill="#1E293B" text-anchor="middle">RMSNorm（Pre-Norm）</text>
+  <line x1="700" y1="402" x2="700" y2="394" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+
+  <!-- FFN 组 -->
+  <rect x="410" y="338" width="580" height="56" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="446" y="372" font-size="13" font-weight="bold" fill="#1E293B">FFN / SwiGLU</text>
+  <rect x="560" y="348" width="120" height="36" rx="8" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="620" y="371" font-size="11" fill="#1E293B" text-anchor="middle">Linear d→4d</text>
+  <rect x="694" y="348" width="110" height="36" rx="8" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="749" y="371" font-size="11" fill="#1E293B" text-anchor="middle">GELU / SiLU</text>
+  <rect x="818" y="348" width="130" height="36" rx="8" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="883" y="371" font-size="11" fill="#1E293B" text-anchor="middle">Linear 4d→d</text>
+
+  <!-- 残差连接旁路 ×2 -->
+  <path d="M 994,573 C 1044,573 1044,440 994,440" fill="none" stroke="#64748B" stroke-width="2" marker-end="url(#arrG)"/>
+  <path d="M 994,419 C 1080,419 1080,334 994,334" fill="none" stroke="#64748B" stroke-width="2" marker-end="url(#arrG)"/>
+  <text x="1090" y="478" font-size="11" fill="#64748B">残差连接 ×2</text>
+  <text x="1120" y="352" font-size="12" fill="#475569">[B, T, d]</text>
+
+  <!-- 隐藏层 → 幽灵卡箭头 -->
+  <line x1="700" y1="338" x2="700" y2="310" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+
+  <!-- 输入层面板 -->
+  <rect x="100" y="638" width="1200" height="120" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="124" y="666" font-size="14" font-weight="bold" fill="#475569">输入层 Input</text>
+  <rect x="170" y="680" width="170" height="44" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="255" y="707" font-size="14" fill="#1E293B" text-anchor="middle">Token IDs [B,T]</text>
+  <line x1="340" y1="702" x2="394" y2="702" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <rect x="400" y="680" width="270" height="44" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="535" y="707" font-size="14" fill="#1E293B" text-anchor="middle">Token Embedding（查表 Linear）</text>
+  <line x1="670" y1="702" x2="724" y2="702" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <rect x="730" y="680" width="240" height="44" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="850" y="707" font-size="14" fill="#1E293B" text-anchor="middle">位置编码 RoPE</text>
+  <text x="1296" y="700" font-size="12" fill="#475569" text-anchor="end">[B, T, d]</text>
+
+  <!-- 输入层 → 详细块 -->
+  <line x1="850" y1="680" x2="850" y2="612" stroke="#2563EB" stroke-width="3" marker-end="url(#arrB)"/>
+
+  <!-- 脚注 -->
+  <text x="48" y="784" font-size="11" fill="#94A3B8">Decoder-only Transformer 三段式：输入层做嵌入，隐藏层重复 N 个「注意力 + FFN」块，输出层仅一个 lm_head 将 d 维向量映射回词表 V</text>
+</svg>

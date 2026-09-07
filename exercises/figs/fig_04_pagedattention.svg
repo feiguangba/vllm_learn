@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 800" width="1400" height="800" font-family="Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/></marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F59E0B"/></marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#F59E0B" flood-opacity="0.45"/></filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.10"/></filter>
+  </defs>
+  <rect width="1400" height="800" fill="#FFFFFF"/>
+
+  <text x="48" y="52" font-size="20" font-weight="bold" fill="#1E293B">PagedAttention：逻辑连续、物理离散的分页 KV 管理</text>
+
+  <!-- ============ 左：逻辑视图 ============ -->
+  <rect x="80" y="80" width="380" height="620" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="104" y="110" font-size="14" font-weight="bold" fill="#475569">逻辑视图（请求眼中的连续 KV）</text>
+  <text x="104" y="122" font-size="12" fill="#475569"> </text>
+  <text x="104" y="126" font-size="12" fill="#7C3AED" font-weight="bold">Seq A（较长请求）</text>
+  <rect x="140" y="132" width="240" height="44" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="260" y="159" font-size="13" fill="#1E293B" text-anchor="middle">逻辑块 0</text>
+  <rect x="140" y="184" width="240" height="44" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="260" y="211" font-size="13" fill="#1E293B" text-anchor="middle">逻辑块 1</text>
+  <rect x="140" y="236" width="240" height="44" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="260" y="263" font-size="13" fill="#1E293B" text-anchor="middle">逻辑块 2</text>
+  <rect x="140" y="288" width="240" height="44" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="260" y="315" font-size="13" fill="#1E293B" text-anchor="middle">逻辑块 3</text>
+  <rect x="140" y="340" width="240" height="44" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="260" y="367" font-size="13" fill="#1E293B" text-anchor="middle">逻辑块 4</text>
+  <rect x="140" y="392" width="240" height="44" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="260" y="419" font-size="13" fill="#1E293B" text-anchor="middle">逻辑块 5</text>
+
+  <text x="104" y="470" font-size="12" fill="#7C3AED" font-weight="bold">Seq B（共享同前缀）</text>
+  <rect x="140" y="480" width="240" height="44" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="260" y="507" font-size="13" fill="#1E293B" text-anchor="middle">逻辑块 0</text>
+  <rect x="140" y="532" width="240" height="44" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="260" y="559" font-size="13" fill="#1E293B" text-anchor="middle">逻辑块 1</text>
+  <rect x="140" y="584" width="240" height="44" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="260" y="611" font-size="13" fill="#1E293B" text-anchor="middle">逻辑块 2</text>
+  <rect x="140" y="636" width="240" height="44" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="260" y="663" font-size="13" fill="#1E293B" text-anchor="middle">逻辑块 3</text>
+  <text x="104" y="690" font-size="10" fill="#94A3B8">请求只感知连续的逻辑块</text>
+
+  <!-- ============ 中：Block Table ============ -->
+  <rect x="500" y="80" width="300" height="620" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="524" y="110" font-size="14" font-weight="bold" fill="#475569">Block Table（映射表）</text>
+
+  <g filter="url(#glow)">
+    <rect x="520" y="126" width="260" height="180" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="650" y="152" font-size="13" font-weight="bold" fill="#1E293B" text-anchor="middle">Seq A Block Table</text>
+  <text x="650" y="176" font-size="12" fill="#1E293B" text-anchor="middle" font-family="Consolas, monospace">逻辑块 0 → 物理 7</text>
+  <text x="650" y="198" font-size="12" fill="#1E293B" text-anchor="middle" font-family="Consolas, monospace">逻辑块 1 → 物理 2</text>
+  <text x="650" y="220" font-size="12" fill="#1E293B" text-anchor="middle" font-family="Consolas, monospace">逻辑块 2 → 物理 9</text>
+  <text x="650" y="242" font-size="12" fill="#1E293B" text-anchor="middle" font-family="Consolas, monospace">逻辑块 3 → 物理 4</text>
+  <text x="650" y="264" font-size="12" fill="#1E293B" text-anchor="middle" font-family="Consolas, monospace">逻辑块 4 → 物理 11</text>
+  <text x="650" y="286" font-size="12" fill="#1E293B" text-anchor="middle" font-family="Consolas, monospace">逻辑块 5 → 物理 13</text>
+
+  <rect x="520" y="380" width="260" height="140" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  <text x="650" y="406" font-size="13" font-weight="bold" fill="#1E293B" text-anchor="middle">Seq B Block Table</text>
+  <text x="650" y="430" font-size="12" fill="#F59E0B" font-weight="bold" text-anchor="middle" font-family="Consolas, monospace">逻辑块 0 → 物理 7（共享）</text>
+  <text x="650" y="452" font-size="12" fill="#1E293B" text-anchor="middle" font-family="Consolas, monospace">逻辑块 1 → 物理 5</text>
+  <text x="650" y="474" font-size="12" fill="#1E293B" text-anchor="middle" font-family="Consolas, monospace">逻辑块 2 → 物理 1</text>
+  <text x="650" y="496" font-size="12" fill="#1E293B" text-anchor="middle" font-family="Consolas, monospace">逻辑块 3 → 物理 8</text>
+
+  <!-- ============ 右：物理块池 ============ -->
+  <rect x="880" y="80" width="440" height="620" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="904" y="110" font-size="14" font-weight="bold" fill="#475569">物理块池（显存 · 离散）</text>
+
+  <rect x="960" y="126" width="320" height="530" rx="12" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+
+  <!-- 物理 7（共享） -->
+  <g filter="url(#glow)">
+    <rect x="980" y="138" width="280" height="48" rx="6" fill="#EDE9FE" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="996" y="168" font-size="12" fill="#1E293B">物理块 7</text>
+  <text x="1146" y="168" font-size="10" fill="#F59E0B" text-anchor="end">ref=2</text>
+  <rect x="1160" y="155" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1180" y="155" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1200" y="155" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1220" y="155" width="14" height="14" fill="#7C3AED"/>
+  <!-- 物理 2 -->
+  <rect x="980" y="194" width="280" height="48" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="996" y="224" font-size="12" fill="#1E293B">物理块 2</text>
+  <rect x="1160" y="211" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1180" y="211" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1200" y="211" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1220" y="211" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <!-- 物理 9 -->
+  <rect x="980" y="250" width="280" height="48" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="996" y="280" font-size="12" fill="#1E293B">物理块 9</text>
+  <rect x="1160" y="267" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1180" y="267" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1200" y="267" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <rect x="1220" y="267" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <!-- 物理 4 -->
+  <rect x="980" y="306" width="280" height="48" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="996" y="336" font-size="12" fill="#1E293B">物理块 4</text>
+  <rect x="1160" y="323" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1180" y="323" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1200" y="323" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1220" y="323" width="14" height="14" fill="#7C3AED"/>
+  <!-- 物理 11 -->
+  <rect x="980" y="362" width="280" height="48" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="996" y="392" font-size="12" fill="#1E293B">物理块 11</text>
+  <rect x="1160" y="379" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1180" y="379" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <rect x="1200" y="379" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <rect x="1220" y="379" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <!-- 物理 13 -->
+  <rect x="980" y="418" width="280" height="48" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="996" y="448" font-size="12" fill="#1E293B">物理块 13</text>
+  <rect x="1160" y="435" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1180" y="435" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1200" y="435" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <rect x="1220" y="435" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <!-- 物理 5 -->
+  <rect x="980" y="474" width="280" height="48" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="996" y="504" font-size="12" fill="#1E293B">物理块 5</text>
+  <rect x="1160" y="491" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1180" y="491" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1200" y="491" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1220" y="491" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <!-- 物理 1 -->
+  <rect x="980" y="530" width="280" height="48" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="996" y="560" font-size="12" fill="#1E293B">物理块 1</text>
+  <rect x="1160" y="547" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1180" y="547" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1200" y="547" width="14" height="14" fill="#7C3AED"/>
+  <rect x="1220" y="547" width="14" height="14" fill="#7C3AED"/>
+  <!-- 物理 8 -->
+  <rect x="980" y="586" width="280" height="48" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="996" y="616" font-size="12" fill="#1E293B">物理块 8</text>
+  <rect x="1160" y="603" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <rect x="1180" y="603" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <rect x="1200" y="603" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <rect x="1220" y="603" width="14" height="14" fill="#FFFFFF" stroke="#94A3B8"/>
+  <text x="960" y="676" font-size="10" fill="#64748B">每物理块 16 slot（图中示意 4 格）；白格 = free</text>
+
+  <!-- ============ 映射箭头 ============ -->
+  <path d="M 380,154 C 450,154 460,166 516,166" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <path d="M 784,166 L 868,166 L 868,148 L 952,148" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <path d="M 380,502 C 440,502 460,420 516,420" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrO)"/>
+  <path d="M 784,420 L 930,420 L 930,162 L 952,162" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrO)"/>
+  <text x="922" y="400" font-size="11" fill="#F59E0B" text-anchor="end">前缀共享</text>
+
+  <text x="48" y="782" font-size="11" fill="#94A3B8">PagedAttention 按固定大小块分配 KV：逻辑连续、物理离散、按需取用，内外碎片趋近于零；相同前缀块跨请求共享</text>
+</svg>

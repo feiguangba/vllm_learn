@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 800" width="1400" height="800" font-family="Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/></marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F59E0B"/></marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#F59E0B" flood-opacity="0.45"/></filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.10"/></filter>
+  </defs>
+  <rect width="1400" height="800" fill="#FFFFFF"/>
+
+  <text x="48" y="52" font-size="20" font-weight="bold" fill="#1E293B">昇腾 AI 全栈 vs NVIDIA 生态：逐层对照</text>
+
+  <text x="420" y="104" font-size="14" font-weight="bold" fill="#475569" text-anchor="middle">NVIDIA 生态</text>
+  <text x="1040" y="104" font-size="14" font-weight="bold" fill="#475569" text-anchor="middle">华为昇腾生态</text>
+
+  <!-- R1 硬件层 -->
+  <text x="76" y="174" font-size="12" fill="#94A3B8">硬件层</text>
+  <rect x="150" y="120" width="560" height="96" rx="12" fill="#F1F5F9" stroke="#64748B" stroke-width="2"/>
+  <text x="180" y="160" font-size="15" font-weight="bold" fill="#1E293B">NVIDIA GPU · Tensor Core</text>
+  <text x="180" y="190" font-size="11" fill="#475569">H100 / A100 · HBM 显存</text>
+  <line x1="718" y1="168" x2="752" y2="168" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-start="url(#arrP)" marker-end="url(#arrP)"/>
+  <g filter="url(#glow)">
+    <rect x="760" y="120" width="560" height="96" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="790" y="160" font-size="15" font-weight="bold" fill="#1E293B">昇腾 NPU · AI Core</text>
+  <rect x="790" y="174" width="150" height="24" rx="6" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1"/>
+  <text x="865" y="191" font-size="11" fill="#1E293B" text-anchor="middle">Cube Unit 矩阵</text>
+  <rect x="950" y="174" width="150" height="24" rx="6" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1"/>
+  <text x="1025" y="191" font-size="11" fill="#1E293B" text-anchor="middle">Vector Unit 向量</text>
+
+  <!-- R2 使能层 -->
+  <text x="76" y="290" font-size="12" fill="#94A3B8">使能层</text>
+  <rect x="150" y="236" width="560" height="96" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="180" y="276" font-size="15" font-weight="bold" fill="#1E293B">CUDA</text>
+  <text x="180" y="306" font-size="11" fill="#475569">cuDNN / cuBLAS / Triton</text>
+  <line x1="718" y1="284" x2="752" y2="284" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-start="url(#arrP)" marker-end="url(#arrP)"/>
+  <g filter="url(#glow)">
+    <rect x="760" y="236" width="560" height="96" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="790" y="276" font-size="15" font-weight="bold" fill="#1E293B">CANN</text>
+  <rect x="790" y="290" width="110" height="24" rx="6" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1"/>
+  <text x="845" y="307" font-size="11" fill="#1E293B" text-anchor="middle">ATB 算子库</text>
+  <rect x="910" y="290" width="110" height="24" rx="6" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1"/>
+  <text x="965" y="307" font-size="11" fill="#1E293B" text-anchor="middle">图引擎 GE</text>
+  <rect x="1030" y="290" width="110" height="24" rx="6" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1"/>
+  <text x="1085" y="307" font-size="11" fill="#1E293B" text-anchor="middle">Ascend C</text>
+
+  <!-- R3 框架层 -->
+  <text x="76" y="406" font-size="12" fill="#94A3B8">框架层</text>
+  <rect x="150" y="352" width="560" height="96" rx="12" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="180" y="392" font-size="15" font-weight="bold" fill="#1E293B">PyTorch</text>
+  <text x="180" y="422" font-size="11" fill="#475569">动态图 · 自动微分</text>
+  <line x1="718" y1="400" x2="752" y2="400" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-start="url(#arrP)" marker-end="url(#arrP)"/>
+  <rect x="760" y="352" width="560" height="96" rx="12" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="790" y="392" font-size="15" font-weight="bold" fill="#1E293B">MindSpore</text>
+  <text x="790" y="422" font-size="11" fill="#475569">自动微分 · 静态图模式</text>
+
+  <!-- R4 引擎层 -->
+  <text x="76" y="522" font-size="12" fill="#94A3B8">引擎层</text>
+  <rect x="150" y="468" width="560" height="96" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  <text x="180" y="508" font-size="15" font-weight="bold" fill="#1E293B">vLLM</text>
+  <text x="180" y="538" font-size="11" fill="#475569">PagedAttention · Continuous Batching</text>
+  <line x1="718" y1="516" x2="752" y2="516" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-start="url(#arrP)" marker-end="url(#arrP)"/>
+  <rect x="760" y="468" width="560" height="96" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  <text x="790" y="508" font-size="15" font-weight="bold" fill="#1E293B">MindIE / vLLM-Ascend</text>
+  <text x="790" y="538" font-size="11" fill="#475569">NPU 上的高吞吐推理引擎</text>
+
+  <!-- R5 云平台层 -->
+  <text x="76" y="638" font-size="12" fill="#94A3B8">云平台层</text>
+  <rect x="150" y="584" width="560" height="96" rx="12" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+  <text x="180" y="624" font-size="15" font-weight="bold" fill="#1E293B">云端训练与部署</text>
+  <text x="180" y="654" font-size="11" fill="#475569">NGC 镜像体系 · MLOps</text>
+  <line x1="718" y1="632" x2="752" y2="632" stroke="#7C3AED" stroke-width="2" stroke-dasharray="6 4" marker-start="url(#arrP)" marker-end="url(#arrP)"/>
+  <rect x="760" y="584" width="560" height="96" rx="12" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+  <text x="790" y="624" font-size="15" font-weight="bold" fill="#1E293B">ModelArts</text>
+  <text x="790" y="654" font-size="11" fill="#475569">训练 · 部署 · 数据管理</text>
+
+  <text x="48" y="740" font-size="11" fill="#94A3B8">迁移的本质是替换硬件层与使能层：上层框架、引擎与业务接口语义保持不变</text>
+</svg>

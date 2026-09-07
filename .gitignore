@@ -7,10 +7,11 @@ __pycache__/
 .ipynb_checkpoints/
 *.egg-info/
 
-# IDE
+# IDE（保留 .claude/skills 绘图规范，其余忽略）
 .idea/
 .vscode/
-.claude/
+.claude/*
+!.claude/skills/
 
 # marimo 会话临时文件
 __marimo__/

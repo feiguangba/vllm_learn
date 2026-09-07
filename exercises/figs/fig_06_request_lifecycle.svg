@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 800" width="1400" height="800" font-family="Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/></marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/></marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F59E0B"/></marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#F59E0B" flood-opacity="0.45"/></filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.10"/></filter>
+  </defs>
+  <rect width="1400" height="800" fill="#FFFFFF"/>
+
+  <text x="48" y="52" font-size="20" font-weight="bold" fill="#1E293B">请求生命周期与 Scheduler 单步循环</text>
+
+  <!-- ============ 左：状态机 ============ -->
+  <rect x="80" y="80" width="600" height="620" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="104" y="110" font-size="14" font-weight="bold" fill="#475569">请求状态机</text>
+
+  <!-- WAITING -->
+  <rect x="140" y="130" width="200" height="56" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="240" y="164" font-size="15" font-weight="bold" fill="#1E293B" text-anchor="middle">WAITING</text>
+  <!-- RUNNING -->
+  <rect x="140" y="330" width="200" height="56" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="240" y="364" font-size="15" font-weight="bold" fill="#1E293B" text-anchor="middle">RUNNING</text>
+  <!-- FINISHED -->
+  <rect x="140" y="560" width="200" height="56" rx="10" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+  <text x="240" y="594" font-size="15" font-weight="bold" fill="#1E293B" text-anchor="middle">FINISHED</text>
+  <!-- PREEMPTED -->
+  <g filter="url(#glow)">
+    <rect x="420" y="560" width="200" height="56" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="520" y="594" font-size="15" font-weight="bold" fill="#1E293B" text-anchor="middle">PREEMPTED</text>
+
+  <!-- WAITING -> RUNNING -->
+  <line x1="240" y1="186" x2="240" y2="324" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <text x="252" y="252" font-size="12" fill="#475569">有 KV 空间 · 组入 batch</text>
+  <!-- RUNNING -> FINISHED -->
+  <line x1="240" y1="386" x2="240" y2="554" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <text x="252" y="474" font-size="12" fill="#475569">所有 token 生成完</text>
+  <!-- RUNNING -> PREEMPTED -->
+  <path d="M 340,372 C 480,372 520,430 520,554" fill="none" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrO)"/>
+  <text x="532" y="440" font-size="12" fill="#475569">资源不足 · 抢占</text>
+  <!-- PREEMPTED -> WAITING -->
+  <path d="M 420,588 C 240,588 100,500 100,340 L 100,172 C 100,164 106,158 116,158 L 134,158" fill="none" stroke="#64748B" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrG)"/>
+  <text x="122" y="430" font-size="11" fill="#64748B" text-anchor="middle" transform="rotate(-90 122 430)">recompute 重算 / swap 换出后重排队</text>
+  <!-- RUNNING self loop -->
+  <path d="M 260,330 C 260,294 320,294 320,330" fill="none" stroke="#64748B" stroke-width="2" marker-end="url(#arrG)"/>
+  <text x="290" y="286" font-size="11" fill="#64748B" text-anchor="middle">每步迭代生成 1 token</text>
+
+  <!-- ============ 右：Scheduler 循环 ============ -->
+  <rect x="720" y="80" width="600" height="620" rx="16" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="744" y="110" font-size="14" font-weight="bold" fill="#475569">Scheduler 单步迭代循环</text>
+
+  <rect x="790" y="130" width="240" height="52" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="910" y="162" font-size="13" fill="#1E293B" text-anchor="middle">① 从 waiting queue 取请求</text>
+  <line x1="910" y1="182" x2="910" y2="202" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <rect x="790" y="208" width="240" height="52" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="910" y="240" font-size="12" fill="#1E293B" text-anchor="middle">② 组 batch（prefill/decode 混合）</text>
+  <line x1="910" y1="260" x2="910" y2="280" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <g filter="url(#glow)">
+    <rect x="790" y="286" width="240" height="52" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  </g>
+  <text x="910" y="318" font-size="13" fill="#1E293B" text-anchor="middle">③ 检查 KV 预算</text>
+  <line x1="910" y1="338" x2="910" y2="358" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <rect x="790" y="364" width="240" height="52" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="910" y="396" font-size="13" fill="#1E293B" text-anchor="middle">④ Model Forward</text>
+  <line x1="910" y1="416" x2="910" y2="436" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <rect x="790" y="442" width="240" height="52" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="910" y="474" font-size="13" fill="#1E293B" text-anchor="middle">⑤ Sample 采样</text>
+  <line x1="910" y1="494" x2="910" y2="514" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <rect x="790" y="520" width="240" height="52" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="910" y="552" font-size="13" fill="#1E293B" text-anchor="middle">⑥ KV 写入 + Detokenize</text>
+
+  <!-- 循环回边 -->
+  <path d="M 1030,546 C 1120,546 1140,400 1140,300 C 1140,156 1080,156 1036,156" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrB)"/>
+  <text x="1156" y="350" font-size="11" fill="#475569" text-anchor="middle" transform="rotate(90 1156 350)">循环 · 每次迭代重复</text>
+
+  <!-- 预算不足分支 -->
+  <path d="M 1030,312 C 900,312 660,440 600,552" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrO)"/>
+  <text x="800" y="400" font-size="11" fill="#F59E0B">预算不足 → 抢占</text>
+
+  <rect x="790" y="616" width="480" height="48" rx="8" fill="#F1F5F9" stroke="#E2E8F0"/>
+  <text x="1030" y="645" font-size="12" fill="#475569" text-anchor="middle">每一步迭代：取请求 → 组批 → 查预算 → 前向 → 采样 → 回收</text>
+
+  <text x="48" y="784" font-size="11" fill="#94A3B8">状态机管理请求生命周期；Scheduler 在资源约束下决定每一步谁上 GPU、谁被抢占——抢占的代价是重算或换出</text>
+</svg>
