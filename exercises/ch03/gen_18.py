@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_18_preemption.py"
@@ -377,7 +377,7 @@ nb.code(
     '''# -*- coding: utf-8 -*-
 import sys, os                                   # 系统库
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")  # OpenMP 兼容
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 from vllm_real import bench_prefill_decode, cuda_info   # 真实 GPU 微基准
 
 print("设备:", cuda_info())                        # 设备
@@ -468,4 +468,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch03\18_preemption.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch03\18_preemption.ipynb")

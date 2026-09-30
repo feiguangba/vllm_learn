@@ -112,7 +112,7 @@ st.markdown("""
 > 降低占用率。`num_stages` 通过流水线预取隐藏访存延迟,`num_warps` 平衡块内并行与资源占用。
 > 用 Triton 写好 tile GEMM,完全能达到与 cuBLAS 相当的吞吐——这就是“写 kernel 不写 CUDA”的底气。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 9 章 · 第 54 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 9 章 · 第 54 课配套演示")
 ''')
 
 NB = new_nb("第 54 课 · Triton GEMM",

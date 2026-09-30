@@ -83,7 +83,7 @@ st.markdown("""
 > 💡 **选型直觉**:显存紧张→加大 TP/PP;吞吐不足→加大 DP;气泡敏感→少用 PP 或加大 m。
 > 实际配置还要看单卡显存容量、总线拓扑与负载特征,本页是「方向正确」的估算,非精确仿真。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 6 章 · 第 41 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 6 章 · 第 41 课配套演示")
 
 if __name__ == "__main__":
     try:
@@ -205,7 +205,7 @@ COMBO_EST 里的 `dtype_bytes=2` 等是**几何事实**,但「算力多快、搬
 NB.code(D('''
 import sys, os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 import gc, time
 import torch
 from vllm_real import cuda_info

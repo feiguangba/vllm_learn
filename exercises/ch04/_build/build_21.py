@@ -273,7 +273,7 @@ D('''
 '''))
 
 NB.code(D('''
-import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 from vllm_real import bench_prefill_decode, cuda_info
 
 b = bench_prefill_decode(d=256, layers=8, L=256, steps=64, reps=7)

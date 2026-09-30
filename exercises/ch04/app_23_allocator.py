@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""🗃️ app_23_allocator.py — KV 块分配器模拟器(VLLM_learn 第 4 章 · 第 23 课)
+"""🗃️ app_23_allocator.py — KV 块分配器模拟器(minivllm 第 4 章 · 第 23 课)
 
 运行: streamlit run app_23_allocator.py
 """
@@ -174,7 +174,7 @@ st.markdown(
     "💡 **直觉**:KV Cache 像一间存放柜的仓库 🗃️。free list 是「空柜清单」,refcount 是「一把钥匙几个人在用」。"
     "碎片率衡量的是仓库里「空但零散」的柜子占比 —— 这正是 PagedAttention 相比整段预分配要解决的经典难题。"
 )
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 4 章 · 第 23 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 4 章 · 第 23 课配套演示")
 
 # ============ PyCharm / 直接运行入口 ============
 # 说明: 在 PyCharm 里直接 Run 本文件,即可启动 Streamlit 服务(浏览器打开 http://localhost:8501)。

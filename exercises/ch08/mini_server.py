@@ -27,7 +27,7 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 # 让本文件无论从哪被 import 都能找到 vllm_real
-_EX = r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises"
+_EX = r"D:\Project\21-Cpp_learn\explore\minivllm\exercises"
 if _EX not in sys.path:
     sys.path.insert(0, _EX)
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")

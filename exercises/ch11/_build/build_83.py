@@ -76,7 +76,7 @@ st.markdown("""
 > 核心都是“用可接受的精度损失换体积与速度”。INT8 常能换来 4 倍体积下降,
 > 而分布越集中、校准越好,误差越小。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 11 章 · 第 83 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 11 章 · 第 83 课配套演示")
 
 if __name__ == "__main__":
     try:

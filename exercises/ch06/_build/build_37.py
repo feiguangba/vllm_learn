@@ -82,7 +82,7 @@ st.markdown("""
 > 数学上完全等价于一次完整矩阵乘(上面 ✅ 一致)。代价是**每次矩阵乘后都要一次通信**,
 > 所以 TP 的通信很频繁,适合单卡放不下、又要低延迟的场景。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 6 章 · 第 37 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 6 章 · 第 37 课配套演示")
 
 if __name__ == "__main__":
     try:
@@ -188,7 +188,7 @@ D('''
 NB.code(D('''
 import sys, os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 import torch, time, gc
 from vllm_real import cuda_info
 

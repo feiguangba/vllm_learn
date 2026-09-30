@@ -94,4 +94,4 @@ st.markdown("""
 > 详见 [vLLM 官方文档](https://docs.vllm.ai) 与
 > [Docker 安装指南](https://docs.docker.com/engine/install/)。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 8 章 · 第 48 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 8 章 · 第 48 课配套演示")

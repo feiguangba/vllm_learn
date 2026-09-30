@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minivllm"
+version = "0.1.0"
+description = "一个 ~500 行的迷你 LLM 推理引擎：分词 → 采样 → 分页 KV Cache → 连续批处理（VLLM_learn 配套包）"
+readme = "minivllm/README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "feiguangba (扶云思)" }]
+dependencies = ["torch>=2.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+minivllm = "minivllm.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["minivllm*"]

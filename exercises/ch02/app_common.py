@@ -45,7 +45,7 @@ def real_badge(real: bool = True) -> None:
 def foot_note() -> None:
     st.divider()
     st.caption(
-        "© VLLM_learn · 图解 vLLM 推理引擎。参考:PagedAttention (SOSP'23) · "
+        "© minivllm · 图解 vLLM 推理引擎。参考:PagedAttention (SOSP'23) · "
         "vLLM 官方文档 · FlashAttention · Orca。")
 
 

@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_03_sampling_demo.py"
@@ -454,4 +454,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch01\03_sampling_strategies.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch01\03_sampling_strategies.ipynb")

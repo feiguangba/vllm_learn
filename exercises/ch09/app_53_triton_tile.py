@@ -56,4 +56,4 @@ st.markdown("""
 > 自己负责的那块 tile,再用 `offs = pid * BLOCK + tl.arange(0, BLOCK)` 生成块内下标。**tile 的大小
 > (BM×BN) 和数量(grid)是一对跷跷板**:tile 越大、块越少;tile 越小、块越多、每块并行度越低。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 9 章 · 第 53 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 9 章 · 第 53 课配套演示")

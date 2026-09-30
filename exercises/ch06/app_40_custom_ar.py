@@ -70,7 +70,7 @@ st.markdown("""
 > 用共享内存直写换来显著加速。源码参考:
 > `vllm/distributed/device_communicators/custom_all_reduce.py`。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 6 章 · 第 40 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 6 章 · 第 40 课配套演示")
 
 if __name__ == "__main__":
     try:

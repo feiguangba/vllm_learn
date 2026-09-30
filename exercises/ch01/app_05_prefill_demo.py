@@ -2,7 +2,7 @@
 # app_05_prefill_demo.py — Prefill vs Decode 演示 ⚡  (真实 GPU 数据版)
 import os, sys
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 import streamlit as st, plotly.graph_objects as go
 from vllm_real import bench_prefill_decode, cuda_info
 

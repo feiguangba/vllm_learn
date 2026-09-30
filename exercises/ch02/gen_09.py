@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_09_fragmentation.py"
@@ -297,7 +297,7 @@ nb.code(
     '''# -*- coding: utf-8 -*-
 import sys, os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")   # 避免 OpenMP 冲突
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\\ch02")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\\ch02")
 import numpy as np
 from real_ops import alloc_frag_sim                     # 仓库统一分配器仿真
 
@@ -455,4 +455,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch02\09_fragmentation_problem.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch02\09_fragmentation_problem.ipynb")

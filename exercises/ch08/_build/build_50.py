@@ -121,7 +121,7 @@ st.markdown("""
 > 见 [vLLM Metrics](https://docs.vllm.ai/en/stable/design/metrics) 与
 > [Prometheus Naming](https://prometheus.io/docs/practices/naming)。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 8 章 · 第 50 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 8 章 · 第 50 课配套演示")
 ''')
 
 # =====================================================================

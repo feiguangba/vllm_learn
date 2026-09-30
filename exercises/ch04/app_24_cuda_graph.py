@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""📸 app_24_cuda_graph.py — CPU-GPU 启动间隙与 CUDA Graph 原理(VLLM_learn 第 4 章 · 第 24 课)
+"""📸 app_24_cuda_graph.py — CPU-GPU 启动间隙与 CUDA Graph 原理(minivllm 第 4 章 · 第 24 课)
 
 运行: streamlit run app_24_cuda_graph.py
 """
@@ -98,7 +98,7 @@ st.markdown(
     "CUDA Graph 是「一次性拍好菜谱,之后照单全炒」,手续费只付一次。kernel 越碎越小,收益越大。"
     "vLLM 正是靠 CUDA Graph 让 decode 阶段(每步只有几个小 kernel)的吞吐大幅提升。"
 )
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 4 章 · 第 24 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 4 章 · 第 24 课配套演示")
 
 # ============ PyCharm / 直接运行入口 ============
 # 说明: 在 PyCharm 里直接 Run 本文件,即可启动 Streamlit 服务(浏览器打开 http://localhost:8501)。

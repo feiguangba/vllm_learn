@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_07_kv_principle.py"
@@ -361,7 +361,7 @@ import sys, os
 # 设定环境变量避免 OpenMP 冲突(Windows 上 torch 常见问题)
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
 # 把 ch02 目录加入模块搜索路径,好导入 real_ops
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\\ch02")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\\ch02")
 from real_ops import bench_qkv_attn                       # 真实 GPU 微基准
 
 # 用 LLaMA 的注意力配置:H=32 头, D=128 维, 历史长度从 32 测到 512
@@ -471,4 +471,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch02\07_kv_cache_principle.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch02\07_kv_cache_principle.ipynb")

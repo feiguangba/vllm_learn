@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_06_toy_engine.py"
@@ -287,7 +287,7 @@ nb.md(
 nb.code(
     '''# 真实对照:在 GPU 上跑一个小 GPT,测 decode 阶段「批大小 → 吞吐」
 import sys
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")  # 共享库路径
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")  # 共享库路径
 from vllm_real import bench_throughput_curve, cuda_info  # 吞吐曲线 + 设备信息
 
 b_real, tps_real, ms_real = bench_throughput_curve(      # GPU 实测
@@ -385,4 +385,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch01\06_toy_inference_engine.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch01\06_toy_inference_engine.ipynb")

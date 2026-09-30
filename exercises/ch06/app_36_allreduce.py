@@ -65,7 +65,7 @@ st.markdown("""
 > 差别在**轮数**——ring 是线性的 2(N-1) 轮,tree 是对数的 2log2(N) 轮。
 > 卡少时差不多,卡一多 tree 的延迟优势就显现了;但 tree 对树高、负载均衡更敏感。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 6 章 · 第 36 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 6 章 · 第 36 课配套演示")
 
 if __name__ == "__main__":
     try:

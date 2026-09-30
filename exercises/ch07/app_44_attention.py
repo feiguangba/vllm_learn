@@ -98,4 +98,4 @@ st.markdown("""
 > naive 把 N×N 打分矩阵整体摊开(显存 O(N²)),分块把它压回 O(N)——这正是真实 GPU kernel
 > (FlashAttention / PagedAttention)的结构雏形。Triton 只是把这段逻辑映射到 GPU 并行线程而已。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 7 章 · 第 44 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 7 章 · 第 44 课配套演示")

@@ -121,7 +121,7 @@ st.markdown(r"""
 > 在不重新读回整行的情况下精确算出分母。这就是 FlashAttention 能分块扫描的理论地基。
 > 来源:[Milakov & Gimelshein, 2018 (arXiv:1805.02867)](https://arxiv.org/abs/1805.02867)
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 7 章 · 第 43 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 7 章 · 第 43 课配套演示")
 ''')
 
 NB = new_nb("第 43 课 · 在线 Softmax",

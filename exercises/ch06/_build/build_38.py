@@ -131,7 +131,7 @@ st.markdown(f"""
 > (与 f、b 无关)。当前:公式 {formula:.1%},1F1B 实测 {bub_1:.1%}。1F1B 相比 GPipe 把
 > 「同时驻留的激活数」从 m 降到约 p,更省显存,所以现代框架(含 vLLM 的 PP)普遍用它。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 6 章 · 第 38 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 6 章 · 第 38 课配套演示")
 
 if __name__ == "__main__":
     try:
@@ -241,7 +241,7 @@ D('''
 NB.code(D('''
 import sys, os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 import gc
 import torch
 from vllm_real import bench_prefill_decode, cuda_info

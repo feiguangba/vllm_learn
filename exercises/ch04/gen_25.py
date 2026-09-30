@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_25_capture.py"
@@ -246,7 +246,7 @@ with torch.no_grad():
 # 用第 24 课的实测启动手续费估算 GPU 上的收益
 import json                                      # JSON 库
 from pathlib import Path                         # 路径库
-mf = Path(r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\\ch04\\launch_measure_24.json")
+mf = Path(r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\\ch04\\launch_measure_24.json")
 launch = json.loads(mf.read_text(encoding="utf-8")) if mf.exists() else {"launch_us": 5.0, "kernel_us": 1.0}  # 加载实测
 t_l = launch["launch_us"]                         # 每次启动手续费 (µs)
 n_ops = counter.count                             # 算子数
@@ -296,7 +296,7 @@ result = dict(
     save_per_step_ms=save_per_step,                # 每步节省 ms (估算)
     note="eager/replay 为本机 CPU 实测; save 为基于启动手续费的估算",
 )
-out = Path(r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\\ch04\\cudagraph_result_25.json")
+out = Path(r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\\ch04\\cudagraph_result_25.json")
 out.write_text(json.dumps(result, indent=2), encoding="utf-8")
 print("[ok] 已保存:", out)''',
     "💾 **App 启动时会显示「已加载第 25 课 notebook 生成的数据」——就是这份文件。**",
@@ -424,4 +424,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch04\25_cudagraph_capture.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch04\25_cudagraph_capture.ipynb")

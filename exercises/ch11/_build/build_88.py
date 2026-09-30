@@ -69,7 +69,7 @@ st.markdown("""
 > 于是昇腾引擎和 vLLM 一样拥抱**分页 KV + 连续批处理**。配上 FP8/INT8 低比特权重,
 > 70B 级模型才能在单机多卡上舒服地跑起来。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 11 章 · 第 88 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 11 章 · 第 88 课配套演示")
 
 if __name__ == "__main__":
     try:

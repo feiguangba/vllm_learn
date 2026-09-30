@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""🚰 app_22_dataflow.py — 模型前向数据流浏览器(VLLM_learn 第 4 章 · 第 22 课)
+"""🚰 app_22_dataflow.py — 模型前向数据流浏览器(minivllm 第 4 章 · 第 22 课)
 
 运行: streamlit run app_22_dataflow.py
 """
@@ -92,7 +92,7 @@ st.markdown(
     "注意力、MLP、残差输出,最后在「采样」端吐出新词元。每台机器的水位(张量大小)都取决于批大小与序列长度。"
     "vLLM 的 `ModelRunner.execute_model` 做的就是:组装输入 → 循环各层 → 采样输出。"
 )
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 4 章 · 第 22 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 4 章 · 第 22 课配套演示")
 
 # ============ PyCharm / 直接运行入口 ============
 # 说明: 在 PyCharm 里直接 Run 本文件,即可启动 Streamlit 服务(浏览器打开 http://localhost:8501)。

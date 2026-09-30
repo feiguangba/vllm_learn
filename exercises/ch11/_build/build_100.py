@@ -10,7 +10,7 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 
-st.set_page_config(page_title="VLLM_learn 全书路线图 🏁", layout="wide")
+st.set_page_config(page_title="minivllm 全书路线图 🏁", layout="wide")
 st.title("🏁 第 100 课 · 全书总结:vLLM 推理引擎全景与学习路线")
 
 st.markdown("""
@@ -170,7 +170,7 @@ for i, (t, rng, sub, fill, edge) in enumerate(phases):
         ax.annotate("", xy=(x + bw + 0.1, 1.8), xytext=(x + bw - 0.05, 1.8),
                     arrowprops=dict(arrowstyle="->", lw=2.4, color="#555"))
     x += bw + 0.5
-ax.text(0.5, 3.2, "VLLM_learn 全书四段主线(第 1-100 课)", fontsize=14, fontweight="bold", ha="center", color="#1f4e79")
+ax.text(0.5, 3.2, "minivllm 全书四段主线(第 1-100 课)", fontsize=14, fontweight="bold", ha="center", color="#1f4e79")
 ax.set_xlim(0, x); ax.set_ylim(0, 3.7)
 plt.tight_layout()
 '''),

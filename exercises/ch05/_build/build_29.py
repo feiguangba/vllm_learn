@@ -110,7 +110,7 @@ st.markdown("""
 > 💡 **经验法则**:权重(大致零对称)用对称量化;激活(ReLU 后全为正)用非对称量化。
 > 这也是 PyTorch / vLLM 里最常见的 QConfig 组合:权重 per-channel 对称 + 激活 per-tensor 非对称。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 5 章 · 第 29 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 5 章 · 第 29 课配套演示")
 
 if __name__ == "__main__":
     try:

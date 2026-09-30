@@ -456,7 +456,7 @@ D('''
 '''))
 
 NB.code(D('''
-import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 from vllm_real import bench_throughput_curve, cuda_info
 
 b_list, tps, mps = bench_throughput_curve(batch=(1, 4, 16, 64, 128), token_len=32, reps=5)

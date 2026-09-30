@@ -105,7 +105,7 @@ st.markdown("""
 > 很多个 program(block)上执行,每个 program 用 `tl.program_id` 知道自己管哪一块数据。
 > 它把 CUDA 里“线程 ↔ 数据”的手动映射,升级成了“块 ↔ 数据”的声明式描述,复杂度交给编译器。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 9 章 · 第 51 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 9 章 · 第 51 课配套演示")
 ''')
 
 NB = new_nb("第 51 课 · Triton 是什么",

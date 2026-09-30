@@ -97,7 +97,7 @@ st.markdown("""
 > 它和 ONNX 同属“图 IR”,和 TorchScript 同属“图 + 代码”的过渡形态。
 > 任何会“读图”的运行时都能执行它——这就是中间表示的威力。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 11 章 · 第 82 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 11 章 · 第 82 课配套演示")
 
 if __name__ == "__main__":
     try:

@@ -268,7 +268,7 @@ line.render_notebook()
 
 NB.code(D('''
 # 真实对照:在 GPU 上跑一个小 GPT,测 decode 阶段「批大小 → 吞吐」的真实曲线
-import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 from vllm_real import bench_throughput_curve, cuda_info
 
 b_real, tps_real, ms_real = bench_throughput_curve(

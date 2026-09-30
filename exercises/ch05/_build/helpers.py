@@ -3,10 +3,10 @@
 import sys
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
-CH05 = r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch05"
+CH05 = r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch05"
 CHAPTER = "第 5 章 · 量化"
 
 

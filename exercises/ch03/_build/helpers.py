@@ -3,10 +3,10 @@
 import sys
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
-CH03 = r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch03"
+CH03 = r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch03"
 CHAPTER = "第 3 章 · Continuous Batching 与调度"
 
 

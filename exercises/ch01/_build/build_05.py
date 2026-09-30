@@ -8,7 +8,7 @@ APP_05 = D('''
 # app_05_prefill_demo.py — Prefill vs Decode 演示 ⚡  (真实 GPU 数据版)
 import os, sys
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 import streamlit as st, plotly.graph_objects as go
 from vllm_real import bench_prefill_decode, cuda_info
 
@@ -163,7 +163,7 @@ D('''
 '''))
 
 NB.code("import os\nos.environ.setdefault(\"KMP_DUPLICATE_LIB_OK\", \"TRUE\")\n"
-        "import sys\nsys.path.insert(0, r\"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\")\n"
+        "import sys\nsys.path.insert(0, r\"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\")\n"
         "import torch\nimport numpy as np\nimport pandas as pd\nimport time\n"
         "from vllm_real import TinyGPT, bench_prefill_decode, cuda_info",
         "🧪 复用跨章共享库 `vllm_real`(内含 TinyGPT 与真实微基准);它自动探测 CUDA/CPU。")

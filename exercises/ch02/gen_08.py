@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_08_kv_memory.py"
@@ -278,7 +278,7 @@ import sys, os
 # 设定环境变量避免 OpenMP 冲突(Windows 上 torch 常见问题)
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
 # 把 ch02 目录加入模块搜索路径,好导入 real_ops
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\\ch02")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\\ch02")
 from real_ops import kv_bytes_real                       # 真实 CUDA 分配微基准
 
 gi = 2 ** 30                                             # 1 GiB 的字节数
@@ -475,4 +475,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch02\08_kv_cache_memory.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch02\08_kv_cache_memory.ipynb")

@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_27_profiler.py"
@@ -396,7 +396,7 @@ summary = dict(
     metrics=metrics,                               # 指标 dict (app 用)
     note="本机 CPU 剖析 (torch.profiler); 指标来自 B=4 并发 serving 模拟",
 )
-out = Path(r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\\ch04\\profile_summary_27.json")
+out = Path(r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\\ch04\\profile_summary_27.json")
 out.write_text(json.dumps(summary, indent=2), encoding="utf-8")
 print("[ok] 已保存:", out)
 print(f"  TTFT={ttft:.2f}ms TPOT={tpot:.2f}ms TPS={tps:.0f} 忙占比={sm_busy_pct:.1f}% | 热点算子数={len(profile_rows)}")''',
@@ -468,4 +468,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch04\27_profiling_metrics.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch04\27_profiling_metrics.ipynb")

@@ -4,7 +4,7 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 
-st.set_page_config(page_title="VLLM_learn 全书路线图 🏁", layout="wide")
+st.set_page_config(page_title="minivllm 全书路线图 🏁", layout="wide")
 st.title("🏁 第 100 课 · 全书总结:vLLM 推理引擎全景与学习路线")
 
 st.markdown("""

@@ -97,7 +97,7 @@ st.markdown("""
 > 💡 **结论**:单卡放不下→用 TP/PP 摊权重;单卡算不动(吞吐不够)→用 DP 摊数据。
 > 并行度不是越高越好,通信会成为新瓶颈。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 6 章 · 第 35 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 6 章 · 第 35 课配套演示")
 
 if __name__ == "__main__":
     try:
@@ -221,7 +221,7 @@ RTX 5060,看精确占多少 MB;再线性外推 7B / 70B,对照本机显存容量
 NB.code(D('''
 import sys, os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")   # Windows 下 OMP 库冲突防护
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 import torch, gc
 from vllm_real import cuda_info
 

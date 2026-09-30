@@ -84,7 +84,7 @@ st.markdown("""
 > 💡 **结论**:单卡放不下→用 TP/PP 摊权重;单卡算不动(吞吐不够)→用 DP 摊数据。
 > 并行度不是越高越好,通信会成为新瓶颈。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 6 章 · 第 35 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 6 章 · 第 35 课配套演示")
 
 if __name__ == "__main__":
     try:

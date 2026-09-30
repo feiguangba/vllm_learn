@@ -96,7 +96,7 @@ st.markdown("""
 > 💡 **选择口诀**:装不下 → GPTQ/AWQ int4;有 H100+ 且要吞吐 → FP8;
 > 求稳少折腾 → int8(W8A8);只救 KV 显存 → KV FP8/int8;调试期 → fp16 基线。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 5 章 · 第 34 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 5 章 · 第 34 课配套演示")
 
 if __name__ == "__main__":
     try:

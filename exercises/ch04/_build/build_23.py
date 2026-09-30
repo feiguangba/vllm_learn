@@ -320,10 +320,10 @@ D('''
 '''))
 
 NB.code(D('''
-import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 import os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-sys.path.insert(0, r"D:/Project/21-Cpp_learn/explore/VLLM_learn/exercises/ch02")
+sys.path.insert(0, r"D:/Project/21-Cpp_learn/explore/minivllm/exercises/ch02")
 from real_ops import kv_bytes_real
 
 # 真实配置:D=128,16 层,8 个 KV head;一条 2048 词元的序列,bf16 KV

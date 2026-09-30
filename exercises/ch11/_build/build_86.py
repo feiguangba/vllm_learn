@@ -88,7 +88,7 @@ st.markdown("""
 > 编译工具链**。理解它最划算的方式,就是与 CUDA 生态**逐个对照**:
 > `AscendCL ↔ CUDA Runtime`、`GEMM/NN 算子库 ↔ cuBLAS/cuDNN`、`HCCL ↔ NCCL`、`Ascend C ↔ CUDA C`。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 11 章 · 第 86 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 11 章 · 第 86 课配套演示")
 
 if __name__ == "__main__":
     try:

@@ -101,4 +101,4 @@ st.markdown("""
 > 见 [vLLM OpenAI-Compatible Server](https://docs.vllm.ai/en/stable/serving/online_serving/openai_compatible_server)
 > 与 [OpenAI Chat Completions API](https://platform.openai.com/docs/api-reference/chat)。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 8 章 · 第 49 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 8 章 · 第 49 课配套演示")

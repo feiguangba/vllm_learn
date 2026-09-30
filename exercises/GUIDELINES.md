@@ -1,4 +1,4 @@
-# VLLM_learn 练习册写作指南(给章节作者的统一规范)
+# minivllm 练习册写作指南(给章节作者的统一规范)
 
 ## 总风格(参照《鸢尾花书》数据科学系列)
 - 中文写作,口语化、亲切、像一位老师手把手带着学
@@ -19,7 +19,7 @@
 
 ## 工具:必须用 nb_builder.py 生成 ipynb
 ```python
-import sys; sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+import sys; sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 nb = Notebook("第 08 课 · KV Cache 的内存账本", subtitle="...", emoji="🧮", chapter="第 2 章 · KV Cache 与 PagedAttention")
 chapter_cover(nb, objectives=[...], toc=[(标题, 描述), ...], links=[("vLLM 文档", "https://docs.vllm.ai"), ...])
@@ -48,5 +48,5 @@ D:\uv_envs\uv_cuda\Scripts\python.exe -m jupyter nbconvert --to notebook --execu
 若某 cell 因 notebook 渲染问题失败,调整为安全写法(如用 pyecharts render_notebook 前先 `from pyecharts.globals import CurrentConfig`)。执行成功后才能交付。
 
 ## 章节划分与文件命名
-目录: D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch01 .. ch08
+目录: D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch01 .. ch08
 文件: NN_短名.ipynb (NN 为两位编号,全书连续编号 01-50)

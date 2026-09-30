@@ -110,7 +110,7 @@ st.markdown("""
 > 💡 **选择口诀**:装不下 → GPTQ/AWQ int4;有 H100+ 且要吞吐 → FP8;
 > 求稳少折腾 → int8(W8A8);只救 KV 显存 → KV FP8/int8;调试期 → fp16 基线。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 5 章 · 第 34 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 5 章 · 第 34 课配套演示")
 
 if __name__ == "__main__":
     try:
@@ -293,7 +293,7 @@ D('''
 
 NB.code(D('''
 import sys, torch, time, gc
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 from vllm_real import bench_throughput_curve, cuda_info
 
 dev = "cuda" if torch.cuda.is_available() else "cpu"

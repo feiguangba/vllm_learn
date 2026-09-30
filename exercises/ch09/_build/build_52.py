@@ -96,7 +96,7 @@ st.markdown("""
 > 启动/调度开销占比大,带宽上不去;BLOCK 足够大后,曲线进入平台期——再大也不会有明显提升。
 > 这解释了为什么“调 tile 大小”是 Triton 里最常见的性能旋钮之一。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 9 章 · 第 52 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 9 章 · 第 52 课配套演示")
 ''')
 
 NB = new_nb("第 52 课 · 第一个 Triton kernel:向量加法",

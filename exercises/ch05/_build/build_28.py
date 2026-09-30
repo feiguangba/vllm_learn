@@ -109,7 +109,7 @@ st.markdown("""
 > 让有限的格子尽可能盖住数据的真实分布范围。
 > 参考:[A White Paper on Neural Network Quantization (arXiv:2106.08295)](https://arxiv.org/abs/2106.08295)。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 5 章 · 第 28 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 5 章 · 第 28 课配套演示")
 
 if __name__ == "__main__":
     try:

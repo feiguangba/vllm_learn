@@ -75,7 +75,7 @@ st.markdown("""
 > **MindIE** 则是一套为昇腾深度定制的独立引擎。选谁,取决于你要“生态兼容”还是“榨干算力”。
 > 两者共享同一套现代推理心法:连续批处理 + PagedAttention(第 85/88 课)。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 11 章 · 第 84 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 11 章 · 第 84 课配套演示")
 
 if __name__ == "__main__":
     try:

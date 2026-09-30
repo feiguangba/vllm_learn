@@ -320,7 +320,7 @@ D('''
 NB.code(D('''
 import sys, os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 from vllm_real import bench_throughput_curve, cuda_info
 
 print("设备:", cuda_info())
@@ -362,7 +362,7 @@ data = dict(requests=(n := len(reqs)), tokens=tok, device=DEVICE,
             rows=[dict(batch_size=int(r["batch_size"]), static_tok_s=float(r["static_tok_s"]),
                        cont_tok_s=float(r["cont_tok_s"]), speedup=float(r["speedup"]))
                   for r in res_rows])
-out_path = "D:/Project/21-Cpp_learn/explore/VLLM_learn/exercises/ch03/batch_compare_data.json"
+out_path = "D:/Project/21-Cpp_learn/explore/minivllm/exercises/ch03/batch_compare_data.json"
 with open(out_path, "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 print("已保存:", out_path)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""🧩 app_21_metadata.py — 变长序列组批量张量组装演示(VLLM_learn 第 4 章 · 第 21 课)
+"""🧩 app_21_metadata.py — 变长序列组批量张量组装演示(minivllm 第 4 章 · 第 21 课)
 
 运行: streamlit run app_21_metadata.py
 """
@@ -120,7 +120,7 @@ st.markdown(
     "`positions` 记住每个词元在自己纸条上的位置,`slot_mapping` 则是把词元'寄放'进 KV Cache 的寄存柜号,"
     "`block_table` 是每个序列的柜子号清单。五个张量合在一起,GPU 就能高效地并行处理整批变长序列。"
 )
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 4 章 · 第 21 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 4 章 · 第 21 课配套演示")
 
 # ============ PyCharm / 直接运行入口 ============
 # 说明: 在 PyCharm 里直接 Run 本文件,即可启动 Streamlit 服务(浏览器打开 http://localhost:8501)。

@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_24_cuda_graph.py"
@@ -345,7 +345,7 @@ measure = dict(
     speedup=round(float(t_many / max(t_batch, 1e-9)), 2),  # 合并提交加速比
     note="真实 GPU 微基准: N 次小 matmul vs 1 次合并 batched matmul, 差值即 N×t_l",
 )
-out = Path(r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\\ch04\\launch_measure_24.json")
+out = Path(r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\\ch04\\launch_measure_24.json")
 out.write_text(json.dumps(measure, indent=2, ensure_ascii=False), encoding="utf-8")   # 写 JSON
 print("[ok] 已保存:", out)
 print("内容:", json.dumps(measure, ensure_ascii=False, indent=2))''',
@@ -397,4 +397,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch04\24_cuda_graph_principle.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch04\24_cuda_graph_principle.ipynb")

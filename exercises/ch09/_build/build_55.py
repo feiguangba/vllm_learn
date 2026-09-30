@@ -137,7 +137,7 @@ st.markdown("""
 > N×N 大矩阵永不落盘,把峰值显存从 O(N²) 压到 O(N),并靠 `exp2 + LOG2E` 在 Triton 里精确复现
 > 标准 softmax。序列越长,节省越夸张(N=8192 时省几十倍)。这就是 vLLM 在长序列场景提速的关键。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 9 章 · 第 55 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 9 章 · 第 55 课配套演示")
 ''')
 
 NB = new_nb("第 55 课 · Triton FlashAttention",

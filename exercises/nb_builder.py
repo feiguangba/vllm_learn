@@ -1,6 +1,6 @@
 """
-nb_builder.py — VLLM_learn 笔记本生成工具
-用法:  import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+nb_builder.py — minivllm 笔记本生成工具
+用法:  import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
        from nb_builder import Notebook
        nb = Notebook("标题", emoji="🚀")
        nb.md("# 第 1 课 ...", "段落...")
@@ -31,7 +31,7 @@ class Notebook:
             cover.append(f"\n**章节**: {chapter}")
         cover.append(
             "\n---\n"
-            "\n> **📚 本笔记本属于《VLLM_learn: 图解 vLLM 推理引擎》系列**"
+            "\n> **📚 本笔记本属于《minivllm: 图解 vLLM 推理引擎》系列**"
             "\n> 风格参照《鸢尾花书》: 重图解、重直觉、循序渐进、动手实操"
         )
         self.md("\n".join(cover))

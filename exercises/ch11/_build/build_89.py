@@ -75,7 +75,7 @@ st.markdown("""
 > 切分方式(**策略**)枚举出来,用 cost model 评估通信,再做全局协调——
 > 这比人手写 TP/PP 更不容易出错,也更接近最优。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 11 章 · 第 89 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 11 章 · 第 89 课配套演示")
 
 if __name__ == "__main__":
     try:

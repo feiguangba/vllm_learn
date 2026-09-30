@@ -16,7 +16,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-EXERCISES = r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises"
+EXERCISES = r"D:\Project\21-Cpp_learn\explore\minivllm\exercises"
 PY = r"D:\uv_envs\uv_cuda\Scripts\python.exe"
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.environ["PYTHONPATH"] = EXERCISES

@@ -97,7 +97,7 @@ st.markdown("""
 > 把收集与 attention 融合在一起,省掉来回搬运。来源:
 > [Kwon et al., SOSP 2023 (arXiv:2309.06180)](https://arxiv.org/abs/2309.06180)
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 7 章 · 第 45 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 7 章 · 第 45 课配套演示")
 ''')
 
 NB = new_nb("第 45 课 · PagedAttention",

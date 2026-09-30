@@ -215,7 +215,7 @@ bar.render_notebook()
 
 NB.md("## 7️⃣ 昇腾 × vLLM:推理引擎怎么落地上昇腾 🚀",
 D('''
-最后一问:我们这本《VLLM_learn》一直用 vLLM 跑 GPU,昇腾上能不能跑 vLLM?**能**。
+最后一问:我们这本《minivllm》一直用 vLLM 跑 GPU,昇腾上能不能跑 vLLM?**能**。
 生态里有两个关键项目:
 
 - **vllm-ascend**:vLLM 官方支持的昇腾分支,把 vLLM 的推理管线(PagedAttention、连续

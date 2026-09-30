@@ -78,7 +78,7 @@ st.markdown("""
 > 差别主要在**调度器**:vLLM/MindIE 这类服务引擎还会叠加连续批处理、
 > PagedAttention、预分配 KV 池——这些正是第 84/85/88 课的主角。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 11 章 · 第 81 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 11 章 · 第 81 课配套演示")
 
 if __name__ == "__main__":
     try:

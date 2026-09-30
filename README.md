@@ -1,29 +1,87 @@
+<div align="center">
 
-# VLLM_learn · 图解 vLLM 推理引擎
+<img src="assets/logo.png" alt="minivllm logo" width="340"/>
 
+# minivllm · 图解 vLLM 推理引擎
+
+**用「图解 + 动手实验 + 一个迷你引擎」从零到一理解 vLLM 推理系统。**
+
+KV Cache · PagedAttention · Continuous Batching · CUDA Graph · 量化 · 分布式并行 · Attention Kernel · Triton · AI 编译器 · 华为昇腾全栈
+
+[![CI](https://github.com/feiguangba/minivllm/actions/workflows/sanity.yml/badge.svg)](./.github/workflows/sanity.yml)
 [![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
-[![Docker](https://img.shields.io/badge/docker-compose-2496ED.svg)](./docker-compose.yml)
-[![vLLM docs](https://img.shields.io/badge/architecture-V1%20v0.23--dev-orange.svg)](./VERSIONS.md)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![CI](https://github.com/feiguangba/vllm_learn/actions/workflows/sanity.yml/badge.svg)](./.github/workflows/sanity.yml)
+[![License](https://img.shields.io/badge/code-MIT-blue.svg)](./LICENSE)
+[![Docs](https://img.shields.io/badge/docs-CC%20BY%204.0-green.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/fuyunsi/vllm-learn-labs.svg)](https://hub.docker.com/r/fuyunsi/vllm-learn-labs)
 [![English](https://img.shields.io/badge/README-English-green.svg)](./README_en.md)
 
-> 用 **图解 + 动手实验** 的方式，从零到一理解 vLLM 推理引擎：KV Cache、PagedAttention、Continuous Batching、CUDA Graph、量化、分布式并行、Attention Kernel、Triton、AI 编译器，以及华为昇腾全栈。
->
-> **100 课系统练习册 + 8 篇源码级架构文档 + 12 张顶会风格架构图。**
+**100 课练习册 · 8 篇源码级架构文档 · 12 张顶会风格架构图 · ~500 行可运行的迷你推理引擎 · 399 题参考答案**
+
+</div>
+
+---
+
+## ⚡ 30 秒上手
 
 ```bash
-docker compose up --build
+git clone https://github.com/feiguangba/minivllm.git
+cd minivllm
+docker compose up --build          # GPU 教学镜像（torch 2.11.0+cu128）
 ```
 
-浏览器打开 [http://localhost:8888](http://localhost:8888)（token: `vllm_learn`）和 [http://localhost:8501](http://localhost:8501)。内核选 `Python 3 (vllm_learn)`。版本约定见 [VERSIONS.md](VERSIONS.md)。
+浏览器打开 [http://localhost:8888](http://localhost:8888)（token: `vllm_learn`）和 [http://localhost:8501](http://localhost:8501)，内核选 `Python 3 (vllm_learn)`。不想本地构建？`docker pull fuyunsi/vllm-learn-labs:gpu` 后 `docker compose up -d labs`。
 
-| 模块 | 路径 | 说明 |
+没有 GPU？[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/feiguangba/minivllm/master) 在线环境 CPU 即可体验 ch01–ch03 的多数课程。
+
+---
+
+## 📦 这个仓库里有什么
+
+| | 模块 | 路径 | 说明 |
+|---|---|---|---|
+| 🧪 | **练习册（100 课）** | [`exercises/`](exercises/) | 11 章 100 课 Jupyter notebook，风格参照《鸢尾花书》：重图解、重直觉、循序渐进、动手实验；ch01–ch08 每课配 Streamlit 交互演示 |
+| 🚂 | **minivllm 迷你引擎** | [`minivllm/`](minivllm/) | ~500 行把课程核心概念落成一个能真跑、带 10 个测试的 Python 包——学完就能读懂 vLLM 的骨架 |
+| 📚 | **repowiki 架构文档** | [`repowiki/`](repowiki/) | 8 篇源码级架构文档（带 `文件:行号` 引用），基于 vLLM **V1** `v0.23.0-dev` 精读整理 |
+| 🖼️ | **架构图库** | [`exercises/figs/`](exercises/figs/) | 12 张顶会风格 SVG 架构图（已嵌入对应课程与第 100 课总画廊） |
+| ✅ | **参考答案** | [`answers/`](answers/) | 100 课全部 399 道练习题的参考答案，先自己做再对照 |
+
+---
+
+## 🚂 minivllm：把课程变成一个能跑的引擎
+
+读 100 课容易，动手写出引擎才算懂。`minivllm` 用约 500 行代码复刻 vLLM 的核心数据流，
+每个模块都能对应到练习册的具体课程：
+
+| 模块 | 对应课程 | 学什么 |
 |---|---|---|
-| 🐳 **Docker** | [`docker-compose.yml`](docker-compose.yml) | GPU 教学镜像一键跑通（torch 2.11.0+cu128）；`--profile gpu` 可选挂官方 vLLM 服务 |
-| 🧪 **练习册（100 课）** | [`exercises/`](exercises/) | 11 章 100 课 Jupyter notebook，风格参照《鸢尾花书》：重图解、重直觉、循序渐进、动手实验 |
-| 📚 **repowiki 架构文档** | [`repowiki/`](repowiki/) | 8 篇源码级架构文档（带 `文件:行号`），基于 vLLM **V1** `v0.23.0-dev` 精读整理 |
-| 🖼️ **架构图库** | [`exercises/figs/`](exercises/figs/) | 12 张 Visio 风格 SVG 架构图（已嵌入对应课程与第 100 课总画廊） |
+| `tokenizer.py` | ch01 第 01 课 | 迷你 BPE：合并对 → 词表 → 压缩率 |
+| `sampler.py` | ch01 第 03 课 | greedy / temperature / top-k / top-p |
+| `paged_kv.py` | ch02 第 10/11/13 课 | BlockAllocator、block table、前缀共享（refcount）、碎片率 |
+| `model.py` | ch04 第 04/22 课 | prefill（并行）与 decode（增量）两条路径 |
+| `engine.py` | ch03 第 14–18 课 | FCFS 准入、批内轮转、完成回收、块耗尽抢占（recompute） |
+
+跑起来只要三行依赖（torch 即可）：
+
+```bash
+pip install -e .
+python -m minivllm "the quick brown fox" --max-new 16 --seed 0 --verbose
+```
+
+```python
+from minivllm import MiniBPETokenizer, Sampler, PagedKVCache, TinyGPT, LLMEngine
+
+tok = MiniBPETokenizer(vocab_size=300).train(["the quick brown fox " * 8])
+model = TinyGPT(vocab_size=tok.vocab_size)
+cache = PagedKVCache(num_blocks=64, block_size=8,
+                     n_heads=model.n_heads, head_dim=model.head_dim,
+                     n_layers=model.n_layers)
+engine = LLMEngine(model, cache, Sampler(temperature=0.8, top_k=20, seed=0))
+engine.add_request(tok.encode("the quick brown fox"), max_new_tokens=16)
+print(tok.decode(next(iter(engine.run().values()))))
+```
+
+> 模型是随机权重的 TinyGPT，输出是伪文本——本包教的是**推理引擎的数据流与调度**，
+> 不是模型质量。细节见 [`minivllm/README.md`](minivllm/README.md)。
 
 ---
 
@@ -53,7 +111,7 @@ docker compose up --build
 
 ## 🧪 练习册总览（11 章 · 100 课）
 
-> 每课 = 1 个 `NN_*.ipynb`（可运行、带实验）+ 多数课程配 `app_NN_*.py` 交互演示（ch01–ch08 全覆盖，ch09–ch11 部分）。
+> 每课 = 1 个 `NN_*.ipynb`（可运行、带实验）+ 多数课程配 `app_NN_*.py` 交互演示（ch01–ch08 全覆盖，ch09–ch11 部分）+ [`answers/`](answers/) 里对应参考答案。
 
 ### 第 1 章 · LLM 推理基础（01–06）`exercises/ch01/`
 
@@ -231,6 +289,16 @@ docker compose up --build
 
 ---
 
+## ☁️ 云端运行（免配置）
+
+| 环境 | 适合 | 入口 |
+|---|---|---|
+| **Binder** | 没有本机 Python/GPU，想快速翻翻 notebook（CPU，ch01–ch03 多数课程可直接跑） | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/feiguangba/minivllm/master) |
+| **Colab** | 想要免费 GPU 翻某一本 notebook（需逐个打开 ipynb 链接） | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/feiguangba/minivllm/blob/master/exercises/ch01/01_token_and_tokenizer.ipynb) |
+| **本机 Docker（推荐）** | 认真跑全部 100 课（GPU 章节需要 CUDA） | `docker compose up --build` |
+
+---
+
 ## 🚀 环境与使用方法
 
 ### Docker（推荐，GPU 教学镜像）
@@ -298,7 +366,7 @@ $env:KMP_DUPLICATE_LIB_OK = "TRUE"
 ch01–ch08 每课配有 `app_NN_*.py`，与 notebook 同目录：
 
 ```powershell
-D:\uv_envs\uv_cuda\Scripts\python.exe -m streamlit run exercises/ch01/app_01_token_demo.py
+python -m streamlit run exercises/ch01/app_01_token_demo.py
 # 浏览器打开 http://localhost:8501
 ```
 
@@ -307,23 +375,35 @@ app 源码也以 `%%writefile` cell 内嵌在对应 notebook 中，二者内容�
 ### 学习顺序建议
 
 1. **入门主线**：ch01 → ch02 → ch03（推理基础 → KV Cache/PagedAttention → 调度），每课先跑 notebook 再玩 app；
-2. **深入执行**：ch04 → ch05 → ch06（模型执行/CUDA Graph → 量化 → 并行）；
-3. **底层与部署**：ch07 → ch08（Attention Kernel → 服务化）；
-4. **扩展视野**：ch09（Triton）→ ch10（AI 编译器）→ ch11（昇腾全栈）；
-5. 需要「源码级」理解时，对照 **repowiki 01–08** 与上游 [vLLM 源码（commit 967e104）](https://github.com/vllm-project/vllm/tree/967e104)；
-6. 想快速建立全局直觉，先看第 [100 课](exercises/ch11/100_summary_roadmap.ipynb) 的 12 张架构图总画廊。
+2. **写一个迷你引擎**：跟着 [`minivllm/`](minivllm/) 的五个模块自己实现一遍（或直接读源码对照）；
+3. **深入执行**：ch04 → ch05 → ch06（模型执行/CUDA Graph → 量化 → 并行）；
+4. **底层与部署**：ch07 → ch08（Attention Kernel → 服务化）；
+5. **扩展视野**：ch09（Triton）→ ch10（AI 编译器）→ ch11（昇腾全栈）；
+6. 需要「源码级」理解时，对照 **repowiki 01–08** 与上游 [vLLM 源码（commit 967e104）](https://github.com/vllm-project/vllm/tree/967e104)；
+7. 想快速建立全局直觉，先看第 [100 课](exercises/ch11/100_summary_roadmap.ipynb) 的 12 张架构图总画廊。
 
 ---
 
 ## 🗂️ 目录结构
 
 ```
-VLLM_learn/
+minivllm/
 ├── README.md / README_en.md
 ├── VERSIONS.md              # 练习册与 vLLM V1 文档的版本约定
 ├── docker-compose.yml       # labs(GPU 教学镜像) + vllm(vllm-openai 服务)
 ├── requirements.txt
+├── minivllm/                # ★ 迷你推理引擎包（~500 行，带测试）
+│   ├── tokenizer.py         #   迷你 BPE 分词器
+│   ├── sampler.py           #   采样策略（greedy/temperature/top-k/top-p）
+│   ├── paged_kv.py          #   分页 KV Cache + BlockAllocator
+│   ├── model.py             #   TinyGPT（prefill/decode 双路径）
+│   ├── engine.py            #   连续批处理调度引擎
+│   └── cli.py / __main__.py #   python -m minivllm 命令行
+├── tests/                   # minivllm 的 10 个测试用例
+├── answers/                 # 100 课 399 题参考答案（ch01–ch11）
 ├── docker/                  # Dockerfile / entrypoint / Streamlit 课表
+├── .binder/                 # Binder 云端环境（CPU）
+├── assets/                  # LOGO
 ├── .claude/skills/paper-fig/ # 顶会级科研绘图规范（画新架构图时引用）
 ├── repowiki/                # 8 篇源码级架构文档（V1）
 │   ├── 01_system_architecture.md .. 08_Attention_Kernels.md
@@ -345,8 +425,7 @@ VLLM_learn/
 ## ✍️ 版权与参考
 
 - 本仓库为学习笔记，非官方文档；
-- **代码**（`exercises/` 下的 `.py`、notebook 内代码、`docker/`）以 [MIT License](./LICENSE) 授权；
+- **代码**（`exercises/` 下的 `.py`、notebook 内代码、`docker/`、`minivllm/`）以 [MIT License](./LICENSE) 授权；
 - **文档与图**（`repowiki/*.md`、`exercises/figs/*.svg` 及 notebook 中的讲解文本）以 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 授权：可自由分享与改编，需注明出处并链接本仓库；
 - 架构图为本仓库原创绘制，绘图规范提炼自公开的顶会绘图方法论；
 - 参考：vLLM 官方文档 <https://docs.vllm.ai>、PagedAttention 论文 <https://arxiv.org/abs/2309.06180>、FlashAttention 论文 <https://arxiv.org/abs/2205.14135>、Orca 论文 <https://arxiv.org/abs/2208.14217>。
-

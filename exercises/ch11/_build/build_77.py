@@ -164,7 +164,7 @@ plt.tight_layout()
 
 NB.md("## 6️⃣ 对 vLLM 的启发:推理引擎也在『静态化』 🚀",
 D('''
-回到《VLLM_learn》的主线:LLM 推理为什么也要静态图思想?
+回到《minivllm》的主线:LLM 推理为什么也要静态图思想?
 
 - **CUDA Graph**:vLLM 支持把解码的固定计算图**捕获(Capture)成 CUDA Graph**,反复回放,
   省去每步逐 kernel 启动 —— 这就是"静态图"在 GPU 上的翻版;

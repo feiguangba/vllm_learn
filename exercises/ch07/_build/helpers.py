@@ -3,10 +3,10 @@
 import sys
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
-CH07 = r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch07"
+CH07 = r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch07"
 CHAPTER = "第 7 章 · Attention Kernel 实战"
 
 

@@ -92,7 +92,7 @@ st.markdown("""
 > FlashAttention 用分块 + 在线 softmax 把这些中间量留在片上(SRAM),HBM 访存从 $O(N^2)$ 降到 $O(N)$。
 > 计算量(FLOPs)其实没变,省的是**访存**这一块。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 7 章 · 第 42 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 7 章 · 第 42 课配套演示")
 ''')
 
 NB = new_nb("第 42 课 · FlashAttention 原理",

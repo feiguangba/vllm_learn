@@ -64,7 +64,7 @@ st.markdown("""
 > 非连续物理块也能当连续序列用。块大小是一个“碎片率 ↔ 管理开销”的工程旋钮——
 > 选小了浪费空间,选大了浪费内存。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 11 章 · 第 85 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 11 章 · 第 85 课配套演示")
 
 if __name__ == "__main__":
     try:

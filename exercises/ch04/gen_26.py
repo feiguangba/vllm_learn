@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_26_compile.py"
@@ -270,7 +270,7 @@ import json                                      # JSON 库
 from pathlib import Path                         # 路径库
 
 # 加载第 24 课的实测启动手续费
-mf = Path(r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\\ch04\\launch_measure_24.json")
+mf = Path(r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\\ch04\\launch_measure_24.json")
 launch = json.loads(mf.read_text(encoding="utf-8")) if mf.exists() else {"launch_us": 5.0, "kernel_us": 1.0}
 t_l = launch["launch_us"]                          # 启动手续费 (µs)
 
@@ -350,7 +350,7 @@ measure = dict(
     save_us=[float(l + h) for l, h in zip(launch_parts, hbm_parts)],  # 每档节省
     note="eager 侧 (kernel 数、耗时) 为本机实测; compiled 侧为融合规则估算",
 )
-out = Path(r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\\ch04\\compile_measure_26.json")
+out = Path(r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\\ch04\\compile_measure_26.json")
 out.write_text(json.dumps(measure, indent=2), encoding="utf-8")
 print("[ok] 已保存:", out)
 print("内容:", {k: v for k, v in measure.items() if not isinstance(v, list)})''',
@@ -418,4 +418,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch04\26_torch_compile.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch04\26_torch_compile.ipynb")

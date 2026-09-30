@@ -115,7 +115,7 @@ st.markdown("""
 > 一旦需要**分页 KV**,`TORCH_SDPA` 这类不支持分页的后端就会被过滤掉。真实工程里的
 > `AttentionSelectorConfig` 就有 `has_sliding_window` / `use_non_causal` 等功能字段。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 7 章 · 第 47 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 7 章 · 第 47 课配套演示")
 ''')
 
 NB = new_nb("第 47 课 · Attention 后端选择",

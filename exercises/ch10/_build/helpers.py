@@ -4,10 +4,10 @@ import sys
 import textwrap
 from pathlib import Path
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
-CH10 = r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch10"
+CH10 = r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch10"
 CHAPTER = "第 10 章 · AI 编译器原理"
 
 

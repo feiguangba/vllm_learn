@@ -3,10 +3,10 @@
 import sys
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
-CH08 = r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch08"
+CH08 = r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch08"
 CHAPTER = "第 8 章 · 端到端 vLLM 部署"
 
 

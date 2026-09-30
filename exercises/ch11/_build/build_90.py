@@ -211,7 +211,7 @@ ax.set_xticks([]); ax.set_xlim(0, 1)
 ax.set_title("你学的每一课,换块硬件依然成立 —— 推理工程是“通识课”", fontsize=12)
 ax.legend(frameon=True, fontsize=9, loc="lower right")
 plt.tight_layout(); plt.show()
-'''), "📊 六个 ✓ 意味着:第十一章不是“另一本书”,而是把前十章的知识翻译成了昇腾方言。恭喜你,整册《VLLM_learn》到此收官!🎉")
+'''), "📊 六个 ✓ 意味着:第十一章不是“另一本书”,而是把前十章的知识翻译成了昇腾方言。恭喜你,整册《minivllm》到此收官!🎉")
 
 wrapup(NB,
     summary=[

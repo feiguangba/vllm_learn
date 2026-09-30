@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_20_batch_compare.py"
@@ -419,7 +419,7 @@ nb.code(
     '''# -*- coding: utf-8 -*-
 import sys, os                                   # 系统库
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")  # OpenMP 兼容
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 from vllm_real import bench_throughput_curve, cuda_info   # 跨章共享微基准
 
 print("设备:", cuda_info())                        # 设备
@@ -469,7 +469,7 @@ data = dict(
     real_curve=dict(batch=b_list, tokens_per_s=tps, ms_per_step=mps),  # 跨章曲线
     note="TinyLM(vocab=256, hidden=64, layers=2, heads=4); 静态批=固定batch, 连续批=完成即补",
 )
-out = Path(r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises\\ch03\\batch_compare_data.json")
+out = Path(r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises\\ch03\\batch_compare_data.json")
 out.write_text(json.dumps(data, indent=2), encoding="utf-8")   # 写 JSON
 print(f"[ok] 已保存到 {out}")
 print("内容概览:", {k: (v if not isinstance(v, list) else f"<list x{len(v)}>") for k, v in data.items()})''',
@@ -520,4 +520,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch03\20_batch_compare_experiment.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch03\20_batch_compare_experiment.ipynb")

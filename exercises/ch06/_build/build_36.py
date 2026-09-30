@@ -78,7 +78,7 @@ st.markdown("""
 > 差别在**轮数**——ring 是线性的 2(N-1) 轮,tree 是对数的 2log2(N) 轮。
 > 卡少时差不多,卡一多 tree 的延迟优势就显现了;但 tree 对树高、负载均衡更敏感。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 6 章 · 第 36 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 6 章 · 第 36 课配套演示")
 
 if __name__ == "__main__":
     try:
@@ -208,7 +208,7 @@ D('''
 NB.code(D('''
 import sys, os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")   # Windows OMP 冲突防护
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 import time, gc, numpy as np
 import torch
 from vllm_real import cuda_info

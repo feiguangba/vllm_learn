@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""🧊 app_26_compile.py — torch.compile 与 Kernel 融合对比(VLLM_learn 第 4 章 · 第 26 课)
+"""🧊 app_26_compile.py — torch.compile 与 Kernel 融合对比(minivllm 第 4 章 · 第 26 课)
 
 运行: streamlit run app_26_compile.py
 """
@@ -104,7 +104,7 @@ st.markdown(
     "vLLM 默认在 `CompilationMode` 中把编译后的图再包进 CUDA Graph,双管齐下。Windows 上 CPU Inductor"
     "需要 MSVC 编译器(cl),GPU Inductor 还需 Triton 的 Windows 移植版 —— 本机两者皆缺,故编译侧数字为模型估算。"
 )
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 4 章 · 第 26 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 4 章 · 第 26 课配套演示")
 
 # ============ PyCharm / 直接运行入口 ============
 # 说明: 在 PyCharm 里直接 Run 本文件,即可启动 Streamlit 服务(浏览器打开 http://localhost:8501)。

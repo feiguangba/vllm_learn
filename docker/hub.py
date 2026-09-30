@@ -1,4 +1,4 @@
-"""VLLM_learn Streamlit 课表。默认占用 8501。
+"""minivllm Streamlit 课表。默认占用 8501。
 
 选一课后可用 APP 环境变量切到对应演示：
   docker compose run --rm -e APP=exercises/ch02/app_10_paged_demo.py labs
@@ -34,8 +34,8 @@ def list_apps(chapter: str) -> list[Path]:
     return sorted(p for p in folder.glob("app_*.py") if p.name != "app_common.py")
 
 
-st.set_page_config(page_title="VLLM_learn 实验台", layout="wide")
-st.title("VLLM_learn · 交互实验台")
+st.set_page_config(page_title="minivllm 实验台", layout="wide")
+st.title("minivllm · 交互实验台")
 st.caption("Jupyter Lab → http://localhost:8888 （token: vllm_learn）  ·  本页是 Streamlit 课表")
 
 c1, c2, c3 = st.columns(3)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""📈 app_27_profiler.py — 性能剖析仪表盘(VLLM_learn 第 4 章 · 第 27 课)
+"""📈 app_27_profiler.py — 性能剖析仪表盘(minivllm 第 4 章 · 第 27 课)
 
 运行: streamlit run app_27_profiler.py
 """
@@ -93,7 +93,7 @@ st.markdown(
     "再放大到具体算子,找到「少数吃掉多数时间」的热点,最后用 kernel 融合 / CUDA Graph / 并行策略去优化。"
     "本数据来自第 27 课 notebook 的 torch.profiler CPU 剖析与 perf_counter 计时。"
 )
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 4 章 · 第 27 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 4 章 · 第 27 课配套演示")
 
 # ============ PyCharm / 直接运行入口 ============
 # 说明: 在 PyCharm 里直接 Run 本文件,即可启动 Streamlit 服务(浏览器打开 http://localhost:8501)。

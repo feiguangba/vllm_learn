@@ -105,7 +105,7 @@ st.markdown("""
 > 换算成对未量化列的修正量——用后面的列,还前面欠的债。
 > 论文:*GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers* (arXiv:2210.17323)
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 5 章 · 第 31 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 5 章 · 第 31 课配套演示")
 
 if __name__ == "__main__":
     try:

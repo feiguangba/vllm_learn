@@ -112,7 +112,7 @@ st.markdown("""
 > 重尾越重,最优 $c$ 离 max 越远——这正是 GPTQ/AWQ 用几百条真实样本做校准集的原因:
 > 用经验分布替你回答「哪些值可以牺牲」。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 5 章 · 第 30 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 5 章 · 第 30 课配套演示")
 
 if __name__ == "__main__":
     try:

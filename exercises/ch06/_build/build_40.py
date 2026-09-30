@@ -82,7 +82,7 @@ st.markdown("""
 > 用共享内存直写换来显著加速。源码参考:
 > `vendor/vllm/vllm/distributed/device_communicators/custom_all_reduce.py`。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 6 章 · 第 40 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 6 章 · 第 40 课配套演示")
 
 if __name__ == "__main__":
     try:
@@ -198,7 +198,7 @@ CUSTOM_AR 里的 `alpha_c = 2e-6`、`alpha_n = 25e-6` 是**假设值**,这一步
 NB.code(D('''
 import sys, os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 import gc, time
 import numpy as np
 import torch

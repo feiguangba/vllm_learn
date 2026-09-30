@@ -104,7 +104,7 @@ st.markdown("""
 > 💡 **vLLM 用法**:`vllm serve <model> --kv-cache-dtype fp8_e4m3`(或 fp8_e5m2)。
 > 注意 KV 量化对长上下文检索类任务可能有轻微精度损失,建议先小规模评测。
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 5 章 · 第 33 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 5 章 · 第 33 课配套演示")
 
 if __name__ == "__main__":
     try:

@@ -117,7 +117,7 @@ st.markdown("""
 > (一次推理即可),更快更稳、不易过拟合校准集。论文:*AWQ: Activation-aware Weight
 > Quantization for LLM Compression and Acceleration* (arXiv:2306.00978)
 """)
-st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 5 章 · 第 32 课配套演示")
+st.caption("《minivllm: 图解 vLLM 推理引擎》第 5 章 · 第 32 课配套演示")
 
 if __name__ == "__main__":
     try:

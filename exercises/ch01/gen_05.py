@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 import textwrap
 
-sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises")
+sys.path.insert(0, r"D:\Project\21-Cpp_learn\explore\minivllm\exercises")
 from nb_builder import Notebook, chapter_cover, wrapup
 
 APP = Path(__file__).parent / "app_05_prefill_demo.py"
@@ -150,7 +150,7 @@ nb.md(
 nb.code(
     '''# 导入共享库:路径指向 exercises 根目录
 import sys
-sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")  # 模块搜索路径
+sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")  # 模块搜索路径
 from vllm_real import bench_prefill_decode, cuda_info   # 两阶段微基准 + 设备信息
 
 L = 256                                                 # 一段提示词 256 个 token
@@ -339,4 +339,4 @@ wrapup(
     ],
 )
 
-nb.save(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\exercises\ch01\05_prefill_vs_decode.ipynb")
+nb.save(r"D:\Project\21-Cpp_learn\explore\minivllm\exercises\ch01\05_prefill_vs_decode.ipynb")

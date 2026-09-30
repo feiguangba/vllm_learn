@@ -277,7 +277,7 @@ D('''
 '''))
 
 NB.code(D('''
-import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\VLLM_learn\\exercises")
+import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
 from vllm_real import TinyGPT, bench_prefill_decode, cuda_info
 import torch
 

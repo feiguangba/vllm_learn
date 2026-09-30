@@ -41,6 +41,6 @@ data = {
     "volumes": {"huggingface_cache": {}}
 }
 
-with open(r"D:\Project\21-Cpp_learn\explore\VLLM_learn\docker-compose.yml", "w", encoding="utf-8") as f:
+with open(r"D:\Project\21-Cpp_learn\explore\minivllm\docker-compose.yml", "w", encoding="utf-8") as f:
     yaml.dump(data, f, default_flow_style=False, allow_unicode=True)
 print("Written successfully")
