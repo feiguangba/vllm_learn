@@ -51,7 +51,7 @@ All `file:line` citations use relative paths into the upstream `vllm/` tree; you
 Requires an NVIDIA GPU + [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). The image ships **torch 2.11.0+cu128** (RTX 50-series / sm_120 compatible), Jupyter Lab and Streamlit.
 
 ```bash
-docker compose up --build        # or: docker pull feiguangba/vllm-learn-labs:gpu
+docker compose up --build        # or: docker pull fuyunsi/vllm-learn-labs:gpu
 ```
 
 - Jupyter Lab: <http://localhost:8888> — token `vllm_learn`, kernel **Python 3 (vllm_learn)**

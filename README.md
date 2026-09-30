@@ -16,7 +16,7 @@
 docker compose up --build
 ```
 
-浏览器打开 [http://localhost:8888](http://localhost:8888)（token: `vllm_learn`）和 [http://localhost:8501](http://localhost:8501)。内核选 `Python 3 (uv_cuda)`。版本约定见 [VERSIONS.md](VERSIONS.md)。
+浏览器打开 [http://localhost:8888](http://localhost:8888)（token: `vllm_learn`）和 [http://localhost:8501](http://localhost:8501)。内核选 `Python 3 (vllm_learn)`。版本约定见 [VERSIONS.md](VERSIONS.md)。
 
 | 模块 | 路径 | 说明 |
 |---|---|---|
@@ -244,7 +244,7 @@ docker compose up --build
 不想本地构建？直接拉现成镜像（约 20GB）：
 
 ```bash
-docker pull feiguangba/vllm-learn-labs:gpu
+docker pull fuyunsi/vllm-learn-labs:gpu
 docker compose up -d labs
 ```
 
