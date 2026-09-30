@@ -41,7 +41,7 @@ st.caption("Jupyter Lab → http://localhost:8888 （token: vllm_learn）  ·  �
 c1, c2, c3 = st.columns(3)
 c1.metric("练习册", "100 课")
 c2.metric("演示脚本", f"{sum(len(list_apps(ch)) for ch, _, _ in CHAPTERS)} 个")
-c3.metric("架构文档", "repowiki 8 篇")
+c3.metric("架构文档", "docs 8 篇")
 
 st.markdown(
     """

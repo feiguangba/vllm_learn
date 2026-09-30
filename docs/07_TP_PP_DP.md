@@ -447,4 +447,4 @@ return False
 - 论文:Megatron-LM —— 张量并行 + 流水线并行的 3D 并行划分 <https://arxiv.org/abs/1909.08053>
 - 论文:Megatron-2(PipeDream 流水线调度的后续,PP 分段的动机)<https://arxiv.org/abs/2104.04473>
 - NVIDIA NCCL 官方仓库(collective 语义、NVLink/PCIe 拓扑感知) <https://github.com/NVIDIA/nccl>
-- 相关文档:本仓库 repowiki `01_system_architecture.md`(DP 时多 EngineCore 的拓扑)、`05_ModelRunner_CUDAGraph.md`(`graph_capture` 的调用方)、`03_Scheduler.md`(PP 异步调度如何借 `num_in_flight_tokens` 抹平流水线气泡)
+- 相关文档:本仓库 docs `01_system_architecture.md`(DP 时多 EngineCore 的拓扑)、`05_ModelRunner_CUDAGraph.md`(`graph_capture` 的调用方)、`03_Scheduler.md`(PP 异步调度如何借 `num_in_flight_tokens` 抹平流水线气泡)

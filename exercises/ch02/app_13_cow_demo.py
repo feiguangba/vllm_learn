@@ -23,7 +23,7 @@ st.markdown(
     "1. 查 `ref_cnt`:若 `>1`,说明被共享 —— **先复制一份新块**给自己,旧块 `ref_cnt -= 1`;\n"
     "2. 若 `=1`(独享),直接就地写,零成本。\n\n"
     "这样**复制成本只在真正发生分歧写入的那一刻**才产生。这也是 OS 的经典语义,被 vLLM 的 "
-    "`BlockPool` + COW 机制沿用(见 repowiki/02 §4)。"
+    "`BlockPool` + COW 机制沿用(见 docs/02 §4)。"
 )
 st.caption("块编号越大越新;灰色=空闲。事件日志记录每次 COW 或直接写。")
 
@@ -129,7 +129,7 @@ terminology([
     ("ref_cnt (ref_count)", "块被多少请求引用,COW 与释放都以它为准。见 KVCacheBlock.ref_cnt。"),
     ("Copy-on-Write", "写时才复制被共享的对象;未写前共享是零成本的。OS fork 的经典语义。"),
     ("cudaMemcpy", "COW 触发的实际拷贝动作,按块大小搬运 HKV 数据。"),
-    ("null_block", "block_id=0 的占位块,is_null=True,永不缓存/释放。见 repowiki/02 §2。"),
+    ("null_block", "block_id=0 的占位块,is_null=True,永不缓存/释放。见 docs/02 §2。"),
     ("partial hit → COW", "前缀边界落在块内或分叉时,先复制再写,避免污染他人。"),
 ])
 

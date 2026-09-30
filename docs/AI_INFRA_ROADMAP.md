@@ -40,7 +40,7 @@ C++ 鐜颁唬鐗规€?(01-70) 鈹€鈹€鈻?CUDA 缂栫▼ (71-100) 鈹€鈹
 > 鍏抽敭鎬ц兘杞ㄨ抗(GEMM 1024鲁):鏈寸礌 1.1 鈫?鍒嗗潡 1.4 鈫?瀵勫瓨鍣?3.3 鈫?WMMA 5.5 鈫?cuBLAS 9.4 TFLOPS銆?
 ### 妯″潡 C:minivllm 鈥斺€?鍥捐В vLLM 鎺ㄧ悊寮曟搸
 
-- **repowiki 鏋舵瀯鏂囨。**(8 绡?甯?`鏂囦欢:琛屽彿`,鍩轰簬 vendor/vllm v0.23-dev)
+- **docs 鏋舵瀯鏂囨。**(8 绡?甯?`鏂囦欢:琛屽彿`,鍩轰簬 vendor/vllm v0.23-dev)
   01 绯荤粺鏋舵瀯 / 02 PagedAttention+KV Cache / 03 Scheduler / 04 LLMEngine / 05 ModelRunner+CUDA Graph / 06 閲忓寲 / 07 TP-PP-DP / 08 Attention 鍚庣
 - **缁冧範鍐?*(50 璇?ipynb + 50 涓?streamlit app,鍙傜収"楦㈠熬鑺变功"椋庢牸)
   ch01 鎺ㄧ悊鍩虹(01-06)鈫?ch02 KV Cache(07-13)鈫?ch03 璋冨害(14-20)鈫?ch04 鎵ц+CUDA Graph(21-27)鈫?ch05 閲忓寲(28-34)鈫?ch06 骞惰(35-41)鈫?ch07 Attention Kernel(42-47)鈫?ch08 閮ㄧ讲(48-50)
@@ -55,7 +55,7 @@ C++ 鐜颁唬鐗规€?(01-70) 鈹€鈹€鈻?CUDA 缂栫▼ (71-100) 鈹€鈹
 
 | 浠撳簱 | 鐢ㄩ€?|
 |---|---|
-| `vendor/vllm` | vLLM 婧愮爜(repowiki 渚濇嵁,commit 967e104) |
+| `vendor/vllm` | vLLM 婧愮爜(docs 渚濇嵁,commit 967e104) |
 | `vendor/llama.cpp` | 杞婚噺鎺ㄧ悊寮曟搸鍙傝€?|
 | `vendor/triton` | 鑷畾涔?kernel DSL 鍙傝€?|
 | `vendor/tinygrad` | 娣卞害瀛︿範妗嗘灦鏈€灏忓疄鐜板弬鑰?|
@@ -70,12 +70,12 @@ C++ 鐜颁唬鐗规€?(01-70) 鈹€鈹€鈻?CUDA 缂栫▼ (71-100) 鈹€鈹
   鈫?81-88 楂樼骇 CUDA 鈫?89-92 寮犻噺鏍?鈫?93-100 宸ョ▼鍖?
 绗簩闃舵(绯荤粺鐞嗚В)
   23-CMU-15418 骞惰绯荤粺鐞嗚
-  鈫?minivllm/repowiki 01 绯荤粺鏋舵瀯
+  鈫?minivllm/docs 01 绯荤粺鏋舵瀯
   鈫?minivllm/exercises ch01-ch04(鎺ㄧ悊鍩虹鈫掓墽琛?
 
 绗笁闃舵(娣卞叆)
   minivllm/exercises ch05-ch08(閲忓寲/骞惰/Kernel/閮ㄧ讲)
-  鈫?repowiki 02-08 瀵圭収婧愮爜绮捐
+  鈫?docs 02-08 瀵圭収婧愮爜绮捐
   鈫?vendor/vllm 鏍稿績鏂囦欢娣卞叆(core.py/scheduler.py/block_pool.py/gpu_model_runner.py)
 
 绗洓闃舵(瀹炴垬)
@@ -91,7 +91,7 @@ C++ 鐜颁唬鐗规€?(01-70) 鈹€鈹€鈻?CUDA 缂栫▼ (71-100) 鈹€鈹
 - [x] **M1**:C++ 01-70 鍏ㄩ儴瀹屾垚(鐜颁唬 C++ 鐗规€?46-70 鍚?span/ranges/coroutines/SIMD)
 - [x] **M2**:CUDA 71-100 鍏ㄩ儴缂栬瘧杩愯楠岃瘉閫氳繃(鍚?WMMA 6x銆乧uBLAS 8.8x 鎬ц兘瀵规瘮)
 - [x] **M3**:uv_cuda 鐜(Python 3.12 + torch 2.11 + pyecharts/streamlit/plotly)
-- [x] **M4**:minivllm 缁冧範鍐?50 璇惧叏閮ㄧ敓鎴愬苟楠岃瘉 + 8 绡?repowiki 鏂囨。
+- [x] **M4**:minivllm 缁冧範鍐?50 璇惧叏閮ㄧ敓鎴愬苟楠岃瘉 + 8 绡?docs 鏂囨。
 - [ ] **M5**:23-CMU-15418 鐩綍鏁寸悊涓?demo 杩愯(鍙€?宸查儴鍒嗗畬鎴?
 - [ ] **M6**:鐢熶骇绾т紭鍖栧疄鎴?寮犻噺鏍?GEMM + FlashAttention 瀹屾暣鐗?+ 澶氬崱 NCCL)
 

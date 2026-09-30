@@ -1,4 +1,4 @@
-# wiki_plan.yaml — VLLM_learn/repowiki 架构文档计划
+# wiki_plan.yaml — VLLM_learn/docs 架构文档计划
 # 依据: vendor/vllm (vLLM v0.23.0 dev/main, commit 967e104)
 # 路径约定: 文档中 `文件:行号` 相对 vendor/vllm/vllm/ 包根目录
 

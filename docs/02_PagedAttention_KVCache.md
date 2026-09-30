@@ -422,4 +422,4 @@ block[3] = H(  h2,        (t48..t63), extra3 )         → h3   ← 指纹 {t0..
 - vLLM 官方文档:Automatic Prefix Caching(自动前缀缓存原理与命中率观察) <https://docs.vllm.ai/en/latest/features/automatic_prefix_caching.html>
 - vLLM 官方文档:调度器设计说明(与 KV 管理的接口 `allocate_slots`/`get_computed_blocks`) <https://docs.vllm.ai/en/latest/design/scheduler.html>
 - vLLM Blog:《Announcing vLLM V1: A Major Architectural Upgrade》(V1 重构 KV 管理动机) <https://blog.vllm.ai/2025/01/27/v1-alpha-release.html>
-- 相关文档:本仓库 repowiki `01_system_architecture.md`(KV Cache Manager 在 EngineCore 中的位置)、`03_Scheduler.md`(`allocate_slots` 的调用点 scheduler.py:631、抢占与延迟释放如何与块池交互)
+- 相关文档:本仓库 docs `01_system_architecture.md`(KV Cache Manager 在 EngineCore 中的位置)、`03_Scheduler.md`(`allocate_slots` 的调用点 scheduler.py:631、抢占与延迟释放如何与块池交互)

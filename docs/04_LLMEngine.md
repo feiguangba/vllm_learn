@@ -433,4 +433,4 @@ LLM/AsyncLLM.generate
 - vLLM 官方文档:OpenAI 兼容服务部署 <https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html>
 - vLLM 官方文档:结构化输出 / 输出流式化配置 <https://docs.vllm.ai/en/latest/features/output_streaming.html>
 - vLLM Blog:《Announcing vLLM V1: A Major Architectural Upgrade》(V1 前端/EngineCore 拆分动机) <https://blog.vllm.ai/2025/01/27/v1-alpha-release.html>
-- 相关文档:本仓库 repowiki `01_system_architecture.md`(三层进程拓扑,LLMEngine/AsyncLLM 在顶层的位置)、`03_Scheduler.md`(EngineCore 内调度循环,`EngineCoreOutputs` 的产出端)
+- 相关文档:本仓库 docs `01_system_architecture.md`(三层进程拓扑,LLMEngine/AsyncLLM 在顶层的位置)、`03_Scheduler.md`(EngineCore 内调度循环,`EngineCoreOutputs` 的产出端)

@@ -413,4 +413,4 @@ self.reset_preempted_req_ids = set() # :1427 清空抢占标记
 - vLLM Blog:《vLLM: Easy, Fast, and Cheap LLM Serving with PagedAttention》(PagedAttention 与块式 KV 管理) <https://blog.vllm.ai/2023/06/20/vllm.html>
 - vLLM Blog:《Announcing vLLM V1: A Major Architectural Upgrade》(V1 调度器泛化的动机) <https://blog.vllm.ai/2025/01/27/v1-alpha-release.html>
 - 论文:SOSP'23 PagedAttention <https://arxiv.org/abs/2309.06180>
-- 相关文档:本仓库 repowiki `01_system_architecture.md`(三层进程拓扑,调度器在 EngineCore 中的位置)、`02_*`(KV Cache Manager,`allocate_slots`/`free` 的底层实现)
+- 相关文档:本仓库 docs `01_system_architecture.md`(三层进程拓扑,调度器在 EngineCore 中的位置)、`02_*`(KV Cache Manager,`allocate_slots`/`free` 的底层实现)

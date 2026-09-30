@@ -118,7 +118,7 @@ terminology([
     ("GQA / MQA", "Group-Query Attention 与 Multi-Query Attention:让多个 query 头共享 KV 头以省显存/带宽。"),
     ("e4m3 / e5m2", "FP8 的两种指数长度编码;e4m3 精度更高,vLLM 默认用它做 KV/权重量化。"),
     ("memory access granularity", "对 KV 的读写以固定字节对齐,block 内可能产生 padding(见 09)。"),
-    ("vLLM CacheConfig.DEFAULT_BLOCK_SIZE=16", "见 repowiki/02;块大小决定页粒度,与 half-warp 对齐。"),
+    ("vLLM CacheConfig.DEFAULT_BLOCK_SIZE=16", "见 docs/02;块大小决定页粒度,与 half-warp 对齐。"),
 ] + [("出处2", f"真实分配来源:{device_str()}@{dtype_key}")])
 
 foot_note()

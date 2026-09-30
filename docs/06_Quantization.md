@@ -441,4 +441,4 @@ FP8 MoE 的量化 key 决策在 `Fp8MoEMethod.__init__`(`fp8.py:487-496`):block 
 - vLLM Blog/文档:FP8(Meta FP8 与 per-block 扩展) <https://docs.vllm.ai/en/latest/features/quantization/fp8.html>
 - Marlin:向量并行 GEMM 的 4-bit 量化 kernel(在 vLLM 中用于 GPTQ/AWQ/FP8) <https://github.com/IST-DASLab/marlin>
 - ModelCloud/GPTQModel(dynamic 配置与 `quantize_config.json` 格式来源) <https://github.com/ModelCloud/GPTQModel>
-- 相关文档:本仓库 repowiki `01_system_architecture.md`(量化方法在 Worker/GPUModelRunner 的模型构造阶段被实例化)、`03_Scheduler.md`(调度与执行,量化只影响 `execute_model` 里的 GEMM)
+- 相关文档:本仓库 docs `01_system_architecture.md`(量化方法在 Worker/GPUModelRunner 的模型构造阶段被实例化)、`03_Scheduler.md`(调度与执行,量化只影响 `execute_model` 里的 GEMM)

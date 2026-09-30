@@ -112,7 +112,7 @@ real_badge(real=False)
 terminology([
     ("num_full_slots", "vLLM BlockTable 属性,一块里已填满的 slot 数,决定何时申请新块。"),
     ("slot_mapping", "逐 token 的物理线性下标,喂给 PagedAttention kernel 做 gather。"),
-    ("req_to_blocks[rid]", "V1 中每请求的块表容器(见 repowiki/02 §3)。"),
+    ("req_to_blocks[rid]", "V1 中每请求的块表容器(见 docs/02 §3)。"),
     ("block 增长", "decode 每步 block 自动扩容:满则 alloc,不满就地写;避免预分配浪费。"),
     ("并发共享", "物理块池是全局的,多个请求可同时持有不同块,提升显存复用率。"),
 ])

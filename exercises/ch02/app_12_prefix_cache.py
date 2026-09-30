@@ -23,7 +23,7 @@ st.markdown(
     "### 🔬 机制:链式块哈希\n"
     "把每个物理块的 KV 连同它的内容指纹(块哈希)存进一张**哈希表**;哈希是**链式的**——"
     "`block[i].hash = H(block[i-1].hash, tokens)`——所以每个哈希唯一标识『到该边界为止的整段前缀』("
-    "见 repowiki/02 §5,`hash_block_size`)。\n\n"
+    "见 docs/02 §5,`hash_block_size`)。\n\n"
     "新请求到达时,凡是与已存块**逐块哈希相等**的前缀,直接**复用物理块**、跳过计算(代码里映射到 "
     "`get_computed_blocks` 的缓存命中查询)。这就是 **automatic prefix caching**。"
 )
@@ -101,7 +101,7 @@ st.markdown(
 real_badge(real=False)
 terminology([
     ("automatic prefix caching", "vLLM 默认开启;以块哈希为键复用物理块,论文 SOSP'23(vLLM)。"),
-    ("chain hash / block_hash", "H(prev_hash, tokens):每个哈希唯一标识到该边界为止的前缀。见 repowiki/02 §5。"),
+    ("chain hash / block_hash", "H(prev_hash, tokens):每个哈希唯一标识到该边界为止的前缀。见 docs/02 §5。"),
     ("block hash table", "hash→物理块的映射;命中即免 prefill,省显存+省 TTFT。"),
     ("get_computed_blocks", "V1 KVCacheManager 里做前缀命中查询的入口。"),
     ("TTFT", "time-to-first-token;前缀缓存让复用请求的首 token 近乎即时。"),

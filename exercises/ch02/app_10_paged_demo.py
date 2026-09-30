@@ -96,7 +96,7 @@ st.success(f"序列 {seq_len} token 切成 {n_logical} 个逻辑块,散落于 {l
 real_badge(real=False)
 terminology([
     ("virtual vs physical block", "逻辑块连续描述序列,物理块是真实显存,二者经页表解耦——与操作系统分页同构。"),
-    ("block table / page table", "逻辑→物理映射;vLLM V1 里对应每个请求的 req_to_blocks[rid]。见 repowiki/02。"),
+    ("block table / page table", "逻辑→物理映射;vLLM V1 里对应每个请求的 req_to_blocks[rid]。见 docs/02。"),
     ("slot / slot_mapping", "把 (物理块号,块内偏移) 线性化为显存单一下标,是 attention kernel 读写的真正地址。"),
     ("default block_size=16", "CacheConfig.DEFAULT_BLOCK_SIZE;与 half-warp(半个线程束)内处理 token 数对齐,利于 kernel 负载均衡。"),
     ("MMU 类比", "CPU 的地址翻译由 MMU+T LB 完成;vLLM 里由 block table + 指针算术完成。"),

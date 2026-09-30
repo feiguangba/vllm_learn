@@ -438,4 +438,4 @@ V0 里 `PagedAttention` 是个完整实现(`vllm/attention/ops/paged_attn.py`,�
 - 论文:PagedAttention 与 vLLM 的块式 KV 管理 <https://arxiv.org/abs/2309.06180>
 - FlashInfer 项目主页(FA3/FA4 之外的第二大 NVIDIA 后端) <https://flashinfer.ai/>
 - vLLM 官方文档:Attention 后端选择机制 <https://docs.vllm.ai/en/latest/design/attention_backend.html>
-- 相关文档:本仓库 repowiki `02_*`(KV Cache Manager,`get_kv_cache_shape` 的消费方)、`03_Scheduler.md`(`allocate_slots`/`block_table` 的产生方)、`01_system_architecture.md`(GPUModelRunner 里 attention 三件套的位置)
+- 相关文档:本仓库 docs `02_*`(KV Cache Manager,`get_kv_cache_shape` 的消费方)、`03_Scheduler.md`(`allocate_slots`/`block_table` 的产生方)、`01_system_architecture.md`(GPUModelRunner 里 attention 三件套的位置)

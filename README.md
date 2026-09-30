@@ -1,27 +1,52 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="minivllm logo" width="340"/>
+<img src="assets/logo.png" alt="minivllm logo" width="320"/>
 
-# minivllm · 图解 vLLM 推理引擎
+# minivllm
 
-**用「图解 + 动手实验 + 一个迷你引擎」从零到一理解 vLLM 推理系统。**
-
-KV Cache · PagedAttention · Continuous Batching · CUDA Graph · 量化 · 分布式并行 · Attention Kernel · Triton · AI 编译器 · 华为昇腾全栈
+图解 vLLM 推理引擎：100 课动手练习册 + 一个能跑的迷你引擎
+</br>
+<em>An illustrated, hands-on course on how vLLM works — with a runnable mini inference engine.</em>
 
 [![CI](https://github.com/feiguangba/minivllm/actions/workflows/sanity.yml/badge.svg)](./.github/workflows/sanity.yml)
-[![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/code-MIT-blue.svg)](./LICENSE)
-[![Docs](https://img.shields.io/badge/docs-CC%20BY%204.0-green.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/fuyunsi/vllm-learn-labs.svg)](https://hub.docker.com/r/fuyunsi/vllm-learn-labs)
-[![English](https://img.shields.io/badge/README-English-green.svg)](./README_en.md)
+[![GitHub Stars](https://img.shields.io/github/stars/feiguangba/minivllm?style=flat-square&color=DAA520)](https://github.com/feiguangba/minivllm/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/feiguangba/minivllm?style=flat-square)](https://github.com/feiguangba/minivllm/network)
+[![Python](https://img.shields.io/badge/python-3.12-blue?style=flat-square)](https://www.python.org/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/fuyunsi/vllm-learn-labs?style=flat-square&logo=docker&logoColor=white)](https://hub.docker.com/r/fuyunsi/vllm-learn-labs)
+[![Binder](https://img.shields.io/badge/Binder-launch-E77C35?style=flat-square&logo=jupyter&logoColor=white)](https://mybinder.org/v2/gh/feiguangba/minivllm/master)
 
-**100 课练习册 · 8 篇源码级架构文档 · 12 张顶会风格架构图 · ~500 行可运行的迷你推理引擎 · 399 题参考答案**
+[中文](./README.md) | [English](./README_en.md)
 
 </div>
 
----
+## ⚡ 一句话介绍
 
-## ⚡ 30 秒上手
+**minivllm** 是一套从零到一理解 LLM 推理系统的开源课程。围绕 vLLM 的核心技术——KV Cache、PagedAttention、Continuous Batching、CUDA Graph、量化、并行、Attention Kernel、Triton、AI 编译器、昇腾全栈——展开 **11 章 100 课** 的动手练习，并配一个 **~500 行、可运行、带测试** 的迷你推理引擎，把每节课的概念落成真实代码。
+
+> 你只需要：跟着课程跑 notebook（有 GPU 用 Docker，没有用 Binder）</br>
+> 你将得到：一条从「会用」到「能自己写出推理引擎」的完整学习路径
+
+## ✨ 项目组成
+
+| | 组件 | 说明 |
+|---|---|---|
+| 🧪 | **[练习册](exercises/)** | 11 章 100 课 Jupyter notebook，重图解、重直觉、每课自带实验 |
+| 🚂 | **[迷你引擎](minivllm/)** | ~500 行复刻 vLLM 骨架：分词 → 采样 → 分页 KV → 连续批处理，10 个测试用例 |
+| 📚 | **[架构文档](docs/)** | 8 篇 vLLM V1 源码级精读，全部带 `文件:行号` 可查证引用 |
+| 🖼️ | **[架构图库](exercises/figs/)** | 12 张顶会风格 SVG 原创图，嵌入对应课程 |
+| ✅ | **[参考答案](answers/)** | 全部 399 道课后练习题的参考答案 |
+
+## 🔄 学习路径
+
+1. **入门主线** · ch01–ch03：分词 → KV Cache / PagedAttention → 连续批处理
+2. **写出引擎** · 对照 [minivllm](minivllm/) 五个模块自己实现一遍
+3. **深入执行** · ch04–ch06：模型执行 / CUDA Graph → 量化 → 分布式并行
+4. **底层与部署** · ch07–ch08：Attention Kernel → 服务化
+5. **扩展视野** · ch09–ch11：Triton → AI 编译器 → 昇腾全栈
+
+需要源码级细节时，随时对照 [docs/](docs/) 的 8 篇架构文档；想建立全局直觉，先看[第 100 课](exercises/ch11/100_summary_roadmap.ipynb)的 12 张架构图总画廊。
+
+## 🚀 快速开始
 
 ```bash
 git clone https://github.com/feiguangba/minivllm.git
@@ -29,403 +54,63 @@ cd minivllm
 docker compose up --build          # GPU 教学镜像（torch 2.11.0+cu128）
 ```
 
-浏览器打开 [http://localhost:8888](http://localhost:8888)（token: `vllm_learn`）和 [http://localhost:8501](http://localhost:8501)，内核选 `Python 3 (vllm_learn)`。不想本地构建？`docker pull fuyunsi/vllm-learn-labs:gpu` 后 `docker compose up -d labs`。
+浏览器打开 [http://localhost:8888](http://localhost:8888)（token `vllm_learn`）与 [http://localhost:8501](http://localhost:8501)（Streamlit 交互演示）。
 
-没有 GPU？[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/feiguangba/minivllm/master) 在线环境 CPU 即可体验 ch01–ch03 的多数课程。
+不想本地构建？`docker pull fuyunsi/vllm-learn-labs:gpu` 后 `docker compose up -d labs`（镜像约 20GB）。
 
----
-
-## 📦 这个仓库里有什么
-
-| | 模块 | 路径 | 说明 |
-|---|---|---|---|
-| 🧪 | **练习册（100 课）** | [`exercises/`](exercises/) | 11 章 100 课 Jupyter notebook，风格参照《鸢尾花书》：重图解、重直觉、循序渐进、动手实验；ch01–ch08 每课配 Streamlit 交互演示 |
-| 🚂 | **minivllm 迷你引擎** | [`minivllm/`](minivllm/) | ~500 行把课程核心概念落成一个能真跑、带 10 个测试的 Python 包——学完就能读懂 vLLM 的骨架 |
-| 📚 | **repowiki 架构文档** | [`repowiki/`](repowiki/) | 8 篇源码级架构文档（带 `文件:行号` 引用），基于 vLLM **V1** `v0.23.0-dev` 精读整理 |
-| 🖼️ | **架构图库** | [`exercises/figs/`](exercises/figs/) | 12 张顶会风格 SVG 架构图（已嵌入对应课程与第 100 课总画廊） |
-| ✅ | **参考答案** | [`answers/`](answers/) | 100 课全部 399 道练习题的参考答案，先自己做再对照 |
-
----
-
-## 🚂 minivllm：把课程变成一个能跑的引擎
-
-读 100 课容易，动手写出引擎才算懂。`minivllm` 用约 500 行代码复刻 vLLM 的核心数据流，
-每个模块都能对应到练习册的具体课程：
-
-| 模块 | 对应课程 | 学什么 |
+| 环境 | 适合 | 入口 |
 |---|---|---|
-| `tokenizer.py` | ch01 第 01 课 | 迷你 BPE：合并对 → 词表 → 压缩率 |
-| `sampler.py` | ch01 第 03 课 | greedy / temperature / top-k / top-p |
-| `paged_kv.py` | ch02 第 10/11/13 课 | BlockAllocator、block table、前缀共享（refcount）、碎片率 |
-| `model.py` | ch04 第 04/22 课 | prefill（并行）与 decode（增量）两条路径 |
-| `engine.py` | ch03 第 14–18 课 | FCFS 准入、批内轮转、完成回收、块耗尽抢占（recompute） |
+| **Docker（推荐）** | 完整跑通 100 课，需 NVIDIA GPU | 上面的命令 |
+| **Binder** | 无本地环境，浏览器体验 CPU 课程 | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/feiguangba/minivllm/master) |
+| **Colab** | 免费 GPU 逐课打开 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/feiguangba/minivllm/blob/master/exercises/ch01/01_token_and_tokenizer.ipynb) |
+| **本机 uv** | 不想用 Docker | `pip install -r requirements.txt` + `jupyter lab` |
 
-跑起来只要三行依赖（torch 即可）：
+没有 GPU 也能跑大部分课程——ch01–ch03 与迷你引擎 `minivllm` 纯 CPU 即可：
 
 ```bash
 pip install -e .
 python -m minivllm "the quick brown fox" --max-new 16 --seed 0 --verbose
 ```
 
-```python
-from minivllm import MiniBPETokenizer, Sampler, PagedKVCache, TinyGPT, LLMEngine
+## 🗺️ 课程地图
 
-tok = MiniBPETokenizer(vocab_size=300).train(["the quick brown fox " * 8])
-model = TinyGPT(vocab_size=tok.vocab_size)
-cache = PagedKVCache(num_blocks=64, block_size=8,
-                     n_heads=model.n_heads, head_dim=model.head_dim,
-                     n_layers=model.n_layers)
-engine = LLMEngine(model, cache, Sampler(temperature=0.8, top_k=20, seed=0))
-engine.add_request(tok.encode("the quick brown fox"), max_new_tokens=16)
-print(tok.decode(next(iter(engine.run().values()))))
-```
+| 章 | 主题 | 课数 | 入口 |
+|---|---|---|---|
+| ch01 | LLM 推理基础（分词 / 自回归 / 采样 / Prefill vs Decode） | 01–06 | [`exercises/ch01/`](exercises/ch01/) |
+| ch02 | KV Cache 与 PagedAttention | 07–13 | [`exercises/ch02/`](exercises/ch02/) |
+| ch03 | Continuous Batching 与调度 | 14–20 | [`exercises/ch03/`](exercises/ch03/) |
+| ch04 | 模型执行与 CUDA Graph | 21–27 | [`exercises/ch04/`](exercises/ch04/) |
+| ch05 | 量化（GPTQ / AWQ / FP8） | 28–34 | [`exercises/ch05/`](exercises/ch05/) |
+| ch06 | 分布式并行（TP / PP / DP / EP） | 35–41 | [`exercises/ch06/`](exercises/ch06/) |
+| ch07 | Attention Kernel 实战 | 42–47 | [`exercises/ch07/`](exercises/ch07/) |
+| ch08 | 端到端部署与服务化 | 48–50 | [`exercises/ch08/`](exercises/ch08/) |
+| ch09 | Triton GPU 编程 | 51–60 | [`exercises/ch09/`](exercises/ch09/) |
+| ch10 | AI 编译器 | 61–70 | [`exercises/ch10/`](exercises/ch10/) |
+| ch11 | 华为昇腾全栈 | 71–100 | [`exercises/ch11/`](exercises/ch11/) |
 
-> 模型是随机权重的 TinyGPT，输出是伪文本——本包教的是**推理引擎的数据流与调度**，
-> 不是模型质量。细节见 [`minivllm/README.md`](minivllm/README.md)。
+每章目录内含逐课 notebook（`NN_*.ipynb`）与 Streamlit 交互演示（`app_NN_*.py`），配套答案在 [`answers/`](answers/)。
 
----
+## 🖼️ 核心架构图（部分）
 
-## 🖼️ 核心架构图画廊
-
-所有图遵循统一的顶会绘图规范（见 [`.claude/skills/paper-fig/SKILL.md`](.claude/skills/paper-fig/SKILL.md)）：
-3 秒可懂、语义色板、每块标清所用网络/算子、结论脚注。点击即可查看 SVG（矢量无损缩放）。
-
-| 架构图 | 讲的是什么 | 嵌入课程 |
+| | | |
 |---|---|---|
-| [Transformer 架构](exercises/figs/fig_01_transformer_block.svg) | 输入层 / 隐藏层 ×N / 输出层；QKV Linear、RoPE、SDPA、FFN/SwiGLU、lm_head 逐块标注 | [第 04 课](exercises/ch01/04_transformer_quickstart.ipynb) |
-| [Prefill vs Decode](exercises/figs/fig_02_prefill_vs_decode.svg) | 两阶段推理：整段并行（算力瓶颈）vs 逐步循环（带宽瓶颈） | [第 05 课](exercises/ch01/05_prefill_vs_decode.ipynb) |
-| [KV Cache](exercises/figs/fig_03_kv_cache.svg) | 历史 K/V 只算一次，O(T²) → O(T)，显存随 T 线性增长 | [第 07 课](exercises/ch02/07_kv_cache_principle.ipynb) |
-| [PagedAttention](exercises/figs/fig_04_pagedattention.svg) | 逻辑块 → Block Table → 物理块，前缀共享 ref 计数 | [第 10 课](exercises/ch02/10_pagedattention_core.ipynb) |
-| [Continuous Batching](exercises/figs/fig_05_continuous_batching.svg) | 静态批的 idle 空泡 vs 迭代粒度换入换出 | [第 15 课](exercises/ch03/15_continuous_batching.ipynb) |
-| [请求状态机与调度循环](exercises/figs/fig_06_request_lifecycle.svg) | WAITING/RUNNING/PREEMPTED/FINISHED + Scheduler 单步迭代 | [第 16 课](exercises/ch03/16_request_state_machine.ipynb) |
-| [vLLM 系统架构](exercises/figs/fig_07_vllm_arch.svg) | API 层 / EngineCore（Scheduler+KV 管理）/ GPU 执行层 | [第 48 课](exercises/ch08/48_serve_model.ipynb) |
-| [端到端推理流水线](exercises/figs/fig_08_inference_pipeline.svg) | Prompt → tokenize → 组批 → forward → sample → SSE 流式 | [第 22 课](exercises/ch04/22_modelrunner_dataflow.ipynb) |
-| [量化全景](exercises/figs/fig_09_quantization.svg) | scale/zero-point 仿射映射 + GPTQ / AWQ / FP8 三条路线 | [第 28 课](exercises/ch05/28_quantization_basics.ipynb) |
-| [分布式并行](exercises/figs/fig_10_parallelism.svg) | TP 切权重、PP 切层、DP 切请求、EP 切专家 | [第 35 课](exercises/ch06/35_parallel_overview.ipynb) |
-| [FlashAttention](exercises/figs/fig_11_flash_attention.svg) | 分块计算 + online softmax，显存 O(N²)→O(N) | [第 42 课](exercises/ch07/42_flash_attention_principle.ipynb) |
-| [昇腾全栈对照](exercises/figs/fig_12_ascend_stack.svg) | NVIDIA ↔ 华为昇腾五层逐层对应：硬件/使能/框架/引擎/云 | [第 71 课](exercises/ch11/71_huawei_ecosystem.ipynb) |
+| [Transformer 架构](exercises/figs/fig_01_transformer_block.svg) | [Prefill vs Decode](exercises/figs/fig_02_prefill_vs_decode.svg) | [KV Cache](exercises/figs/fig_03_kv_cache.svg) |
+| [PagedAttention](exercises/figs/fig_04_pagedattention.svg) | [Continuous Batching](exercises/figs/fig_05_continuous_batching.svg) | [请求状态机](exercises/figs/fig_06_request_lifecycle.svg) |
+| [vLLM 系统架构](exercises/figs/fig_07_vllm_arch.svg) | [推理流水线](exercises/figs/fig_08_inference_pipeline.svg) | [量化全景](exercises/figs/fig_09_quantization.svg) |
+| [分布式并行](exercises/figs/fig_10_parallelism.svg) | [FlashAttention](exercises/figs/fig_11_flash_attention.svg) | [昇腾全栈对照](exercises/figs/fig_12_ascend_stack.svg) |
 
-> 第 [100 课](exercises/ch11/100_summary_roadmap.ipynb) 开头有全部 12 张图的总画廊。图审校记录见 [`exercises/figs/REVIEW.md`](exercises/figs/REVIEW.md)。
-
----
-
-## 🧪 练习册总览（11 章 · 100 课）
-
-> 每课 = 1 个 `NN_*.ipynb`（可运行、带实验）+ 多数课程配 `app_NN_*.py` 交互演示（ch01–ch08 全覆盖，ch09–ch11 部分）+ [`answers/`](answers/) 里对应参考答案。
-
-### 第 1 章 · LLM 推理基础（01–06）`exercises/ch01/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [01](exercises/ch01/01_token_and_tokenizer.ipynb) | 认识 Token 与分词器 | 字符级到 BPE，手写迷你分词器，看懂 token→id |
-| [02](exercises/ch01/02_autoregressive_generation.ipynb) | 自回归生成 | n-gram 玩具模型逐字接龙，生成长度 L 需 L 次前向 |
-| [03](exercises/ch01/03_sampling_strategies.ipynb) | 采样策略 | greedy / temperature / top-k / top-p，连到 SamplingParams |
-| [04](exercises/ch01/04_transformer_quickstart.ipynb) | 手写单层 Transformer 块 | CPU 手写 attention block，9 步打印形状 |
-| [05](exercises/ch01/05_prefill_vs_decode.ipynb) | Prefill vs Decode | FLOPs 推导 + torch 实测两阶段耗时差 |
-| [06](exercises/ch01/06_toy_inference_engine.ipynb) | 玩具推理引擎 | n-gram + 采样拼装批量引擎，实测吞吐曲线 |
-
-### 第 2 章 · KV Cache 与 PagedAttention（07–13）`exercises/ch02/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [07](exercises/ch02/07_kv_cache_principle.ipynb) | KV Cache 原理 | O(T²) 重算降成 O(T) 追加写，数值验证加速比 |
-| [08](exercises/ch02/08_kv_cache_memory.ipynb) | KV Cache 内存账本 | 显存公式推导，MHA / GQA / MQA 对比 |
-| [09](exercises/ch02/09_fragmentation_problem.ipynb) | 内存碎片化 | 内/外碎片，连续 vs 分页分配器模拟 |
-| [10](exercises/ch02/10_pagedattention_core.ipynb) | PagedAttention 核心 | 用操作系统虚拟内存思想管理 KV |
-| [11](exercises/ch02/11_block_table_slots.ipynb) | Block Table 与 Slot Mapping | block_ids / slot_mapping 实现，多请求并发 |
-| [12](exercises/ch02/12_prefix_caching.ipynb) | 前缀缓存 | 块哈希复用，命中率对内存/延迟的影响 |
-| [13](exercises/ch02/13_cow_copy_on_write.ipynb) | Copy-on-Write | 引用计数，共享块的写入时机 |
-
-### 第 3 章 · Continuous Batching 与调度（14–20）`exercises/ch03/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [14](exercises/ch03/14_static_batching_problem.ipynb) | 静态批处理的缺陷 | 队头阻塞、尾部浪费，甘特图模拟 |
-| [15](exercises/ch03/15_continuous_batching.ipynb) | Continuous Batching | 事件驱动模拟器，每步 batch 成员变化 |
-| [16](exercises/ch03/16_request_state_machine.ipynb) | 请求状态机 | WAITING / RUNNING / FINISHED 状态迁移日志 |
-| [17](exercises/ch03/17_scheduler_design.ipynb) | Scheduler 设计 | token 预算 × FCFS / SJF / Priority |
-| [18](exercises/ch03/18_preemption.ipynb) | 抢占 Preemption | recompute vs swap，延迟惩罚对比 |
-| [19](exercises/ch03/19_iterative_scheduler_sim.ipynb) | 迭代级调度模拟器 | 完整 Simulator 与参数敏感性实验 |
-| [20](exercises/ch03/20_batch_compare_experiment.ipynb) | 真实 GPU 对比 | 静态批 vs Continuous Batching 吞吐实测 |
-
-### 第 4 章 · 模型执行与 CUDA Graph（21–27）`exercises/ch04/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [21](exercises/ch04/21_metadata_assembly.ipynb) | 变长序列组批 | input_ids / positions / slot_mapping 组装 |
-| [22](exercises/ch04/22_modelrunner_dataflow.ipynb) | ModelRunner 数据流 | 迷你 GPT 前向，从 embedding 到 lm_head |
-| [23](exercises/ch04/23_kv_allocator.ipynb) | KV 块分配器 | free list、引用计数与碎片率 |
-| [24](exercises/ch04/24_cuda_graph_principle.ipynb) | kernel 启动开销 | CPU 为什么会成为 GPU 的瓶颈 |
-| [25](exercises/ch04/25_cudagraph_capture.ipynb) | CUDA Graph 捕获与重放 | 为什么形状必须固定 |
-| [26](exercises/ch04/26_torch_compile.ipynb) | torch.compile | 把一串小算子冻成一颗大 kernel |
-| [27](exercises/ch04/27_profiling_metrics.ipynb) | 性能剖析 | tokens/s、TTFT、TPOT 与延迟分布 |
-
-### 第 5 章 · 量化（28–34）`exercises/ch05/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [28](exercises/ch05/28_quantization_basics.ipynb) | 量化基础 | 位宽、scale 与 zero-point |
-| [29](exercises/ch05/29_sym_asym_quant.ipynb) | 对称 vs 非对称 | per-tensor 与 per-channel |
-| [30](exercises/ch05/30_quantization_error.ipynb) | 量化误差分析 | MSE、SNR 与校准 |
-| [31](exercises/ch05/31_gptq_principle.ipynb) | GPTQ 思想 | 逐列量化与误差补偿，手写简化演示 |
-| [32](exercises/ch05/32_awq_principle.ipynb) | AWQ 思想 | 激活感知的权重保护 |
-| [33](exercises/ch05/33_fp8_kv_quant.ipynb) | FP8 与 KV 量化 | e4m3 / e5m2，显存节省计算 |
-| [34](exercises/ch05/34_quant_tradeoff.ipynb) | 量化权衡实验 | 精度-速度-显存三角权衡 |
-
-### 第 6 章 · 分布式并行（35–41）`exercises/ch06/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [35](exercises/ch06/35_parallel_overview.ipynb) | 并行策略总览 | DP / TP / PP / EP，7B/70B 为什么必须并行 |
-| [36](exercises/ch06/36_allreduce_nccl.ipynb) | AllReduce 与 NCCL | numpy 手写 ring / tree，带宽公式 |
-| [37](exercises/ch06/37_tensor_parallel.ipynb) | 张量并行 | 列切 / 行切，Megatron QKV/FFN 切法 |
-| [38](exercises/ch06/38_pipeline_parallel.ipynb) | 流水线并行 | GPipe vs 1F1B 甘特图，bubble 公式 |
-| [39](exercises/ch06/39_data_parallel_dp.ipynb) | 数据并行 | 推理负载均衡 vs 训练梯度同步 |
-| [40](exercises/ch06/40_custom_allreduce.ipynb) | CustomAllreduce | 共享内存替掉 NCCL，延迟模型 |
-| [41](exercises/ch06/41_parallel_combination.ipynb) | 并行组合 | TP × PP × DP 估算公式与选型 |
-
-### 第 7 章 · Attention Kernel 实战（42–47）`exercises/ch07/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [42](exercises/ch07/42_flash_attention_principle.ipynb) | FlashAttention 原理 | O(N²) 瓶颈，分块 + 在线 softmax |
-| [43](exercises/ch07/43_online_softmax.ipynb) | 在线 Softmax | running max 修正，numpy 分块验证 |
-| [44](exercises/ch07/44_attention_kernel.ipynb) | Attention Kernel | naive vs 分块，kernel 逐行讲解 |
-| [45](exercises/ch07/45_paged_attention.ipynb) | PagedAttention kernel | block table 收集非连续 KV |
-| [46](exercises/ch07/46_attention_perf.ipynb) | Attention 性能 | naive / 分块 / SDPA 耗时实测 |
-| [47](exercises/ch07/47_attn_backend_select.ipynb) | 后端选择机制 | FLASH_ATTN / TRITON / FLASHINFER 优先级 |
-
-### 第 8 章 · 端到端部署与服务化（48–50）`exercises/ch08/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [48](exercises/ch08/48_serve_model.ipynb) | 部署入门 | `vllm serve` 与 OpenAI 兼容接口，迷你 server |
-| [49](exercises/ch08/49_openai_api.ipynb) | OpenAI 客户端实战 | chat/completions、stream、SSE 解析 |
-| [50](exercises/ch08/50_metrics_monitor.ipynb) | 性能指标与监控 | TTFT / TPOT / 吞吐 / Prometheus 仪表盘 |
-
-### 第 9 章 · Triton GPU 编程（51–60）`exercises/ch09/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [51](exercises/ch09/51_triton_intro.ipynb) | Triton 是什么 | 用 Python 写 GPU kernel 的另一条路 |
-| [52](exercises/ch09/52_triton_vectoradd.ipynb) | 第一个 Triton kernel | 向量加法，grid / block 直觉 |
-| [53](exercises/ch09/53_triton_tile_model.ipynb) | tile 编程模型 | program_id + tl.arange + BLOCK 指针 |
-| [54](exercises/ch09/54_triton_gemm.ipynb) | Triton GEMM | tl.dot 写矩阵乘，naive vs tile 对比 |
-| [55](exercises/ch09/55_triton_flashattn.ipynb) | Triton FlashAttention | 分块 + 在线 softmax 的 kernel 实现 |
-| [56](exercises/ch09/56_triton_compiler.ipynb) | Triton 编译器原理 | 从 Python 一路 lowered 到 PTX |
-| [57](exercises/ch09/57_triton_tuning.ipynb) | 性能调优 | num_warps / num_stages / BLOCK 搜索 |
-| [58](exercises/ch09/58_triton_vllm.ipynb) | Triton 与 vLLM | 为什么 vLLM 用 Triton 写 attention kernel |
-| [59](exercises/ch09/59_triton_debug.ipynb) | 调试与验证 | 越界、掩码、精度：kernel bug 排查 |
-| [60](exercises/ch09/60_triton_oplib.ipynb) | mini 算子库 | LayerNorm / GELU / Softmax / RMSNorm |
-
-### 第 10 章 · AI 编译器（61–70）`exercises/ch10/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [61](exercises/ch10/61_ai_compiler_overview.ipynb) | AI 编译器全景 | TVM / MLIR / XLA / Inductor 为什么存在 |
-| [62](exercises/ch10/62_graph_optimization.ipynb) | 计算图优化 | 算子融合、常量折叠、死代码消除 |
-| [63](exercises/ch10/63_memory_scheduling.ipynb) | 内存规划与生命周期 | 把显存用得抠门 |
-| [64](exercises/ch10/64_mlir_intro.ipynb) | MLIR 与中间表示 | 多层级 IR 与 Dialect 思想 |
-| [65](exercises/ch10/65_auto_tuning.ipynb) | 自动调优 | Ansor / auto-sched 搜索最优参数 |
-| [66](exercises/ch10/66_torch_to_backend.ipynb) | 从 PyTorch 到后端 | 模型如何变成 Triton kernel |
-| [67](exercises/ch10/67_kernel_fusion.ipynb) | Kernel 融合实战 | 把一串小 kernel 并成一个 |
-| [68](exercises/ch10/68_codegen_schedule.ipynb) | 代码生成与调度 | 循环分块、向量化、tiling |
-| [69](exercises/ch10/69_oplib_vs_compiler.ipynb) | 算子库 vs 编译器 | cuDNN/CUTLASS（专业厨师）与编译器（万能厨师） |
-| [70](exercises/ch10/70_ai_compiler_trends.ipynb) | 发展趋势 | torch.compile 生态与 MLIR 动态 |
-
-### 第 11 章 · 华为昇腾全栈（71–100）`exercises/ch11/`
-
-| # | 课程 | 一句话 |
-|---|---|---|
-| [71](exercises/ch11/71_huawei_ecosystem.ipynb) | 华为 AI 生态全景 | 昇腾 + CANN + MindSpore + ModelArts |
-| [72](exercises/ch11/72_davinci_arch.ipynb) | 达芬奇架构 | AI Core 三单元与分级缓存 |
-| [73](exercises/ch11/73_cann_stack.ipynb) | CANN 软件栈 | 从应用接口到芯片执行的五层结构 |
-| [74](exercises/ch11/74_ascend_c.ipynb) | Ascend C 算子编程 | 给 AI Core 排数据流水 |
-| [75](exercises/ch11/75_mindspore_tensor.ipynb) | MindSpore 基础 | 张量、自动微分与计算图思维 |
-| [76](exercises/ch11/76_mindspore_graph.ipynb) | 计算图与静态图 | 从 PyNative 到整图下沉 |
-| [77](exercises/ch11/77_ms_dynamic_static.ipynb) | 动态图 vs 静态图 | 灵活、性能与调试的三方博弈 |
-| [78](exercises/ch11/78_ms_operator_dev.ipynb) | MindSpore 算子开发 | Primitive、自定义算子与融合 |
-| [79](exercises/ch11/79_graph_fusion.ipynb) | 图算融合 | GE 如何把 N 个算子并成 1 个 kernel |
-| [80](exercises/ch11/80_ms_distributed.ipynb) | 分布式训练 | 数据并行、模型并行与自动并行 |
-| [81](exercises/ch11/81_ms_inference.ipynb) | MindSpore 推理部署 | 从训练到服务的落地路径 |
-| [82](exercises/ch11/82_mindir.ipynb) | MindIR 与模型转换 | 模型的「通用护照」 |
-| [83](exercises/ch11/83_ms_lite.ipynb) | MindSpore Lite 端侧 | 手机上的大模型：转换、量化与硬件加速 |
-| [84](exercises/ch11/84_ascend_vs_vllm.ipynb) | 昇腾推理引擎 vs vLLM | vLLM-Ascend 与 MindIE 同题对比 |
-| [85](exercises/ch11/85_pagedattn_ascend.ipynb) | PagedAttention 在昇腾 | 分页思想换硬件的适配 |
-| [86](exercises/ch11/86_cann_oplib.ipynb) | CANN 算子库与融合 | 昇腾的「cuDNN/cuBLAS」 |
-| [87](exercises/ch11/87_ascend_quant.ipynb) | 华为量化方案 | 与 GPTQ / AWQ / FP8 同源的减精度思路 |
-| [88](exercises/ch11/88_ascend_llm.ipynb) | 昇腾大模型推理 | MindIE 的 KV 管理、并行与长上下文 |
-| [89](exercises/ch11/89_ms_autoparallel.ipynb) | MindSpore 自动并行 | 让框架替你选切分方式 |
-| [90](exercises/ch11/90_ms_evolution.ipynb) | 全栈 AI 演进 | 芯片 → 框架 → 引擎的协同演进 |
-| [91](exercises/ch11/91_ascend_llama.ipynb) | 昇腾上跑 LLaMA | 从 PyTorch 到昇腾的模型迁移 |
-| [92](exercises/ch11/92_ascend_c_perf.ipynb) | Ascend C 性能实战 | 矢量优化与流水线 |
-| [93](exercises/ch11/93_modelarts.ipynb) | ModelArts 与昇腾云 | 把训练和推理搬上云 |
-| [94](exercises/ch11/94_ms_pytorch_migrate.ipynb) | MindSpore ↔ PyTorch 迁移 | API 对照与踩坑 |
-| [95](exercises/ch11/95_ascend_graph_engine.ipynb) | 昇腾图引擎 GE | 让计算图整图下沉 |
-| [96](exercises/ch11/96_npu_memory_kv.ipynb) | NPU 内存管理与 KV Cache | 内存池与复用策略 |
-| [97](exercises/ch11/97_ascend_sparsity.ipynb) | 量化与稀疏化 | 让模型瘦身提速 |
-| [98](exercises/ch11/98_ascend_cluster.ipynb) | 集群通信 | HCCL 与 AllReduce |
-| [99](exercises/ch11/99_ascend_perf_tuning.ipynb) | 推理性能调优 | 吞吐、时延与 profiling |
-| [100](exercises/ch11/100_summary_roadmap.ipynb) | 全书总结 | 100 课知识地图 + 12 张架构图总画廊 |
-
----
-
-## 📚 repowiki 架构文档
-
-基于 vLLM **V1** `v0.23.0-dev`（commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)）源码精读，8 篇文档每篇都带真实 `文件:行号` 引用，可按 [GitHub 永久链接](https://github.com/vllm-project/vllm/blob/967e104/vllm/v1/engine/core.py)逐条查证：
-
-| # | 文档 | 主题 |
-|---|---|---|
-| 01 | [系统架构](repowiki/01_system_architecture.md) | 多进程拓扑(前端/EngineCore/Worker) + ZMQ 通信 + 事件循环 |
-| 02 | [PagedAttention 与 KV Cache](repowiki/02_PagedAttention_KVCache.md) | 块管理/容量计算/前缀缓存/COW |
-| 03 | [调度器](repowiki/03_Scheduler.md) | token 预算 / 抢占 / 连续批处理 |
-| 04 | [LLMEngine](repowiki/04_LLMEngine.md) | 输入渲染 / 输出规格化 / detokenizer |
-| 05 | [ModelRunner 与 CUDA Graph](repowiki/05_ModelRunner_CUDAGraph.md) | 执行器 / 图捕获 / torch.compile |
-| 06 | [量化](repowiki/06_Quantization.md) | FP8 / GPTQ / AWQ 三层抽象 |
-| 07 | [TP/PP/DP 并行](repowiki/07_TP_PP_DP.md) | 组切分 / 并行层 / NCCL / CustomAllReduce |
-| 08 | [Attention 后端](repowiki/08_Attention_Kernels.md) | 后端选择 / FlashAttention / MLA |
-
-> 📋 文档计划与源码依据见 [`repowiki/wiki_plan.yaml`](repowiki/wiki_plan.yaml)。
-
----
-
-## ☁️ 云端运行（免配置）
-
-| 环境 | 适合 | 入口 |
-|---|---|---|
-| **Binder** | 没有本机 Python/GPU，想快速翻翻 notebook（CPU，ch01–ch03 多数课程可直接跑） | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/feiguangba/minivllm/master) |
-| **Colab** | 想要免费 GPU 翻某一本 notebook（需逐个打开 ipynb 链接） | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/feiguangba/minivllm/blob/master/exercises/ch01/01_token_and_tokenizer.ipynb) |
-| **本机 Docker（推荐）** | 认真跑全部 100 课（GPU 章节需要 CUDA） | `docker compose up --build` |
-
----
-
-## 🚀 环境与使用方法
-
-### Docker（推荐，GPU 教学镜像）
-
-镜像内置 **torch 2.11.0+cu128 + triton 3.6.0**（sm_120 / RTX 50 系兼容），练习直接跑在你的 NVIDIA GPU 上。要求：NVIDIA 显卡 + 已装驱动；Windows 需启用 WSL2（Docker Desktop 默认后端即可）。
-
-```bash
-docker compose up --build
-```
-
-不想本地构建？直接拉现成镜像（约 20GB）：
-
-```bash
-docker pull fuyunsi/vllm-learn-labs:gpu
-docker compose up -d labs
-```
-
-| 服务 | 地址 | 说明 |
-|---|---|---|
-| Jupyter Lab | http://localhost:8888 | token `vllm_learn`，内核 `Python 3 (vllm_learn)` |
-| Streamlit 课表 | http://localhost:8501 | 选章节后按提示切换演示 |
-
-单独跑某一课的 Streamlit：
-
-```bash
-docker compose run --rm -e APP=exercises/ch02/app_10_paged_demo.py -p 8501:8501 labs
-```
-
-可选 profile：官方 `vllm/vllm-openai` 服务（与练习册相互独立）：
-
-```bash
-docker compose --profile gpu up
-```
-
-> 国内构建时若 `download.pytorch.org` 卡顿/超时，见 [`docker/Dockerfile.local`](docker/Dockerfile.local) 头部注释的镜像源 + 本地轮子方案。
-
-默认在 8000 端口用 `vllm/vllm-openai` 拉起 `Qwen/Qwen3-0.6B`。细节见 [VERSIONS.md](VERSIONS.md)。
-
-### 本机 uv（不走 Docker）
-
-- Python 3.12 + `uv`（或 venv）
-- `torch`（GPU 章节—ch04/05/06/07/09 等—需要 CUDA 版 torch，`pip install torch --index-url https://download.pytorch.org/whl/cu128`；RTX 50 系务必用 cu128）
-- `pyecharts`、`plotly`、`streamlit`、`numpy`、`pandas`、`matplotlib`、`seaborn`、`requests`（或直接 `pip install -r requirements.txt`）
-- Windows 用户需设 `KMP_DUPLICATE_LIB_OK=TRUE`（避免 torch 与 Anaconda 的 OMP 库冲突）
-
-安装（以 uv 为例）：
-
-```bash
-uv venv .venv --python 3.12
-uv pip install --python .venv/Scripts/python.exe -r requirements.txt torch --extra-index-url https://download.pytorch.org/whl/cu128
-```
-
-### 运行 notebook
-
-```powershell
-# Windows (PowerShell)
-$env:KMP_DUPLICATE_LIB_OK = "TRUE"
-.venv\Scripts\python.exe -m jupyter lab   # 打开后选 Python 3 (vllm_learn) 内核
-```
-
-每个 notebook 内部都自带「KMP 保护」开头 cell，可直接运行。
-
-### 运行交互演示（Streamlit）
-
-ch01–ch08 每课配有 `app_NN_*.py`，与 notebook 同目录：
-
-```powershell
-python -m streamlit run exercises/ch01/app_01_token_demo.py
-# 浏览器打开 http://localhost:8501
-```
-
-app 源码也以 `%%writefile` cell 内嵌在对应 notebook 中，二者内容一致。
-
-### 学习顺序建议
-
-1. **入门主线**：ch01 → ch02 → ch03（推理基础 → KV Cache/PagedAttention → 调度），每课先跑 notebook 再玩 app；
-2. **写一个迷你引擎**：跟着 [`minivllm/`](minivllm/) 的五个模块自己实现一遍（或直接读源码对照）；
-3. **深入执行**：ch04 → ch05 → ch06（模型执行/CUDA Graph → 量化 → 并行）；
-4. **底层与部署**：ch07 → ch08（Attention Kernel → 服务化）；
-5. **扩展视野**：ch09（Triton）→ ch10（AI 编译器）→ ch11（昇腾全栈）；
-6. 需要「源码级」理解时，对照 **repowiki 01–08** 与上游 [vLLM 源码（commit 967e104）](https://github.com/vllm-project/vllm/tree/967e104)；
-7. 想快速建立全局直觉，先看第 [100 课](exercises/ch11/100_summary_roadmap.ipynb) 的 12 张架构图总画廊。
-
----
+全部 12 张图集中在 [`exercises/figs/`](exercises/figs/)，并已嵌入对应课程。
 
 ## 🗂️ 目录结构
 
 ```
 minivllm/
-├── README.md / README_en.md
-├── VERSIONS.md              # 练习册与 vLLM V1 文档的版本约定
-├── docker-compose.yml       # labs(GPU 教学镜像) + vllm(vllm-openai 服务)
-├── requirements.txt
 ├── minivllm/                # ★ 迷你推理引擎包（~500 行，带测试）
-│   ├── tokenizer.py         #   迷你 BPE 分词器
-│   ├── sampler.py           #   采样策略（greedy/temperature/top-k/top-p）
-│   ├── paged_kv.py          #   分页 KV Cache + BlockAllocator
-│   ├── model.py             #   TinyGPT（prefill/decode 双路径）
-│   ├── engine.py            #   连续批处理调度引擎
-│   └── cli.py / __main__.py #   python -m minivllm 命令行
-├── tests/                   # minivllm 的 10 个测试用例
-├── answers/                 # 100 课 399 题参考答案（ch01–ch11）
-├── docker/                  # Dockerfile / entrypoint / Streamlit 课表
+├── exercises/               # 练习册：11 章 100 课 + 12 张架构图
+├── docs/                    # 8 篇 vLLM V1 源码级架构文档 + 版本约定
+├── answers/                 # 399 题参考答案
+├── tests/                   # 迷你引擎测试
+├── docker/                  # GPU 教学镜像（Dockerfile / entrypoint）
 ├── .binder/                 # Binder 云端环境（CPU）
-├── assets/                  # LOGO
-├── .claude/skills/paper-fig/ # 顶会级科研绘图规范（画新架构图时引用）
-├── repowiki/                # 8 篇源码级架构文档（V1）
-│   ├── 01_system_architecture.md .. 08_Attention_Kernels.md
-│   └── wiki_plan.yaml
-└── exercises/               # 练习册（11 章 100 课）
-    ├── GUIDELINES.md        # 写作规范
-    ├── nb_builder.py        # notebook 生成工具
-    ├── figs/                # 12 张 SVG 架构图 + REVIEW.md 审校记录
-    ├── ch01/ .. ch11/       # 11 章，每章 3–30 课
-    │   ├── NN_*.ipynb       # 每课 notebook
-    │   ├── app_NN_*.py      # 每课 streamlit 交互演示
-    │   └── _build/          # 生成脚本（helpers + build_NN.py）
+└── assets/                  # LOGO
 ```
-
-> 源码引用约定：repowiki 与部分课程的 `文件:行号` 基于上游 vLLM commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)，可按 [永久链接](https://github.com/vllm-project/vllm/blob/967e104/vllm/v1/engine/core.py)在线查证，无需本地 clone 源码。
-
----
-
-## ✍️ 版权与参考
-
-- 本仓库为学习笔记，非官方文档；
-- **代码**（`exercises/` 下的 `.py`、notebook 内代码、`docker/`、`minivllm/`）以 [MIT License](./LICENSE) 授权；
-- **文档与图**（`repowiki/*.md`、`exercises/figs/*.svg` 及 notebook 中的讲解文本）以 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 授权：可自由分享与改编，需注明出处并链接本仓库；
-- 架构图为本仓库原创绘制，绘图规范提炼自公开的顶会绘图方法论；
-- 参考：vLLM 官方文档 <https://docs.vllm.ai>、PagedAttention 论文 <https://arxiv.org/abs/2309.06180>、FlashAttention 论文 <https://arxiv.org/abs/2205.14135>、Orca 论文 <https://arxiv.org/abs/2208.14217>。

@@ -460,4 +460,4 @@ compile_or_warm_up_model:
 - vLLM 官方文档:性能调优(含 `--enforce-eager`、`--cudagraph-capture-sizes`、`--compile` 等开关) <https://docs.vllm.ai/en/latest/performance/performance_tuning.html>
 - vLLM 官方文档:torch.compile 与编译配置 <https://docs.vllm.ai/en/latest/features/compilation/index.html>
 - vLLM 官方文档:投机解码(与 capture sizes 的 `decode_query_len` 直接相关) <https://docs.vllm.ai/en/latest/features/spec_decode.html>
-- 相关文档:本仓库 repowiki `01_system_architecture.md`(Worker 在进程拓扑中的位置)、`03_Scheduler.md`(SchedulerOutput 的来源与消费)、`02_*`(KV Cache Manager,`block_ids` 的来源)
+- 相关文档:本仓库 docs `01_system_architecture.md`(Worker 在进程拓扑中的位置)、`03_Scheduler.md`(SchedulerOutput 的来源与消费)、`02_*`(KV Cache Manager,`block_ids` 的来源)

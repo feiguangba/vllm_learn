@@ -1,28 +1,52 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="minivllm logo" width="340"/>
+<img src="assets/logo.png" alt="minivllm logo" width="320"/>
 
-# minivllm · Illustrated vLLM Inference Engine
+# minivllm
 
-**Understand how a modern LLM inference engine works — with diagrams, hands-on experiments, and a runnable mini engine.**
-
-KV Cache · PagedAttention · Continuous Batching · CUDA Graph · Quantization · Distributed Parallelism · Attention Kernels · Triton · AI Compilers · Huawei Ascend
+An illustrated, hands-on course on how vLLM works — with a runnable mini inference engine.
+</br>
+<em>图解 vLLM 推理引擎：100 课动手练习册 + 一个能跑的迷你引擎</em>
 
 [![CI](https://github.com/feiguangba/minivllm/actions/workflows/sanity.yml/badge.svg)](./.github/workflows/sanity.yml)
-[![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/code-MIT-blue.svg)](./LICENSE)
-[![Docs](https://img.shields.io/badge/docs-CC%20BY%204.0-green.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/fuyunsi/vllm-learn-labs.svg)](https://hub.docker.com/r/fuyunsi/vllm-learn-labs)
+[![GitHub Stars](https://img.shields.io/github/stars/feiguangba/minivllm?style=flat-square&color=DAA520)](https://github.com/feiguangba/minivllm/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/feiguangba/minivllm?style=flat-square)](https://github.com/feiguangba/minivllm/network)
+[![Python](https://img.shields.io/badge/python-3.12-blue?style=flat-square)](https://www.python.org/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/fuyunsi/vllm-learn-labs?style=flat-square&logo=docker&logoColor=white)](https://hub.docker.com/r/fuyunsi/vllm-learn-labs)
+[![Binder](https://img.shields.io/badge/Binder-launch-E77C35?style=flat-square&logo=jupyter&logoColor=white)](https://mybinder.org/v2/gh/feiguangba/minivllm/master)
 
-**100-lesson workbook · 8 source-level architecture notes · 12 top-conference-style figures · ~500-line runnable mini engine · 399 exercise answers**
-
-> 🇨🇳 中文版 README：[README.md](README.md)（内容更全，含逐课清单）
+[English](./README_en.md) | [中文](./README.md)
 
 </div>
 
----
+## ⚡ Overview
 
-## ⚡ Quick start
+**minivllm** is an open course that takes you from zero to understanding LLM inference systems. Around vLLM's core techniques — KV Cache, PagedAttention, continuous batching, CUDA Graph, quantization, parallelism, attention kernels, Triton, AI compilers, and the Huawei Ascend stack — it offers **11 chapters × 100 hands-on lessons**, plus a **~500-line, runnable, tested** mini inference engine that turns every concept into real code.
+
+> All you need: follow the notebooks (Docker if you have a GPU, Binder if you don't)</br>
+> What you get: a complete path from "using an inference engine" to "being able to write one"
+
+## ✨ What's inside
+
+| | Component | Description |
+|---|---|---|
+| 🧪 | **[Workbook](exercises/)** | 100 Jupyter lessons in 11 chapters — diagrams first, intuition first, experiments built in |
+| 🚂 | **[Mini engine](minivllm/)** | ~500 lines replicating the vLLM skeleton: tokenizer → sampler → paged KV → continuous batching, with 10 tests |
+| 📚 | **[Architecture notes](docs/)** | 8 source-level deep dives into vLLM V1, every claim backed by a verifiable `file:line` citation |
+| 🖼️ | **[Figure gallery](exercises/figs/)** | 12 original top-conference-style SVG figures embedded in the lessons |
+| ✅ | **[Answers](answers/)** | Reference answers to all 399 exercises |
+
+## 🔄 Suggested path
+
+1. **Core loop** · ch01–ch03: tokenization → KV Cache / PagedAttention → continuous batching
+2. **Write the engine** · re-implement each of the five [minivllm](minivllm/) modules yourself
+3. **Execution deep dive** · ch04–ch06: model execution / CUDA Graph → quantization → parallelism
+4. **Kernels & serving** · ch07–ch08: attention kernels → end-to-end deployment
+5. **Wider horizons** · ch09–ch11: Triton → AI compilers → Huawei Ascend
+
+When you need source-level depth, open the matching note in [docs/](docs/); for a global intuition, start with the 12-figure gallery in [lesson 100](exercises/ch11/100_summary_roadmap.ipynb).
+
+## 🚀 Quick start
 
 ```bash
 git clone https://github.com/feiguangba/minivllm.git
@@ -30,131 +54,61 @@ cd minivllm
 docker compose up --build          # GPU teaching image (torch 2.11.0+cu128)
 ```
 
-Open [http://localhost:8888](http://localhost:8888) (token: `vllm_learn`) and [http://localhost:8501](http://localhost:8501); pick the **Python 3 (vllm_learn)** kernel. No local build? `docker pull fuyunsi/vllm-learn-labs:gpu` then `docker compose up -d labs`.
+Open [http://localhost:8888](http://localhost:8888) (token `vllm_learn`) and [http://localhost:8501](http://localhost:8501) (Streamlit demos). Or pull the prebuilt image: `docker pull fuyunsi/vllm-learn-labs:gpu` then `docker compose up -d labs` (~20GB).
 
-No GPU? [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/feiguangba/minivllm/master) runs most of ch01–ch03 on CPU in your browser.
-
-## 📦 What's inside
-
-| | Module | Path | What it is |
-|---|---|---|---|
-| 🧪 | **Workbook (100 lessons)** | [`exercises/`](exercises/) | 11 chapters × 100 Jupyter notebooks — concept → minimal implementation → visualization → experiment; ch01–ch08 also ship Streamlit demos |
-| 🚂 | **minivllm mini engine** | [`minivllm/`](minivllm/) | ~500 lines turning the core ideas into a runnable, tested Python package — the skeleton of vLLM in miniature |
-| 📚 | **repowiki** | [`repowiki/`](repowiki/) | 8 source-level architecture notes with `file:line` citations, based on vLLM **V1** `v0.23.0-dev` |
-| 🖼️ | **Figure gallery** | [`exercises/figs/`](exercises/figs/) | 12 original SVG architecture figures embedded in the lessons |
-| ✅ | **Answers** | [`answers/`](answers/) | Reference answers to all 399 exercises across the 100 lessons |
-
-## 🚂 minivllm: turn the course into a working engine
-
-Each module maps to specific lessons:
-
-| Module | Lessons | Covers |
+| Environment | Best for | Link |
 |---|---|---|
-| `tokenizer.py` | ch01 · L01 | mini BPE: merges → vocab → compression ratio |
-| `sampler.py` | ch01 · L03 | greedy / temperature / top-k / top-p |
-| `paged_kv.py` | ch02 · L10/11/13 | BlockAllocator, block table, prefix sharing (refcount), fragmentation |
-| `model.py` | ch04 · L04/22 | prefill (parallel) and decode (incremental) paths |
-| `engine.py` | ch03 · L14–18 | FCFS admission, in-batch rotation, completion, recompute preemption |
+| **Docker (recommended)** | Full 100 lessons, needs an NVIDIA GPU | command above |
+| **Binder** | Browser, CPU-friendly lessons | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/feiguangba/minivllm/master) |
+| **Colab** | Free GPU, one notebook at a time | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/feiguangba/minivllm/blob/master/exercises/ch01/01_token_and_tokenizer.ipynb) |
+| **Local uv** | Without Docker | `pip install -r requirements.txt` + `jupyter lab` |
+
+Most content runs without a GPU — ch01–ch03 and the mini engine are pure CPU:
 
 ```bash
 pip install -e .
 python -m minivllm "the quick brown fox" --max-new 16 --seed 0 --verbose
 ```
 
-The model is a randomly-initialized TinyGPT — the outputs are pseudo-text. The point is the **engine's data flow and scheduling**, not model quality. See [`minivllm/README.md`](minivllm/README.md).
+## 🗺️ Course map
 
-## 🖼️ Architecture figures
+| Ch. | Topic | Lessons | Entry |
+|---|---|---|---|
+| ch01 | LLM inference basics (tokens / decoding / sampling / prefill vs decode) | 01–06 | [`exercises/ch01/`](exercises/ch01/) |
+| ch02 | KV Cache & PagedAttention | 07–13 | [`exercises/ch02/`](exercises/ch02/) |
+| ch03 | Continuous batching & scheduling | 14–20 | [`exercises/ch03/`](exercises/ch03/) |
+| ch04 | Model execution & CUDA Graph | 21–27 | [`exercises/ch04/`](exercises/ch04/) |
+| ch05 | Quantization (GPTQ / AWQ / FP8) | 28–34 | [`exercises/ch05/`](exercises/ch05/) |
+| ch06 | Distributed parallelism (TP / PP / DP / EP) | 35–41 | [`exercises/ch06/`](exercises/ch06/) |
+| ch07 | Attention kernels in practice | 42–47 | [`exercises/ch07/`](exercises/ch07/) |
+| ch08 | End-to-end deployment & serving | 48–50 | [`exercises/ch08/`](exercises/ch08/) |
+| ch09 | Triton GPU programming | 51–60 | [`exercises/ch09/`](exercises/ch09/) |
+| ch10 | AI compilers | 61–70 | [`exercises/ch10/`](exercises/ch10/) |
+| ch11 | Huawei Ascend full stack | 71–100 | [`exercises/ch11/`](exercises/ch11/) |
 
-12 original SVG figures drawn in a top-conference paper style live in [`exercises/figs/`](exercises/figs/) — overall architecture, PagedAttention block table, scheduler state machine, CUDA graph capture/replay, TP/PP/DP layouts, attention kernel anatomy, and more. The drawing spec is in `.claude/skills/paper-fig/`. Lesson [100](exercises/ch11/100_summary_roadmap.ipynb) opens with the full gallery.
+Each chapter folder contains the per-lesson notebooks (`NN_*.ipynb`) and Streamlit demos (`app_NN_*.py`); answers live in [`answers/`](answers/).
 
-## 📚 repowiki — source-level architecture notes
+## 🖼️ Architecture figures (selection)
 
-Eight deep-dive documents in [`repowiki/`](repowiki/) derived from reading the **vLLM V1** source (main branch @ commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)):
-
-1. [System architecture](repowiki/01_system_architecture.md) — processes, RPC, engine core loop
-2. [PagedAttention & KV cache](repowiki/02_PagedAttention_KVCache.md) — block manager, allocator, prefix caching
-3. [Scheduler](repowiki/03_Scheduler.md) — admission, batching, preemption policies
-4. [LLMEngine](repowiki/04_LLMEngine.md) — sync/async frontends, output processing
-5. [ModelRunner & CUDA Graph](repowiki/05_ModelRunner_CUDAGraph.md) — execute_model path, graph capture
-6. [Quantization](repowiki/06_Quantization.md) — method registry, online/offline paths
-7. [TP / PP / DP](repowiki/07_TP_PP_DP.md) — parallelism groups, communication schedules
-8. [Attention kernels](repowiki/08_Attention_Kernels.md) — backend selection, FlashAttention integration
-
-All `file:line` citations use relative paths into the upstream `vllm/` tree; you can verify each one online via the [permalink base](https://github.com/vllm-project/vllm/blob/967e104/vllm/v1/engine/core.py) — no local clone needed.
-
-## ☁️ Run in the cloud
-
-| Environment | Best for | Link |
+| | | |
 |---|---|---|
-| **Binder** | No local Python/GPU — browse most CPU-friendly lessons | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/feiguangba/minivllm/master) |
-| **Colab** | Free GPU for a single notebook | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/feiguangba/minivllm/blob/master/exercises/ch01/01_token_and_tokenizer.ipynb) |
-| **Local Docker (recommended)** | The full 100 lessons on your own NVIDIA GPU | `docker compose up --build` |
+| [Transformer block](exercises/figs/fig_01_transformer_block.svg) | [Prefill vs Decode](exercises/figs/fig_02_prefill_vs_decode.svg) | [KV Cache](exercises/figs/fig_03_kv_cache.svg) |
+| [PagedAttention](exercises/figs/fig_04_pagedattention.svg) | [Continuous Batching](exercises/figs/fig_05_continuous_batching.svg) | [Request lifecycle](exercises/figs/fig_06_request_lifecycle.svg) |
+| [vLLM system architecture](exercises/figs/fig_07_vllm_arch.svg) | [Inference pipeline](exercises/figs/fig_08_inference_pipeline.svg) | [Quantization](exercises/figs/fig_09_quantization.svg) |
+| [Parallelism](exercises/figs/fig_10_parallelism.svg) | [FlashAttention](exercises/figs/fig_11_flash_attention.svg) | [Ascend stack](exercises/figs/fig_12_ascend_stack.svg) |
 
-## 🚀 Run it
-
-### Docker (recommended — GPU teaching image)
-
-Requires an NVIDIA GPU + [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). The image ships **torch 2.11.0+cu128** (RTX 50-series / sm_120 compatible), Jupyter Lab and Streamlit.
-
-```bash
-docker compose up --build        # or: docker pull fuyunsi/vllm-learn-labs:gpu
-```
-
-- Jupyter Lab: <http://localhost:8888> — token `vllm_learn`, kernel **Python 3 (vllm_learn)**
-- Streamlit hub: <http://localhost:8501> — switch demos via the `APP` env var:
-
-```bash
-docker compose run --rm -e APP=exercises/ch02/app_10_paged_demo.py -p 8501:8501 labs
-```
-
-Building in mainland China and pip keeps stalling? See the offline three-stage recipe in [`docker/Dockerfile.local`](docker/Dockerfile.local).
-
-### Local uv / venv
-
-Python 3.12; install `requirements.txt` plus CUDA torch (`pip install torch --index-url https://download.pytorch.org/whl/cu128`), then `jupyter lab` and pick the **Python 3 (vllm_learn)** kernel. On Windows set `KMP_DUPLICATE_LIB_OK=TRUE`.
-
-### Optional: real vLLM server
-
-```bash
-docker compose --profile gpu up   # serves Qwen/Qwen3-0.6B on :8000 via vllm/vllm-openai
-```
-
-Not required for the 100 lessons.
-
-### Suggested learning order
-
-ch01 → ch02 → ch03 (core inference loop) → write/read the [minivllm](minivllm/) engine → ch04 → ch09 → ch05/ch06 → ch07 → ch08 → ch10/ch11. When you need source-level depth, open the matching repowiki note next to the chapter.
+All 12 figures live in [`exercises/figs/`](exercises/figs/) and are embedded in their lessons.
 
 ## 🗂️ Repository layout
 
 ```
 minivllm/
-├── README.md / README_en.md
-├── VERSIONS.md              # version conventions for lessons vs vLLM V1
-├── docker-compose.yml       # labs (GPU teaching image) + vllm-openai service
-├── requirements.txt
-├── minivllm/                # ★ mini inference engine package (~500 lines, tested)
-├── tests/                   # 10 test cases for minivllm
-├── answers/                 # reference answers for all 399 exercises
-├── docker/                  # Dockerfile / entrypoint / Streamlit hub
+├── minivllm/                # ★ mini inference engine (~500 lines, tested)
+├── exercises/               # workbook: 11 chapters, 100 lessons + 12 figures
+├── docs/                    # 8 source-level vLLM V1 notes + version conventions
+├── answers/                 # reference answers (399 exercises)
+├── tests/                   # engine test suite
+├── docker/                  # GPU teaching image (Dockerfile / entrypoint)
 ├── .binder/                 # cloud (CPU) environment for Binder
-├── assets/                  # logo
-├── repowiki/                # 8 source-level architecture notes
-└── exercises/               # 11 chapters, 100 lessons
-    ├── GUIDELINES.md       # writing spec
-    ├── nb_builder.py        # notebook generation tooling
-    ├── figs/                # 12 SVG architecture figures
-    └── ch01/ .. ch11/       # NN_*.ipynb lessons + app_NN_*.py demos
+└── assets/                  # logo
 ```
-
-## Versions
-
-See [VERSIONS.md](VERSIONS.md). Notes target **vLLM V1** (v0.23-dev @ 967e104). The notebooks do **not** import the `vllm` package — everything is implemented from scratch so you can see every moving part.
-
-## ✍️ License & references
-
-This repo is a study companion, not official documentation.
-
-- **Code** (`.py` files, notebook code cells, `docker/`, `minivllm/`) is licensed under the [MIT License](./LICENSE);
-- **Docs & figures** (`repowiki/*.md`, `exercises/figs/*.svg`, notebook prose) are additionally licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — share and adapt freely with attribution and a link back;
-- References: [vLLM docs](https://docs.vllm.ai) · [PagedAttention](https://arxiv.org/abs/2309.06180) · [FlashAttention](https://arxiv.org/abs/2205.14135) · [Orca](https://arxiv.org/abs/2208.14217).
