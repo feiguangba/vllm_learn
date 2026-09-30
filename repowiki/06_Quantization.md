@@ -1,7 +1,7 @@
 # 06 · vLLM 量化子系统:三层抽象、配置注入与 kernel 选择链
 
-> **版本**:基于 `vendor/vllm` 的 vLLM v0.23.0(dev/main)源码精读整理。
-> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vendor/vllm/vllm/`(例如 `model_executor/layers/quantization/fp8.py:92` = `vendor/vllm/vllm/model_executor/layers/quantization/fp8.py` 第 92 行)。
+> **版本**:基于 vLLM v0.23.0(dev/main @ commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)) 源码精读整理。
+> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vllm/`(在线查证: https://github.com/vllm-project/vllm/blob/967e104/vllm/<路径>#L<行号> ;例如 `model_executor/layers/quantization/fp8.py:92` = 上游源码中的 `vllm/model_executor/layers/quantization/fp8.py` 第 92 行)。
 > **一句话总结**:vLLM 的量化是"**配置(QuantizationConfig)→ 方法(QuantizeMethodBase)→ kernel(LinearKernel)**"三层抽象:配置类从 checkpoint 或 CLI 参数实例化,通过 `get_quant_method()` 为每个算子分派对应的 Linear/MoE 方法,方法在 `create_weights()` 里用 vLLM 自定义参数(打包权重/scale/zero-point)建权重,加载后由 `process_weights_after_loading()` 重排成特定 kernel 需要的布局,最终在 `apply()` 里委托给 `choose_scaled_mm_linear_kernel` / `choose_mp_linear_kernel` 按平台优先级挑选出的 kernel 完成计算。
 
 ---

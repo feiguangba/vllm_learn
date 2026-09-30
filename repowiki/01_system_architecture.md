@@ -1,7 +1,7 @@
 # 01 · vLLM V1 系统架构:多进程拓扑与事件循环
 
-> **版本**:基于 `vendor/vllm` 的 vLLM v0.23.0(dev/main)源码精读整理。
-> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vendor/vllm/vllm/`(例如 `v1/engine/core.py:1375` = `vendor/vllm/vllm/v1/engine/core.py` 第 1375 行)。
+> **版本**:基于 vLLM v0.23.0(dev/main @ commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)) 源码精读整理。
+> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vllm/`(在线查证: https://github.com/vllm-project/vllm/blob/967e104/vllm/<路径>#L<行号> ;例如 `v1/engine/core.py:1375` = 上游源码中的 `vllm/v1/engine/core.py` 第 1375 行)。
 > **一句话总结**:V1 把引擎拆成"**前端进程 → EngineCore 进程 → Worker 进程组**"三层,前端负责输入渲染与输出规格化,EngineCore 独占调度 + KV 管理 + 执行编排,Worker 只负责模型前向与采样;三层之间用 **ZMQ(msgpack)+ 共享内存广播队列 + 零拷贝张量 IPC** 连接。
 
 ---

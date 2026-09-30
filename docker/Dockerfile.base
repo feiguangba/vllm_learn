@@ -1,0 +1,24 @@
+# 基础镜像：apt 工具链 + requirements（在线，~2.5 分钟，单独构建以躲开 Docker Desktop 后端断流窗口）。
+# 用法：docker build -f docker/Dockerfile.base -t vllm-learn-base:latest .
+# 用后即删；仓库正式入口是 docker/Dockerfile。
+FROM python:3.12-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PYTHONPATH=/workspace/exercises \
+    JUPYTER_TOKEN=vllm_learn \
+    JUPYTER_PORT=8888 \
+    STREAMLIT_PORT=8501
+
+WORKDIR /workspace
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        curl \
+        git \
+        ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir --retries 5 --timeout 60 -r /tmp/requirements.txt

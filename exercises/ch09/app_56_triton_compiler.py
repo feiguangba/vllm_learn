@@ -2,8 +2,9 @@
 # app_56_triton_compiler.py — 编译流程概念图 + 真实编译产物查看器 ⚙️
 import os, time
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-_PTXAS = r"D:\CUDA\v13.3\bin\ptxas.exe"
-if os.path.exists(_PTXAS):
+import shutil
+_PTXAS = os.environ.get("TRITON_PTXAS_PATH") or shutil.which("ptxas")   # 系统 CUDA 自带 ptxas
+if _PTXAS:                                                     # 未命中则回退 PATH 查找
     os.environ.setdefault("TRITON_PTXAS_PATH", _PTXAS)
 import streamlit as st
 import plotly.graph_objects as go

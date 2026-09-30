@@ -1,0 +1,58 @@
+services:
+  labs:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: vllm-learn-labs
+    environment:
+      APP: docker/hub.py
+      JUPYTER_TOKEN: vllm_learn
+      PYTHONPATH: /workspace/exercises
+    image: vllm-learn-labs:gpu
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - capabilities:
+            - gpu
+            count: all
+            driver: nvidia
+    ipc: host
+    ports:
+    - 8888:8888
+    - 8501:8501
+    profiles:
+    - default
+    - gpu
+    volumes:
+    - .:/workspace
+    working_dir: /workspace
+  vllm:
+    command:
+    - --model
+    - Qwen/Qwen3-0.6B
+    - --max-model-len
+    - '2048'
+    - --enforce-eager
+    container_name: vllm-learn-vllm
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - capabilities:
+            - gpu
+            count: all
+            driver: nvidia
+    environment:
+      HUGGING_FACE_HUB_TOKEN: ${HF_TOKEN:-}
+      VLLM_LOGGING_LEVEL: WARNING
+    image: vllm/vllm-openai:latest
+    ipc: host
+    ports:
+    - 8000:8000
+    profiles:
+    - gpu
+    volumes:
+    - huggingface_cache:/root/.cache/huggingface
+volumes:
+  huggingface_cache: {}

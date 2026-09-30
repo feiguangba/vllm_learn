@@ -15,13 +15,14 @@ GPU 上有 vLLM,昇腾上有什么?答案是两条路:
 下方拖动**并发数 / 平均输出长度 / 显存总量**,对比三种“引擎形态”的**吞吐与显存占用**。
 """)
 
+# 三种引擎:批效率(单位算力产出 token/s)示意
+ENGINE_EFF = {"vLLM (CUDA)": 100, "vLLM-Ascend": 92, "MindIE (昇腾)": 95}
+
 def calc(conc, out_len, gpu_gb, prefill=512):
     kv_per_req = 2.0 * 4096 * 2.0 / 1e9 * (prefill + out_len) * 0.5   # GB/请求
-    # 三种引擎:批效率(单位算力产出 token/s)示意
-    engine_eff = {"vLLM (CUDA)": 100, "vLLM-Ascend": 92, "MindIE (昇腾)": 95}
-    names = list(engine_eff)
+    names = list(ENGINE_EFF)
     kv_total = kv_per_req * conc
-    thr = [eff * conc * 6.0 / max(out_len, 1) for eff in engine_eff.values()]
+    thr = [eff * conc * 6.0 / max(out_len, 1) for eff in ENGINE_EFF.values()]
     mem_ratio = kv_total / gpu_gb * 100
     return names, thr, kv_total, mem_ratio
 
@@ -48,16 +49,12 @@ st.caption("⭐ 三者的差距来自算子实现与图优化策略,但都建立
 
 st.subheader("📈 吞吐 vs 并发")
 cs = np.arange(1, conc + 1)
-lines = []
-for name, eff in engine_eff.items():
+fig2 = go.Figure()
+_colors = ["#4C78A8", "#F58518", "#E45756"]
+for i, (name, eff) in enumerate(ENGINE_EFF.items()):
     y = [eff * c * 6.0 / max(out_len, 1) for c in cs]
-    fig2 = go.Figure() if name == list(engine_eff)[0] else fig2
-    if name == list(engine_eff)[0]:
-        fig2.add_trace(go.Scatter(x=cs, y=y, mode="lines+markers", name=name,
-                                  line=dict(color="#4C78A8", width=3)))
-    else:
-        fig2.add_trace(go.Scatter(x=cs, y=y, mode="lines", name=name,
-                                  line=dict(color="#F58518" if "Ascend" in name else "#E45756", width=3)))
+    fig2.add_trace(go.Scatter(x=cs, y=y, mode="lines+markers" if i == 0 else "lines", name=name,
+                              line=dict(color=_colors[i], width=3)))
 fig2.add_vline(x=conc, line_dash="dash", line_color="#333")
 fig2.update_layout(title="吞吐随并发增长(线性理想模型)", xaxis_title="并发请求数",
                    yaxis_title="吞吐(相对单位)", height=400, margin=dict(l=10, r=10, t=50, b=10))

@@ -1,0 +1,30 @@
+# 最终层：基于基础镜像(apt+requirements)，从轮子库镜像离线安装 torch/CUDA 全家桶。
+# 前置：
+#   1) tar -C docker/wheels -cf - . | docker import - vllm-learn-wheelhouse:latest
+#   2) docker build -f docker/Dockerfile.base -t vllm-learn-base:latest .
+# 构建(约 2 分钟,规避 Docker Desktop 后端断流窗口):
+#   docker build -f docker/Dockerfile.local -t vllm-learn-labs:gpu .
+# 用后即删；仓库正式入口是 docker/Dockerfile。
+FROM vllm-learn-base:latest
+
+WORKDIR /workspace
+
+# 离线安装:torch/triton + 全部 nvidia-* CUDA 运行库均来自轮子库镜像
+COPY --from=vllm-learn-wheelhouse:latest . /tmp/wheels
+RUN pip install --no-cache-dir --no-index --find-links /tmp/wheels \
+      torch==2.11.0+cu128 triton==3.6.0 \
+    && rm -rf /tmp/wheels
+
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
+
+EXPOSE 8888 8501
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
+
+EXPOSE 8888 8501
+
+ENTRYPOINT ["/entrypoint.sh"]

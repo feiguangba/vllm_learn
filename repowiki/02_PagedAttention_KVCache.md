@@ -1,7 +1,7 @@
 # 02 · vLLM V1 PagedAttention 与 KV Cache 管理:块池、前缀缓存与多组协调
 
-> **版本**:基于 `vendor/vllm` 的 vLLM v0.23.0(dev/main)源码精读整理。
-> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vendor/vllm/vllm/`(例如 `v1/core/block_pool.py:143` = `vendor/vllm/vllm/v1/core/block_pool.py` 第 143 行)。
+> **版本**:基于 vLLM v0.23.0(dev/main @ commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)) 源码精读整理。
+> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vllm/`(在线查证: https://github.com/vllm-project/vllm/blob/967e104/vllm/<路径>#L<行号> ;例如 `v1/core/block_pool.py:143` = 上游源码中的 `vllm/v1/core/block_pool.py` 第 143 行)。
 > **一句话总结**:KV Cache 不再是一整块连续显存,而是被切成固定大小(默认 16 token)的"页/块"(block),由 `BlockPool` 统一分配/回收,`KVCacheManager` + `KVCacheCoordinator` 负责按请求建块表、做前缀缓存(链式哈希 + COW)并对**多个 KV cache group**(全注意力 / 滑窗 / Mamba / 混合模型)协调;显存预算在启动时由 GPU profiling 决定(`available = 总内存×util − 模型占用 − CUDA graph`)。
 
 ---

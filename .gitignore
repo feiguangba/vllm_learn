@@ -22,3 +22,6 @@ test*.py
 
 # 运行产物(可选保留的数据 JSON 除外)
 *.log
+
+# 本地下载的 torch/triton 大轮子(断网构建用,不入库)
+docker/wheels/

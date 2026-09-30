@@ -1,7 +1,7 @@
 # 05 · vLLM V1 ModelRunner 与 CUDA Graph:从 SchedulerOutput 到 GPU 前向
 
-> **版本**:基于 `vendor/vllm` 的 vLLM v0.23.0(dev/main)源码精读整理。
-> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vendor/vllm/vllm/`(例如 `v1/worker/gpu/model_runner.py:158` = `vendor/vllm/vllm/v1/worker/gpu/model_runner.py` 第 158 行)。
+> **版本**:基于 vLLM v0.23.0(dev/main @ commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)) 源码精读整理。
+> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vllm/`(在线查证: https://github.com/vllm-project/vllm/blob/967e104/vllm/<路径>#L<行号> ;例如 `v1/worker/gpu/model_runner.py:158` = 上游源码中的 `vllm/v1/worker/gpu/model_runner.py` 第 158 行)。
 > **一句话总结**:ModelRunner 是 Worker 进程内的"GPU 前端",负责把调度器产出的 `SchedulerOutput` 翻译成一组固定形状的 GPU 张量(`input_ids`/`positions`/`query_start_loc`/block table/slot mapping)并驱动模型前向;为了让一次前向的数千次 kernel 启动变成一次 `graph.replay()`,vLLM 先用 `profile_run()` 测定显存、按 `cudagraph_capture_sizes` 预热并捕获一组 **shape 固定**的 CUDA Graph(共享一个 graph 内存池),运行期再按"取最近的捕获尺寸向上 padding"派发,而 `torch.compile`(VLLM_COMPILE + VllmBackend)负责把图拆成可捕获的 piecewise 子图并做 Inductor 融合与缓存。
 
 ---

@@ -1,7 +1,7 @@
 # 08 · vLLM V1 Attention 内核:后端抽象、选择与 PagedAttention 元数据
 
-> **版本**:基于 `vendor/vllm` 的 vLLM v0.23.0(dev/main)源码精读整理。
-> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vendor/vllm/vllm/`(例如 `v1/attention/backend.py:55` = `vendor/vllm/vllm/v1/attention/backend.py` 第 55 行)。本仓库的 V1 attention 代码位于 `v1/attention/`(**不存在** `vllm/attention`);`v1/attention/backends/` 下每个子模块是一个后端。
+> **版本**:基于 vLLM v0.23.0(dev/main @ commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)) 源码精读整理。
+> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vllm/`(在线查证: https://github.com/vllm-project/vllm/blob/967e104/vllm/<路径>#L<行号> ;例如 `v1/attention/backend.py:55` = 上游源码中的 `vllm/v1/attention/backend.py` 第 55 行)。本仓库的 V1 attention 代码位于 `v1/attention/`(**不存在** `vllm/attention`);`v1/attention/backends/` 下每个子模块是一个后端。
 > **一句话总结**:vLLM 把"注意力"抽象成**一对三**的插件体系——每个后端由一个 `AttentionBackend` 类(静态能力声明 + 校验)、一个 `AttentionMetadataBuilder`(把调度输出翻译成 kernel 需要的元数据)和一个 `AttentionImpl`(真正的 `forward` 实现)组成;引擎在启动时按 `AttentionSelectorConfig` 从 `AttentionBackendEnum` 全集里**按平台优先级逐个候选 validate**,选中最优后端,再由 `CommonAttentionMetadata` 统一承载跨后端的批次信息、由各后端 builder 派生各自的 kernel 元数据,最终在 GPU 前向里通过 **PagedAttention 的 block_table / slot_mapping 两级寻址**读写非连续的 KV cache。
 
 ---

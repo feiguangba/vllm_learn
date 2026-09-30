@@ -1,7 +1,7 @@
 # 04 · vLLM V1 引擎前端:LLMEngine / AsyncLLM 与输入输出处理器
 
-> **版本**:基于 `vendor/vllm` 的 vLLM v0.23.0(dev/main)源码精读整理。
-> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vendor/vllm/vllm/`(例如 `v1/engine/llm_engine.py:48` = `vendor/vllm/vllm/v1/engine/llm_engine.py` 第 48 行)。
+> **版本**:基于 vLLM v0.23.0(dev/main @ commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)) 源码精读整理。
+> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vllm/`(在线查证: https://github.com/vllm-project/vllm/blob/967e104/vllm/<路径>#L<行号> ;例如 `v1/engine/llm_engine.py:48` = 上游源码中的 `vllm/v1/engine/llm_engine.py` 第 48 行)。
 > **一句话总结**:`LLMEngine`(同步)与 `AsyncLLM`(异步)是用户碰到的**唯一引擎门面**,它们自己不调度、不碰 GPU,只做三件事——用 `InputProcessor` 把输入渲染/分词成 `EngineCoreRequest`、用 `OutputProcessor` 把 `EngineCoreOutputs` 规整成用户可读的 `RequestOutput`,以及通过 `EngineCoreClient` 与后台的 EngineCore 进程互通;文档 01/03 讲的调度器、KV 管理、执行器全部在进程另一端。
 
 ---

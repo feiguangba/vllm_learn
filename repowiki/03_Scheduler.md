@@ -1,7 +1,7 @@
 # 03 · vLLM V1 调度器:Token 预算驱动的一次性调度与请求生命周期
 
-> **版本**:基于 `vendor/vllm` 的 vLLM v0.23.0(dev/main)源码精读整理。
-> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vendor/vllm/vllm/`(例如 `v1/core/sched/scheduler.py:476` = `vendor/vllm/vllm/v1/core/sched/scheduler.py` 第 476 行)。
+> **版本**:基于 vLLM v0.23.0(dev/main @ commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)) 源码精读整理。
+> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vllm/`(在线查证: https://github.com/vllm-project/vllm/blob/967e104/vllm/<路径>#L<行号> ;例如 `v1/core/sched/scheduler.py:476` = 上游源码中的 `vllm/v1/core/sched/scheduler.py` 第 476 行)。
 > **一句话总结**:V1 调度器**取消了独立的 prefill/decode 阶段**,把调度彻底泛化为"给每个请求分配 token 预算、让 `num_computed_tokens` 追赶 `num_tokens_with_spec`"的纯预算问题;`schedule()` 每步产出 `SchedulerOutput` 交给模型前向,`update_from_output()` 消费 GPU 输出并推进请求状态机,配合抢占(recompute)与连续批处理实现动态的 token 级流水线。
 
 ---

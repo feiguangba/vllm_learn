@@ -1,15 +1,28 @@
 
-
 # VLLM_learn · 图解 vLLM 推理引擎
+
+[![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/docker-compose-2496ED.svg)](./docker-compose.yml)
+[![vLLM docs](https://img.shields.io/badge/architecture-V1%20v0.23--dev-orange.svg)](./VERSIONS.md)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![CI](https://github.com/feiguangba/vllm_learn/actions/workflows/sanity.yml/badge.svg)](./.github/workflows/sanity.yml)
+[![English](https://img.shields.io/badge/README-English-green.svg)](./README_en.md)
 
 > 用 **图解 + 动手实验** 的方式，从零到一理解 vLLM 推理引擎：KV Cache、PagedAttention、Continuous Batching、CUDA Graph、量化、分布式并行、Attention Kernel、Triton、AI 编译器，以及华为昇腾全栈。
 >
 > **100 课系统练习册 + 8 篇源码级架构文档 + 12 张顶会风格架构图。**
 
+```bash
+docker compose up --build
+```
+
+浏览器打开 [http://localhost:8888](http://localhost:8888)（token: `vllm_learn`）和 [http://localhost:8501](http://localhost:8501)。内核选 `Python 3 (uv_cuda)`。版本约定见 [VERSIONS.md](VERSIONS.md)。
+
 | 模块 | 路径 | 说明 |
 |---|---|---|
+| 🐳 **Docker** | [`docker-compose.yml`](docker-compose.yml) | GPU 教学镜像一键跑通（torch 2.11.0+cu128）；`--profile gpu` 可选挂官方 vLLM 服务 |
 | 🧪 **练习册（100 课）** | [`exercises/`](exercises/) | 11 章 100 课 Jupyter notebook，风格参照《鸢尾花书》：重图解、重直觉、循序渐进、动手实验 |
-| 📚 **repowiki 架构文档** | [`repowiki/`](repowiki/) | 8 篇源码级架构文档（带 `文件:行号`），基于 `vendor/vllm`(v0.23.0-dev) 精读整理 |
+| 📚 **repowiki 架构文档** | [`repowiki/`](repowiki/) | 8 篇源码级架构文档（带 `文件:行号`），基于 vLLM **V1** `v0.23.0-dev` 精读整理 |
 | 🖼️ **架构图库** | [`exercises/figs/`](exercises/figs/) | 12 张 Visio 风格 SVG 架构图（已嵌入对应课程与第 100 课总画廊） |
 
 ---
@@ -201,7 +214,7 @@
 
 ## 📚 repowiki 架构文档
 
-基于 `vendor/vllm`(v0.23.0-dev) 源码精读，8 篇文档每篇都带真实 `文件:行号` 引用：
+基于 vLLM **V1** `v0.23.0-dev`（commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)）源码精读，8 篇文档每篇都带真实 `文件:行号` 引用，可按 [GitHub 永久链接](https://github.com/vllm-project/vllm/blob/967e104/vllm/v1/engine/core.py)逐条查证：
 
 | # | 文档 | 主题 |
 |---|---|---|
@@ -220,18 +233,54 @@
 
 ## 🚀 环境与使用方法
 
-### 环境要求
+### Docker（推荐，GPU 教学镜像）
+
+镜像内置 **torch 2.11.0+cu128 + triton 3.6.0**（sm_120 / RTX 50 系兼容），练习直接跑在你的 NVIDIA GPU 上。要求：NVIDIA 显卡 + 已装驱动；Windows 需启用 WSL2（Docker Desktop 默认后端即可）。
+
+```bash
+docker compose up --build
+```
+
+不想本地构建？直接拉现成镜像（约 20GB）：
+
+```bash
+docker pull feiguangba/vllm-learn-labs:gpu
+docker compose up -d labs
+```
+
+| 服务 | 地址 | 说明 |
+|---|---|---|
+| Jupyter Lab | http://localhost:8888 | token `vllm_learn`，内核 `Python 3 (vllm_learn)` |
+| Streamlit 课表 | http://localhost:8501 | 选章节后按提示切换演示 |
+
+单独跑某一课的 Streamlit：
+
+```bash
+docker compose run --rm -e APP=exercises/ch02/app_10_paged_demo.py -p 8501:8501 labs
+```
+
+可选 profile：官方 `vllm/vllm-openai` 服务（与练习册相互独立）：
+
+```bash
+docker compose --profile gpu up
+```
+
+> 国内构建时若 `download.pytorch.org` 卡顿/超时，见 [`docker/Dockerfile.local`](docker/Dockerfile.local) 头部注释的镜像源 + 本地轮子方案。
+
+默认在 8000 端口用 `vllm/vllm-openai` 拉起 `Qwen/Qwen3-0.6B`。细节见 [VERSIONS.md](VERSIONS.md)。
+
+### 本机 uv（不走 Docker）
 
 - Python 3.12 + `uv`（或 venv）
-- `torch`（CPU 即可跑通全部练习；GPU 可选）
-- `pyecharts`、`plotly`、`streamlit`、`numpy`、`pandas`、`matplotlib`
+- `torch`（GPU 章节—ch04/05/06/07/09 等—需要 CUDA 版 torch，`pip install torch --index-url https://download.pytorch.org/whl/cu128`；RTX 50 系务必用 cu128）
+- `pyecharts`、`plotly`、`streamlit`、`numpy`、`pandas`、`matplotlib`、`seaborn`、`requests`（或直接 `pip install -r requirements.txt`）
 - Windows 用户需设 `KMP_DUPLICATE_LIB_OK=TRUE`（避免 torch 与 Anaconda 的 OMP 库冲突）
 
 安装（以 uv 为例）：
 
 ```bash
-uv venv uv_cuda --python 3.12
-uv pip install --python uv_cuda/Scripts/python.exe torch pyecharts streamlit plotly numpy pandas matplotlib ipykernel nbformat jupyterlab
+uv venv .venv --python 3.12
+uv pip install --python .venv/Scripts/python.exe -r requirements.txt torch --extra-index-url https://download.pytorch.org/whl/cu128
 ```
 
 ### 运行 notebook
@@ -239,7 +288,7 @@ uv pip install --python uv_cuda/Scripts/python.exe torch pyecharts streamlit plo
 ```powershell
 # Windows (PowerShell)
 $env:KMP_DUPLICATE_LIB_OK = "TRUE"
-D:\uv_envs\uv_cuda\Scripts\python.exe -m jupyter lab   # 打开后选 uv_cuda 内核
+.venv\Scripts\python.exe -m jupyter lab   # 打开后选 Python 3 (vllm_learn) 内核
 ```
 
 每个 notebook 内部都自带「KMP 保护」开头 cell，可直接运行。
@@ -261,7 +310,7 @@ app 源码也以 `%%writefile` cell 内嵌在对应 notebook 中，二者内容�
 2. **深入执行**：ch04 → ch05 → ch06（模型执行/CUDA Graph → 量化 → 并行）；
 3. **底层与部署**：ch07 → ch08（Attention Kernel → 服务化）；
 4. **扩展视野**：ch09（Triton）→ ch10（AI 编译器）→ ch11（昇腾全栈）；
-5. 需要「源码级」理解时，对照 **repowiki 01–08** 与 `vendor/vllm` 源码；
+5. 需要「源码级」理解时，对照 **repowiki 01–08** 与上游 [vLLM 源码（commit 967e104）](https://github.com/vllm-project/vllm/tree/967e104)；
 6. 想快速建立全局直觉，先看第 [100 课](exercises/ch11/100_summary_roadmap.ipynb) 的 12 张架构图总画廊。
 
 ---
@@ -270,9 +319,13 @@ app 源码也以 `%%writefile` cell 内嵌在对应 notebook 中，二者内容�
 
 ```
 VLLM_learn/
-├── README.md                # 本文件
+├── README.md / README_en.md
+├── VERSIONS.md              # 练习册与 vLLM V1 文档的版本约定
+├── docker-compose.yml       # labs(GPU 教学镜像) + vllm(vllm-openai 服务)
+├── requirements.txt
+├── docker/                  # Dockerfile / entrypoint / Streamlit 课表
 ├── .claude/skills/paper-fig/ # 顶会级科研绘图规范（画新架构图时引用）
-├── repowiki/                # 8 篇源码级架构文档
+├── repowiki/                # 8 篇源码级架构文档（V1）
 │   ├── 01_system_architecture.md .. 08_Attention_Kernels.md
 │   └── wiki_plan.yaml
 └── exercises/               # 练习册（11 章 100 课）
@@ -285,12 +338,15 @@ VLLM_learn/
     │   └── _build/          # 生成脚本（helpers + build_NN.py）
 ```
 
-> 仓库外部依赖：`vendor/vllm`（vLLM 源码，repowiki 与 ch07/47 等课程引用）。
+> 源码引用约定：repowiki 与部分课程的 `文件:行号` 基于上游 vLLM commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)，可按 [永久链接](https://github.com/vllm-project/vllm/blob/967e104/vllm/v1/engine/core.py)在线查证，无需本地 clone 源码。
 
 ---
 
 ## ✍️ 版权与参考
 
 - 本仓库为学习笔记，非官方文档；
-- 架构图为本仓库原创绘制（SVG 源文件在 `exercises/figs/`），绘图规范提炼自公开的顶会绘图方法论；
+- **代码**（`exercises/` 下的 `.py`、notebook 内代码、`docker/`）以 [MIT License](./LICENSE) 授权；
+- **文档与图**（`repowiki/*.md`、`exercises/figs/*.svg` 及 notebook 中的讲解文本）以 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 授权：可自由分享与改编，需注明出处并链接本仓库；
+- 架构图为本仓库原创绘制，绘图规范提炼自公开的顶会绘图方法论；
 - 参考：vLLM 官方文档 <https://docs.vllm.ai>、PagedAttention 论文 <https://arxiv.org/abs/2309.06180>、FlashAttention 论文 <https://arxiv.org/abs/2205.14135>、Orca 论文 <https://arxiv.org/abs/2208.14217>。
+

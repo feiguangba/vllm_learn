@@ -1,7 +1,7 @@
 # 07 · vLLM 张量/流水线/数据并行:进程组、层切分与通信器
 
-> **版本**:基于 `vendor/vllm` 的 vLLM v0.23.0(dev/main)源码精读整理。
-> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vendor/vllm/vllm/`(例如 `distributed/parallel_state.py:1751` = `vendor/vllm/vllm/distributed/parallel_state.py` 第 1751 行)。
+> **版本**:基于 vLLM v0.23.0(dev/main @ commit [967e104](https://github.com/vllm-project/vllm/commit/967e104)) 源码精读整理。
+> **路径约定**:下文所有 `文件:行号` 均相对 vLLM 包根目录 `vllm/`(在线查证: https://github.com/vllm-project/vllm/blob/967e104/vllm/<路径>#L<行号> ;例如 `distributed/parallel_state.py:1751` = 上游源码中的 `vllm/distributed/parallel_state.py` 第 1751 行)。
 > **一句话总结**:vLLM 用 `initialize_model_parallel`(`distributed/parallel_state.py:1751`)把世界按 **DP×PP×PCP×TP** 五维排布切出若干 `GroupCoordinator`;TP 靠 `Column/RowParallelLinear` 把 GEMM 权重沿输出/输入维切开并用 all-gather / reduce-scatter 拼回;PP 靠 `make_layers` 把 transformer 层切成 `[start_layer, end_layer)` 段并只让首/尾 rank 持有 embed/norm/lm_head;底层通信交给一条 **symm-mem → CustomAllReduce(共享内存+IPC)→ PyNccl(直接 libnccl.so)** 的快速路径链。
 
 ---

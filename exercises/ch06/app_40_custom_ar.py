@@ -68,7 +68,7 @@ st.markdown("""
 > 💡 **结论**:小消息(几 KB 到几 MB)下,固定开销主导延迟,CustomAllreduce 快一个量级;
 > 大消息下带宽主导,两者差距缩小。vLLM 正是抓住 LLM 推理里大量「小规模张量通信」的场景,
 > 用共享内存直写换来显著加速。源码参考:
-> `vendor/vllm/vllm/distributed/device_communicators/custom_all_reduce.py`。
+> `vllm/distributed/device_communicators/custom_all_reduce.py`。
 """)
 st.caption("《VLLM_learn: 图解 vLLM 推理引擎》第 6 章 · 第 40 课配套演示")
 

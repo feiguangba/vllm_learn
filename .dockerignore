@@ -1,0 +1,13 @@
+.git
+.github
+.idea
+.claude
+.venv
+__pycache__
+**/.ipynb_checkpoints
+**/*.pyc
+aios
+media
+*.log
+.uvcache
+.git
